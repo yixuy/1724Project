@@ -50,22 +50,48 @@ There are three students in the team, each with their own responsibilities:
 
 
 
-Task 1: Set up the server using Rocket to handle HTTP requests, including user sign-up and login.
-Task 2: Integrate Actix for managing WebSocket connections, enabling real-time messaging, and ensuring efficient handling of chatrooms.
-Task 3: Implement authentication mechanisms for users, including JWT or cookie-based authentication.
-Task 4: Implement presence detection for users (online/offline status).
-Task 5: Design and implement message broadcasting between chat rooms.
-Task 2: Create APIs to store and retrieve chat messages, ensuring persistent storage of messages.
-Task 3: Implement user presence tracking and persistent message storage.
-Task 4: Work on message history retrieval so that users can see past messages when joining a chat room.
 
-Task 2: Integrate WebSocket communication with the backend to handle real-time messaging.
-Task 3: Implement UI components for user authentication, room creation/joining, and message display.
-Task 4: Add support for showing the online/offline status of users.
+##### 1. User Sign up & Log in {#user-sign-up-log-in}
+Task: Set up the server using Rocket to handle HTTP requests, including user sign-up and login.
+Task: Implement authentication mechanisms for users, including JWT or cookie-based authentication.
+
+##### 2. Basic User Authentication
+Task: Add support for showing the online/offline status of users.
+
+##### 3. Chat room or Channel creation and joining {#Chat-room}
+Task: Design and implement message broadcasting between chat rooms.
+
+##### 4. Real-time messaging using WebSockets (an industry standard)
+Task: Integrate Actix for managing WebSocket connections, enabling real-time messaging, and ensuring efficient handling of chatrooms.
+Task: Integrate WebSocket communication with the backend to handle real-time messaging.
+
+##### 5. Presence detection to show online/offline status
+Task: Implement presence detection for users (online/offline status).
+Task: Add support for showing the online/offline status of users.
+
+##### 6. Persistent Storage of Messages
+Task: Create APIs to store and retrieve chat messages, ensuring persistent storage of messages.
+
+##### 7. Message History{#Message-History}
+Task: Set up a database (SurrealDB) for storing user credentials, chat room metadata, and message history.
+Task: Implement user presence tracking and persistent message storage.
+
+##### 8. Frontend Implement using Rust{#Frontend}
+Task: Build the Yew frontend for the chat application, creating a responsive interface for user interaction.
+Task: Implement UI components for user authentication, room creation/joining, and message display.
+Task: Work on message history retrieval so that users can see past messages when joining a chat room.
+
+
+
+
+
+
+
+
 
 - Henry:
-Task 1: Set up a database (SurrealDB) for storing user credentials, chat room metadata, and message history.
-Task 1: Build the Yew frontend for the chat application, creating a responsive interface for user interaction.
+
+
 
 
 - Sheila:
