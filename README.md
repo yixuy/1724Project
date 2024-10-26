@@ -2,7 +2,11 @@
 
 
 ## Motivation
+Real-time communication is central to our digital lives, shaping everything from our work meetings to casual catch-ups with friends. While there are many established chat applications, they can sometimes face performance and scalability challenges under high user loads. Quite a few of these platforms may struggle to provide low-latency communication and robust infrastructure for thousands of concurrent users.
 
+Motivated by these common issues, our team chose to address them through our project. We saw an opportunity to utilize the capabilities of Rust in a domain typically dominated by other programming languages like JavaScript and Python, which have mature ecosystems with extensive support for developing web and network applications. However, Rust's standout features, such as memory safety, zero-cost abstractions, and lack of garbage collection, make it ideal for building real-time systems that demand high speed and safety. We are driven by the potential to enhance user experience through these unique advantages, ensuring that our application can handle high traffic without compromising speed.
+
+Although Rust has been gaining popularity, it is still less commonly used for building mainstream chat applications, leaving a gap in the market for a Rust-native solution. We intend to fill this gap by developing a real-time chat application completely written in Rust for our course project. This project will not only allow us to solve real-world problems but also showcase Rust's potential in creating high-level, user-facing applications beyond its typical system programming uses.
 
 ## Objective and key features
 
