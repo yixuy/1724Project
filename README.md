@@ -9,6 +9,11 @@ Motivated by these common issues, our team chose to address them through our pro
 Although Rust has been gaining popularity, it is still less commonly used for building mainstream chat applications, leaving a gap in the market for a Rust-native solution. We intend to fill this gap by developing a real-time chat application completely written in Rust for our course project. This project will not only allow us to solve real-world problems but also showcase Rust's potential in creating high-level, user-facing applications beyond its typical system programming uses.
 
 ## Objective and key features
+The objective of this project is to design and implement a high-performance real-time chat application in Rust, enabling users to register, log in, create or join chat rooms, and exchange messages instantly. This application will serve as a demonstration of Rust's capabilities in building a reliable and efficient communication system, with a strong emphasis on enhancing backend performance while ensuring frontend usability.
+
+Considering that most chat applications built with Rust currently rely on front-end frameworks like React, and there has been limited exploration into using Rust-related frameworks for front-end development. This project aims to leverage the Yew framework to create the user interface of the chat application, thereby, filling a gap in the current Rust ecosystem. The backend will be developed using Actix Web. Ultimately, the goal is to create a fully functional chat application using 100% Rust.
+
+This project will focus on implementing several key features to ensure a seamless user experience. Here are the key features of the chat application:
 
 ##### 1. User Sign up & Log in {#user-sign-up-log-in}
 ##### 2. Basic User Authentication
