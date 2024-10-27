@@ -34,7 +34,7 @@ The system will include presence detection to show whether a user is online or o
 Messages exchanged in chat rooms will be stored in a database to ensure persistence, preventing any loss of messages due to unexpected disconnections or application shutdowns. 
 
 #### 7. Message History
-The chat application will support the retrieval of historical messages in each chat room. This means that if a user exits the application, they will still be able to view previous messages upon their next login, as the messages will be reloaded from the database.
+The chat application will support the retrieval of historical messages in each chat room. This means that if users exit the application, they will still be able to view previous messages upon their next login, as the messages will be reloaded from the database.
 
 #### 8. Front-end user interface
 A user-friendly interface will be created, enabling users to register, log in, create or join chat rooms, and exchange messages in real time. The design will focus on simplicity and ease of use, ensuring a smooth experience for all users. 
