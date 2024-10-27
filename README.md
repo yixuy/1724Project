@@ -15,14 +15,29 @@ Considering that most chat applications built with Rust currently rely on front-
 
 This project will focus on implementing several key features to ensure a seamless user experience. Here are the key features of the chat application:
 
-##### 1. User Sign up & Log in {#user-sign-up-log-in}
-##### 2. Basic User Authentication
-##### 3. Chat room or Channel creation and joining {#Chat-room}
-##### 4. Real-time messaging using WebSockets (an industry standard)
-##### 5. Presence detection to show online/offline status
-##### 6. Persistent Storage of Messages
-##### 7. Message History{#Message-History}
-##### 8. Frontend Implement using Rust{#Frontend}
+##### 1. User registration
+New users could be able to create unique accounts through a registration process. User credentials will be securely stored in a database. 
+
+##### 2. User login and Basic user authentication
+The application will include an authentication mechanism to manage user access. Each user will be required to sign up and log in before they can create or join chat rooms. Once users complete the registration process, they can log in using their own usernames and passwords. Authentication ensures that only authorized users can access the chat application and its features, promoting safe interactions.
+
+##### 3. Chat room creation and joining
+Users will be able to create new chat rooms, and other users can join these rooms to engage in conversations. Each chat room will be isolated, meaning that messages sent in one room will not be visible to users in other rooms. This feature will enable users to engage in different discussions across different chat rooms.
+
+##### 4. Real-time messaging using WebSockets
+The application will utilize WebSocket technology to enable real-time, two-way communication between clients and server. This feature allows messages to be transmitted immediately, enhancing user experience. 
+
+##### 5. Presence detection
+The system will include presence detection to show whether a user is online or offline in a chat room. This functionality will improve user engagement by enabling participants to see who is currently active in the conversation.
+
+##### 6. Message persistence
+Messages exchanged in chat rooms will be stored in a database to ensure persistence, preventing any loss of messages due to unexpected disconnections or application shutdowns. 
+
+##### 7. Message History
+The chat application will support the retrieval of historical messages in each chat room. This means that if a user exits the application, they will still be able to view previous messages upon their next login, as the messages will be reloaded from the database.
+
+##### 8. Front-end user interface
+A user-friendly interface will be created, enabling users to register, log in, create or join chat rooms, and exchange messages in real time. The design will focus on simplicity and ease of use, ensuring a smooth experience for all users. 
 
 ## Tentative plan
 Briefly and concisely, describe how your team plans to achieve the project objective in a matter of weeks, with clear descriptions of responsibilities for each team member in the team. As the duration of the project is quite short, there is no need to include milestones and tentative dates.
