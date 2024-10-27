@@ -15,28 +15,28 @@ Considering that most chat applications built with Rust currently rely on front-
 
 This project will focus on implementing several key features to ensure a seamless user experience. Here are the key features of the chat application:
 
-##### 1. User registration
+#### 1. User registration
 New users could be able to create unique accounts through a registration process. User credentials will be securely stored in a database. 
 
-##### 2. User login and Basic user authentication
+#### 2. User login and Basic user authentication
 The application will include an authentication mechanism to manage user access. Each user will be required to sign up and log in before they can create or join chat rooms. Once users complete the registration process, they can log in using their own usernames and passwords. Authentication ensures that only authorized users can access the chat application and its features, promoting safe interactions.
 
-##### 3. Chat room creation and joining
+#### 3. Chat room creation and joining
 Users will be able to create new chat rooms, and other users can join these rooms to engage in conversations. Each chat room will be isolated, meaning that messages sent in one room will not be visible to users in other rooms. This feature will enable users to engage in different discussions across different chat rooms.
 
-##### 4. Real-time messaging using WebSockets
+#### 4. Real-time messaging using WebSockets
 The application will utilize WebSocket technology to enable real-time, two-way communication between clients and server. This feature allows messages to be transmitted immediately, enhancing user experience. 
 
-##### 5. Presence detection
+#### 5. Presence detection
 The system will include presence detection to show whether a user is online or offline in a chat room. This functionality will improve user engagement by enabling participants to see who is currently active in the conversation.
 
-##### 6. Message persistence
+#### 6. Message persistence
 Messages exchanged in chat rooms will be stored in a database to ensure persistence, preventing any loss of messages due to unexpected disconnections or application shutdowns. 
 
-##### 7. Message History
+#### 7. Message History
 The chat application will support the retrieval of historical messages in each chat room. This means that if a user exits the application, they will still be able to view previous messages upon their next login, as the messages will be reloaded from the database.
 
-##### 8. Front-end user interface
+#### 8. Front-end user interface
 A user-friendly interface will be created, enabling users to register, log in, create or join chat rooms, and exchange messages in real time. The design will focus on simplicity and ease of use, ensuring a smooth experience for all users. 
 
 ## Tentative plan
@@ -71,32 +71,32 @@ There are three students in the team, each with their own responsibilities:
 
 
 
-##### 1. User Sign up & Log in {#user-sign-up-log-in}
+#### 1. User Sign up & Log in {#user-sign-up-log-in}
 Task: Set up the server using Rocket to handle HTTP requests, including user sign-up and login.
 Task: Implement authentication mechanisms for users, including JWT or cookie-based authentication.
 
-##### 2. Basic User Authentication
+#### 2. Basic User Authentication
 Task: Add support for showing the online/offline status of users.
 
-##### 3. Chat room or Channel creation and joining {#Chat-room}
+#### 3. Chat room or Channel creation and joining {#Chat-room}
 Task: Design and implement message broadcasting between chat rooms.
 
-##### 4. Real-time messaging using WebSockets (an industry standard)
+#### 4. Real-time messaging using WebSockets (an industry standard)
 Task: Integrate Actix for managing WebSocket connections, enabling real-time messaging, and ensuring efficient handling of chatrooms.
 Task: Integrate WebSocket communication with the backend to handle real-time messaging.
 
-##### 5. Presence detection to show online/offline status
+#### 5. Presence detection to show online/offline status
 Task: Implement presence detection for users (online/offline status).
 Task: Add support for showing the online/offline status of users.
 
-##### 6. Persistent Storage of Messages
+#### 6. Persistent Storage of Messages
 Task: Create APIs to store and retrieve chat messages, ensuring persistent storage of messages.
 
-##### 7. Message History{#Message-History}
+#### 7. Message History{#Message-History}
 Task: Set up a database (SurrealDB) for storing user credentials, chat room metadata, and message history.
 Task: Implement user presence tracking and persistent message storage.
 
-##### 8. Frontend Implement using Rust{#Frontend}
+#### 8. Frontend Implement using Rust{#Frontend}
 Task: Build the Yew frontend for the chat application, creating a responsive interface for user interaction.
 Task: Implement UI components for user authentication, room creation/joining, and message display.
 Task: Work on message history retrieval so that users can see past messages when joining a chat room.
