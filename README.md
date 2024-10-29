@@ -1,9 +1,9 @@
 # 1724Project
 
-##Group Memebers:
-###Selena
-###Henry
-###Yiran(Sheila) Chen 1004392739
+## Group Memebers:
+### Selena
+### Henry
+### Yiran(Sheila) Chen 1004392739
 
 ## Motivation
 Real-time communication is central to our digital lives, shaping everything from our work meetings to casual catch-ups with friends. While there are many established chat applications, they can sometimes face performance and scalability challenges under high user loads. Quite a few of these platforms may struggle to provide low-latency communication and robust infrastructure for thousands of concurrent users.
