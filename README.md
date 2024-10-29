@@ -40,18 +40,19 @@ The chat application will support the retrieval of historical messages in each c
 A user-friendly interface will be created, enabling users to register, log in, create or join chat rooms, and exchange messages in real time. The design will focus on simplicity and ease of use, ensuring a smooth experience for all users. 
 
 ### Team Member Work Allocation
-**Selena:**  
+**Selena:** 
    - User Registration  
    - User Login and Basic User Authentication  
    - Presence Detection  
 
-**Sheila:**  
+**Sheila:** 
    - Chat Room Creation and Joining  
    - Real-Time Messaging Using WebSockets  
    - Message Persistence 
 
-**Henry:**  
+**Henry:** 
    - Message History
+   - DataBase Integration
    - Front-End User Interface  
 
 ## Tentative plan
