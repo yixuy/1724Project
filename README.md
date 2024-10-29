@@ -47,17 +47,17 @@ A user-friendly interface will be created, enabling users to register, log in, c
 **Selena:** 
    - User Registration  
    - User Login and Basic User Authentication  
-   - Presence Detection  
-
-**Sheila:** 
-   - Chat Room Creation and Joining  
-   - Real-Time Messaging Using WebSockets  
-   - Message Persistence 
+   - Presence Detection
 
 **Henry:** 
    - Message History
    - DataBase Integration
    - Front-End User Interface  
+
+**Sheila:** 
+   - Chat Room Creation and Joining  
+   - Real-Time Messaging Using WebSockets  
+   - Message Persistence 
 
 ## Tentative plan
 
