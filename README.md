@@ -39,6 +39,22 @@ The chat application will support the retrieval of historical messages in each c
 #### 8. Front-end user interface
 A user-friendly interface will be created, enabling users to register, log in, create or join chat rooms, and exchange messages in real time. The design will focus on simplicity and ease of use, ensuring a smooth experience for all users. 
 
+### Team Member Work Allocation
+
+1. **Selena:**  
+   - User Registration  
+   - User Login and Basic User Authentication  
+   - Presence Detection  
+
+2. **Sheila:**  
+   - Chat Room Creation and Joining  
+   - Real-Time Messaging Using WebSockets  
+   - Message Persistence 
+
+3. **Henry:**  
+   - Message History
+   - Front-End User Interface  
+
 ## Tentative plan
 
 In this project, our objective is to design and implement a robust, scalable chat server application utilizing cutting-edge web technologies based on Rust. The backend architecture will be constructed using [Actix](https://actix.rs/docs/server) frameworks, which offer flexibility and efficiency. For testing the backend requests, [Postman](https://www.postman.com/) will be employed to ensure reliability and accuracy. User data management will be handled by the [SurrealDB](https://surrealdb.com/) database, providing a solid and scalable storage solution. Real-time communication between the server and clients will be enabled through the [WebSocket](https://rocket.rs/guide/v0.5/upgrading/#blocking-i-o) protocol, supporting bidirectional data flow over TCP connections. For front-end development, we will utilize the [Yew](https://yew.rs/docs/getting-started/introduction) framework to create an interactive and responsive user interface for the chat client. Additionally, as project timelines permit, we will enhance the front-end aesthetics to improve user engagement and experience. There are three students in our group, Henry, Selena, and Sheila. Sheila will be responsible for the backend development, including the server setup, WebSocket communication. Henry will focus on the front-end development, creating the user interface and handling user interactions and database integration. Selena will be involved in the user login and user registration process, and the status of user presence in the chat room.
