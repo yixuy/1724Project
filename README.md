@@ -1,6 +1,6 @@
 # 1724Project
 
-## Group Memebers:
+## Group Memebers
 ### Selena
 ### Henry
 ### Yiran(Sheila) Chen 1004392739
