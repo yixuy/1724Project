@@ -1,9 +1,10 @@
-# 1724Project
+# ECE1724 Course Project Proposal
 
-## Group Memebers
-### Selena
-### Henry
-### Yiran(Sheila) Chen 1004392739
+| Student Name|  Student ID |  
+|-------------|-------------|
+| Selena Yan  | TODO |
+| Yiran (Sheila) Chen | 1004392739 |
+| Yixu (Henry) Ye  | 1010506579 |
 
 ## Motivation
 Real-time communication is central to our digital lives, shaping everything from our work meetings to casual catch-ups with friends. While there are many established chat applications, they can sometimes face performance and scalability challenges under high user loads. Quite a few of these platforms may struggle to provide low-latency communication and robust infrastructure for thousands of concurrent users.
@@ -15,7 +16,7 @@ Although Rust has been gaining popularity, it is still less commonly used for bu
 ## Objective and key features
 The objective of this project is to design and implement a high-performance real-time chat application in Rust, enabling users to register, log in, create or join chat rooms, and exchange messages instantly. This application will serve as a demonstration of Rust's capabilities in building a reliable and efficient communication system, with a strong emphasis on enhancing backend performance while ensuring frontend usability.
 
-Considering that most chat applications built with Rust currently rely on front-end frameworks like React, and there has been limited exploration into using Rust-related frameworks for front-end development. This project aims to leverage the Yew framework to create the user interface of the chat application, thereby, filling a gap in the current Rust ecosystem. The backend will be developed using Actix Web. Ultimately, the goal is to create a fully functional chat application using 100% Rust.
+Considering that most chat applications built with Rust currently rely on front-end frameworks like React, and there has been limited exploration into using Rust-related frameworks for front-end development. This project aims to leverage the Yew framework to create the user interface of the chat application, thereby, filling a gap in the current Rust ecosystem. The backend will be developed using Actix Web. Ultimately, the goal is to create a fully functional chat application using nearly 100% Rust.
 
 This project will focus on implementing several key features to ensure a seamless user experience. Here are the key features of the chat application:
 
@@ -38,25 +39,25 @@ The system will include presence detection to show whether a user is online or o
 Messages exchanged in chat rooms will be stored in a database to ensure persistence. This feature prevents any loss of messages due to unexpected disconnections or application shutdowns, providing a more reliable communication experience.
 
 #### 7. Message History
-The chat application will support the retrieval of historical messages in each chat room. This means that if users exit the application, they will still be able to view previous messages upon their next login, as the messages will be reloaded from the database.
+The chat application will support the retrieval of historical messages in each chat room. This means that if users exit the application, they will still be able to retrieve previous messages upon their next login, as the messages will be reloaded from the database.
 
 #### 8. Front-end user interface
-A user-friendly interface will be created, enabling users to register, log in, create or join chat rooms, and exchange messages in real time. The design will focus on simplicity and ease of use, ensuring a smooth experience for all users. 
+A user-friendly interface will be created, enabling users to register, log in, create or join chat rooms, and exchange messages in real time. The design will focus on simplicity and ease of use, ensuring a smooth experience for all users.
 
 #### Group Member Work Allocation
-**Selena:** 
-   - User Registration  
+**Selena:**
+   - User Registration
    - User Login and Basic User Authentication  
-   - Presence Detection  
+   - User Online/Offline status detection
 
-**Sheila:** 
-   - Chat Room Creation and Joining  
+**Sheila:**
+   - Chat Room Creation and Joining
    - Real-Time Messaging Using WebSockets  
-   - Message Persistence 
+   - Message Persistence
 
-**Henry:** 
+**Henry:**
    - Message History
-   - DataBase Integration
+   - Database Integration
    - Front-End User Interface  
 
 ## Tentative plan
