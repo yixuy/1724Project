@@ -1,5 +1,9 @@
 # 1724Project
 
+Group Memebers:
+Selena
+Henry
+Yiran(Sheila) Chen 1004392739
 
 ## Motivation
 Real-time communication is central to our digital lives, shaping everything from our work meetings to casual catch-ups with friends. While there are many established chat applications, they can sometimes face performance and scalability challenges under high user loads. Quite a few of these platforms may struggle to provide low-latency communication and robust infrastructure for thousands of concurrent users.
@@ -39,7 +43,7 @@ The chat application will support the retrieval of historical messages in each c
 #### 8. Front-end user interface
 A user-friendly interface will be created, enabling users to register, log in, create or join chat rooms, and exchange messages in real time. The design will focus on simplicity and ease of use, ensuring a smooth experience for all users. 
 
-#### Team Member Work Allocation
+#### Group Member Work Allocation
 **Selena:** 
    - User Registration  
    - User Login and Basic User Authentication  
