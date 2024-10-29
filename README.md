@@ -22,7 +22,7 @@ New users could be able to create unique accounts through a registration process
 The application will include an authentication mechanism to manage user access. Each user will be required to sign up and log in before they can create or join chat rooms. Once users complete the registration process, they can log in using their own usernames and passwords. Authentication ensures that only authorized users can access the chat application and its features, promoting safe interactions.
 
 #### 3. Chat room creation and joining
-Users will be able to create new chat rooms, and other users can join these rooms to engage in conversations. Each chat room will be isolated, meaning that messages sent in one room will not be visible to users in other rooms. This feature will enable users to engage in different discussions across different chat rooms.
+Users will be able to create new chat rooms, and other users can join these rooms to engage in conversations. Each chat room will be isolated, meaning that messages sent in one room will not be visible to users in other rooms. This feature enables users to engage in separate discussions within different chat rooms, enhancing privacy.
 
 #### 4. Real-time messaging using WebSockets
 The application will utilize WebSocket technology to enable real-time, two-way communication between clients and server. This feature allows messages to be transmitted immediately, enhancing user experience.
@@ -31,7 +31,7 @@ The application will utilize WebSocket technology to enable real-time, two-way c
 The system will include presence detection to show whether a user is online or offline in a chat room. This functionality will improve user engagement by enabling participants to see who is currently active in the conversation.
 
 #### 6. Message persistence
-Messages exchanged in chat rooms will be stored in a database to ensure persistence, preventing any loss of messages due to unexpected disconnections or application shutdowns. 
+Messages exchanged in chat rooms will be stored in a database to ensure persistence. This feature prevents any loss of messages due to unexpected disconnections or application shutdowns, providing a more reliable communication experience.
 
 #### 7. Message History
 The chat application will support the retrieval of historical messages in each chat room. This means that if users exit the application, they will still be able to view previous messages upon their next login, as the messages will be reloaded from the database.
