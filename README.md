@@ -44,7 +44,7 @@ The chat application will support the retrieval of historical messages in each c
 #### 8. Front-end user interface
 A user-friendly interface will be created, enabling users to register, log in, create or join chat rooms, and exchange messages in real time. The design will focus on simplicity and ease of use, ensuring a smooth experience for all users.
 
-#### Group Member Work Allocation
+#### Group Member Work Allocation 
 **Selena:**
    - User Registration
    - User Login and Basic User Authentication  
