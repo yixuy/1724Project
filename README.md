@@ -56,8 +56,6 @@ A user-friendly interface will be created, enabling users to register, log in, c
 
 ### Group Member Work Allocation
 
-Our group consists of three members: Selena, Sheila and Henry. Selena will handle user authentication, including login and registration, as well as managing user presence in the chat room. Sheila will take charge of the backend development, which includes setting up the server and managing WebSocket communication. Henry will focus on the front-end development, designing the user interface, managing user interactions, and integrating the database.
-
 **Selena:**
 
 - User Registration
@@ -78,7 +76,7 @@ Our group consists of three members: Selena, Sheila and Henry. Selena will handl
 
 ## Tentative plan
 
-In this project, our objective is to design and implement a robust, scalable chat server application utilizing cutting-edge web technologies based on Rust. The backend architecture will be constructed using [Actix](https://actix.rs/docs/server) frameworks, which offer flexibility and efficiency. For testing the backend requests, [Postman](https://www.postman.com/) will be employed to ensure reliability and accuracy. User data management will be handled by the [SurrealDB](https://surrealdb.com/) database, providing a solid and scalable storage solution. Real-time communication between the server and clients will be enabled through the [WebSocket](https://rocket.rs/guide/v0.5/upgrading/#blocking-i-o) protocol, supporting bidirectional data flow over TCP connections. For front-end development, we will utilize the [Yew](https://yew.rs/docs/getting-started/introduction) framework to create an interactive and responsive user interface for the chat client. Additionally, as project timelines permit, we will enhance the front-end aesthetics to improve user engagement and experience.
+In this project, our objective is to design and implement a robust, scalable chat server application utilizing cutting-edge web technologies based on Rust. The backend architecture will be constructed using [Actix](https://actix.rs/docs/server) frameworks, which offer flexibility and efficiency. For testing the backend requests, [Postman](https://www.postman.com/) will be employed to ensure reliability and accuracy. User data management will be handled by the [SurrealDB](https://surrealdb.com/) database, providing a solid and scalable storage solution. Real-time communication between the server and clients will be enabled through the [WebSocket](https://rocket.rs/guide/v0.5/upgrading/#blocking-i-o) protocol, supporting bidirectional data flow over TCP connections. For front-end development, we will utilize the [Yew](https://yew.rs/docs/getting-started/introduction) framework to create an interactive and responsive user interface for the chat client. Additionally, as project timelines permit, we will enhance the front-end aesthetics to improve user engagement and experience. Based on the allocation of responsibilities, Selena will oversee user authentication, including login and registration processes, as well as manage user presence within the chat room. Sheila will be responsible for backend development, which entails setting up the server and handling WebSocket communication. Henry will focus on front-end development, which includes designing the user interface, managing user interactions, and integrating the database. These tasks will be implemented in a structured, step-by-step manner to ensure smooth development progress.
 
 ### Build up server and chat functionality
 <!-- (#Chat-room) -->
