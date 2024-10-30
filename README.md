@@ -2,7 +2,7 @@
 
 | Student Name|  Student ID |  
 |-------------|-------------|
-| Selena Yan  | TODO |
+| Zhaoyu (Selena) Yan  | 1006521621 |
 | Yiran (Sheila) Chen | 1004392739 |
 | Yixu (Henry) Ye  | 1010506579 |
 
