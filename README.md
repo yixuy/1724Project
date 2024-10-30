@@ -7,62 +7,78 @@
 | Yixu (Henry) Ye  | 1010506579 |
 
 ## Motivation
-Real-time communication is central to our digital lives, shaping everything from our work meetings to casual catch-ups with friends. While there are many established chat applications, they can sometimes face performance and scalability challenges under high user loads. Quite a few of these platforms may struggle to provide low-latency communication and robust infrastructure for thousands of concurrent users.
 
-Motivated by these common issues, our team chose to address them through our project. We saw an opportunity to utilize the capabilities of Rust in a domain typically dominated by other programming languages like JavaScript and Python, which have mature ecosystems with extensive support for developing web and network applications. However, Rust's standout features, such as memory safety, zero-cost abstractions, and lack of garbage collection, make it ideal for building real-time systems that demand high speed and safety. We are driven by the potential to enhance user experience through these unique advantages, ensuring that our application can handle high traffic without compromising speed.
+Real-time communication is central to our digital lives, shaping everything from work meetings to casual catch-ups with friends. While many established chat applications exist, they often face performance and scalability challenges under high user loads. Several of these platforms may struggle to provide low-latency communication and a robust infrastructure for thousands of concurrent users.
 
-Although Rust has been gaining popularity, it is still less commonly used for building mainstream chat applications, leaving a gap in the market for a Rust-native solution. We intend to fill this gap by developing a real-time chat application completely written in Rust for our course project. This project will not only allow us to solve real-world problems but also showcase Rust's potential in creating high-level, user-facing applications beyond its typical system programming uses.
+Motivated by these common issues, our team has decided to address them in our project by leveraging the unique strengths of Rust. While domains like web and network application development are typically dominated by languages like JavaScript and Python—each with mature ecosystems and extensive tooling—Rust offers standout features that make it an ideal candidate for building real-time systems such as chat applications. The potential advantages of Rust include its memory safety guarantees, concurrency model, and performance, which are crucial for building scalable and efficient real-time communication systems. Rust’s memory safety without garbage collection ensures that we can achieve predictable performance without the overhead of runtime memory management, which is crucial for latency-sensitive applications. Its ownership and borrowing model allows for safe concurrency, preventing common multithreading errors like data races. Rust’s message-passing capabilities and asynchronous programming model allow us to efficiently handle large numbers of simultaneous connections, making it a great fit for network-heavy applications. Besides, its strong type system helps us catch bugs at compile time, significantly reducing runtime errors, which enhances both reliability and maintainability. We are driven by the potential to enhance user experience through these unique advantages, ensuring that our application can handle high traffic without compromising performance.
+
+Although Rust has been gaining popularity, it is still less commonly used for building mainstream chat applications, leaving a gap in the market for a Rust-native solution. We aim to fill this gap by developing a real-time chat application entirely written in Rust for our course project. This project will not only enable us to solve real-world problems but also showcase Rust's potential in creating high-level, user-facing applications beyond its typical system programming uses.
 
 ## Objective and key features
+
 The objective of this project is to design and implement a high-performance real-time chat application in Rust, enabling users to register, log in, create or join chat rooms, and exchange messages instantly. This application will serve as a demonstration of Rust's capabilities in building a reliable and efficient communication system, with a strong emphasis on enhancing backend performance while ensuring frontend usability.
 
 Considering that most chat applications built with Rust currently rely on front-end frameworks like React, and there has been limited exploration into using Rust-related frameworks for front-end development. This project aims to leverage the Yew framework to create the user interface of the chat application, thereby, filling a gap in the current Rust ecosystem. The backend will be developed using Actix Web. Ultimately, the goal is to create a fully functional chat application using nearly 100% Rust.
 
 This project will focus on implementing several key features to ensure a seamless user experience. Here are the key features of the chat application:
 
-#### 1. User registration
+### 1. User registration
+
 New users could be able to create unique accounts through a registration process. User credentials will be securely stored in a database.
 
-#### 2. User login and Basic user authentication
+### 2. User login and Basic user authentication
+
 The application will include an authentication mechanism to manage user access. Each user will be required to sign up and log in before they can create or join chat rooms. Once users complete the registration process, they can log in using their own usernames and passwords. Authentication ensures that only authorized users can access the chat application and its features, promoting safe interactions.
 
-#### 3. Chat room creation and joining
+### 3. Chat room creation and joining
+
 Users will be able to create new chat rooms, and other users can join these rooms to engage in conversations. Each chat room will be isolated, meaning that messages sent in one room will not be visible to users in other rooms. This feature enables users to engage in separate discussions within different chat rooms, enhancing privacy.
 
-#### 4. Real-time messaging using WebSockets
+### 4. Real-time messaging using WebSockets
+
 The application will utilize WebSocket technology to enable real-time, two-way communication between clients and server. This feature allows messages to be transmitted immediately, enhancing user experience.
 
-#### 5. Presence detection
-The system will include presence detection to show whether a user is online or offline in a chat room. This functionality will improve user engagement by enabling participants to see who is currently active in the conversation.
+### 5. User Online/Offline status detection
 
-#### 6. Message persistence
+The system will include User Online/Offline status detection to show whether a user is online or offline in a chat room. This functionality will improve user engagement by enabling participants to see who is currently active in the conversation.
+
+### 6. Message persistence
+
 Messages exchanged in chat rooms will be stored in a database to ensure persistence. This feature prevents any loss of messages due to unexpected disconnections or application shutdowns, providing a more reliable communication experience.
 
-#### 7. Message History
+### 7. Message History
+
 The chat application will support the retrieval of historical messages in each chat room. This means that if users exit the application, they will still be able to retrieve previous messages upon their next login, as the messages will be reloaded from the database.
 
-#### 8. Front-end user interface
+### 8. Front-end user interface
+
 A user-friendly interface will be created, enabling users to register, log in, create or join chat rooms, and exchange messages in real time. The design will focus on simplicity and ease of use, ensuring a smooth experience for all users.
 
-#### Group Member Work Allocation 
+### Group Member Work Allocation
+
+Our group consists of three members: Selena, Sheila and Henry. Selena will handle user authentication, including login and registration, as well as managing user presence in the chat room. Sheila will take charge of the backend development, which includes setting up the server and managing WebSocket communication. Henry will focus on the front-end development, designing the user interface, managing user interactions, and integrating the database.
+
 **Selena:**
-   - User Registration
-   - User Login and Basic User Authentication  
-   - User Online/Offline status detection
+
+- User Registration
+- User Login and Basic User Authentication  
+- User Online/Offline status detection
 
 **Sheila:**
-   - Chat Room Creation and Joining
-   - Real-Time Messaging Using WebSockets  
-   - Message Persistence
+
+- Chat Room Creation and Joining
+- Real-Time Messaging Using WebSockets  
+- Message Persistence
 
 **Henry:**
-   - Message History
-   - Database Integration
-   - Front-End User Interface  
+
+- Message History
+- Database Integration
+- Front-End User Interface  
 
 ## Tentative plan
 
-In this project, our objective is to design and implement a robust, scalable chat server application utilizing cutting-edge web technologies based on Rust. The backend architecture will be constructed using [Actix](https://actix.rs/docs/server) frameworks, which offer flexibility and efficiency. For testing the backend requests, [Postman](https://www.postman.com/) will be employed to ensure reliability and accuracy. User data management will be handled by the [SurrealDB](https://surrealdb.com/) database, providing a solid and scalable storage solution. Real-time communication between the server and clients will be enabled through the [WebSocket](https://rocket.rs/guide/v0.5/upgrading/#blocking-i-o) protocol, supporting bidirectional data flow over TCP connections. For front-end development, we will utilize the [Yew](https://yew.rs/docs/getting-started/introduction) framework to create an interactive and responsive user interface for the chat client. Additionally, as project timelines permit, we will enhance the front-end aesthetics to improve user engagement and experience. There are three students in our group, Henry, Selena, and Sheila. Sheila will be responsible for the backend development, including the server setup, WebSocket communication. Henry will focus on the front-end development, creating the user interface and handling user interactions and database integration. Selena will be involved in the user login and user registration process, and the status of user presence in the chat room.
+In this project, our objective is to design and implement a robust, scalable chat server application utilizing cutting-edge web technologies based on Rust. The backend architecture will be constructed using [Actix](https://actix.rs/docs/server) frameworks, which offer flexibility and efficiency. For testing the backend requests, [Postman](https://www.postman.com/) will be employed to ensure reliability and accuracy. User data management will be handled by the [SurrealDB](https://surrealdb.com/) database, providing a solid and scalable storage solution. Real-time communication between the server and clients will be enabled through the [WebSocket](https://rocket.rs/guide/v0.5/upgrading/#blocking-i-o) protocol, supporting bidirectional data flow over TCP connections. For front-end development, we will utilize the [Yew](https://yew.rs/docs/getting-started/introduction) framework to create an interactive and responsive user interface for the chat client. Additionally, as project timelines permit, we will enhance the front-end aesthetics to improve user engagement and experience.
 
 ### Build up server and chat functionality
 <!-- (#Chat-room) -->
