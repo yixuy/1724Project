@@ -48,7 +48,7 @@ Messages exchanged in chat rooms will be stored in a database to ensure persiste
 
 ### 6. Message persistence and history retrieval
 
-The chat application will support message persistence, allowing users to retrieve historical messages in each chat room. This feature ensures that no messages are lost when users refresh the browser or experience unexpected disconnections, as messages will be reloaded upon reconnection. Additionally, users can access previous messages to review conversation history at any time, with all messages securely stored and reloaded from the database.
+To ensure a reliable communication experience, messages exchanged in chat rooms will be stored in a database, providing both persistence and accessible message history. This feature prevents any message loss due to unexpected disconnections or application shutdowns. Users can retrieve previous messages upon re-entering a chat room, as the stored messages will be reloaded from the database, allowing them to seamlessly continue their conversations from where they left off.
 
 ### 7. Front-end user interface
 
