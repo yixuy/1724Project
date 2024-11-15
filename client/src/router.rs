@@ -23,8 +23,8 @@ pub enum Route {
 
 pub fn switch(route: Route) -> Html {
     match route {
-        Route::Home => html! { <h1>{ "Home Page" }</h1> },
-        Route::Room { room } => html! { <h1>{ format!("Room: {}", room) }</h1> },
+        Route::Home => html! { <Home /> },
+        Route::Room { room } => html! { <Room room={room} /> },
         Route::SignUp => html! { <SignUp /> },
         Route::SignIn => html! { <SignIn /> },
         Route::Settings => html! { <Settings /> },
