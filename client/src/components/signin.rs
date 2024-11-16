@@ -9,11 +9,9 @@ pub fn sign_in() -> Html {
     let go_home_button = {
         let navigator = navigator.clone();
         let onclick = Callback::from(move |_| navigator.push(&Route::Home));
-        
-        
-        html! {
 
-            <div>
+        html! {
+            <div >
             <h1>{ "Sign In Page" }</h1>
             <button {onclick}>{"click to go home"}</button>
         </div>
