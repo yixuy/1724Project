@@ -1,6 +1,7 @@
 use crate::db;
 use crate::error;
 use crate::user;
+use crate::user_trait::UserTrait;
 use actix_web::web::Data;
 use actix_web::{get, post, web::Json, web::Path, HttpResponse, Responder};
 use db::Database;
@@ -9,6 +10,8 @@ use user::NewUser;
 use user::UpdateUserURL;
 use uuid::Uuid;
 use validator::Validate;
+
+// Implement the routers for the server
 
 #[get("/user/{id}")]
 async fn get_user() -> impl Responder {
@@ -22,7 +25,7 @@ async fn test_handler() -> impl Responder {
 
 #[get("/users")]
 async fn get_users(db: Data<Database>) -> Result<Json<Vec<user::User>>, UserError> {
-    let users = db.get_all_users().await;
+    let users = Database::get_all_users(&db).await;
     match users {
         Some(all_users) => Ok(Json(all_users)),
         None => Err(UserError::NoUserFound),
@@ -42,13 +45,15 @@ async fn create_user(
             let mut buffer = Uuid::encode_buffer();
             let new_uuid = Uuid::new_v4().simple().encode_lower(&mut buffer);
 
-            let new_user = db
-                .add_user(user::User::new(
+            let new_user = Database::add_user(
+                &db,
+                user::User::new(
                     new_uuid.to_string(),
                     body.username.clone(),
                     body.password.clone(),
-                ))
-                .await;
+                ),
+            )
+            .await;
 
             match new_user {
                 Some(create_user) => Ok(Json(create_user)),
@@ -65,7 +70,7 @@ async fn update_user(
     db: Data<Database>,
 ) -> Result<Json<user::User>, UserError> {
     let uuid = update_user_url.uuid.clone();
-    let updated_user = db.update_user(&uuid).await;
+    let updated_user = Database::update_user(&db, &uuid).await;
     match updated_user {
         Some(user) => Ok(Json(user)),
         None => Err(UserError::NoSuchUser),

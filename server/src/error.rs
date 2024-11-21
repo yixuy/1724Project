@@ -2,6 +2,8 @@ use actix_web::{
     http::{header::HeaderValue, header::CONTENT_TYPE, StatusCode},
     HttpResponse, ResponseError,
 };
+
+// Error message for the models
 use derive_more::Display;
 #[derive(Debug, Display)]
 pub enum UserError {

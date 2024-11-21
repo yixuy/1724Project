@@ -1,13 +1,19 @@
 mod components;
+mod request;
 mod router;
+
 use router::{switch, Route};
 use stylist::style;
 use yew::prelude::*;
 use yew_router::prelude::*;
 // use crate::router::Route;
+// use reqwest::blocking::{Client, ClientBuilder};
+use reqwest;
 
 #[function_component(App)]
 fn app() -> Html {
+    // request::get_request();
+
     let css = style!(
         r#"
         .container {
@@ -94,12 +100,14 @@ fn app() -> Html {
 
                 <NavBar />
                 <divider/>
-                // <div class="inner_container">
-                //     <h1>{ "Welcome to the chat app" }</h1>
-                //     <p>{ "Please Register the username before you can join the room" }</p>
-                //     <input />
-                //     <button>{"Join the room"}</button>
-                // <div/>
+                    // <div class="inner_container">
+                    //     <h1>{ "Welcome to the chat app" }</h1>
+                    //     <p>{ "Please Register the username before you can join the room" }</p>
+                    //     <input />
+                    //     <button>{"Join the room"}</button>
+                    // <div/>
+                // <ChatArea />
+                // <TypeArea />
 
             </div>
         </div>
