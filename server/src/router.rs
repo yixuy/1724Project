@@ -2,7 +2,7 @@ use crate::db;
 use crate::error;
 use crate::user;
 use actix_web::web::Data;
-use actix_web::{get, patch, post, web, web::Json, web::Path, HttpResponse, Responder};
+use actix_web::{get, post, web::Json, web::Path, HttpResponse, Responder};
 use db::Database;
 use error::UserError;
 use user::NewUser;

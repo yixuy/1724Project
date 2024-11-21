@@ -1,29 +1,8 @@
-// use serde::{Deserialize, Serialize};
-// use surrealdb::engine::remote::ws::Ws;
-// use surrealdb::opt::auth::Root;
-// use surrealdb::Surreal;
-
-// #[derive(Debug, Serialize, Deserialize)]
-// struct User {
-//     first_name: String,
-//     last_name: String,
-
-// }
-
-use std::fmt::format;
-
 use actix_web::web::Data;
-// use actix_web::dev::Path;
-use actix_web::{get, patch, post, web, web::Json, web::Path, HttpResponse, Responder};
-mod user;
-use user::NewUser;
-use user::UpdateUserURL;
-use uuid::Uuid;
-use validator::Validate;
 mod db;
+mod user;
 use db::Database;
 mod error;
-use error::UserError;
 mod router;
 use router::{create_user, get_user, get_users, test_handler, update_user};
 
@@ -42,7 +21,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(db_data.clone())
-            .service(router::test_handler)
+            .service(test_handler)
             .service(get_user)
             .service(create_user)
             .service(update_user)
