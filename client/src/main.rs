@@ -1,14 +1,12 @@
 mod components;
-mod request;
+mod api;
 mod router;
 
 use router::{switch, Route};
 use stylist::style;
 use yew::prelude::*;
 use yew_router::prelude::*;
-// use crate::router::Route;
-// use reqwest::blocking::{Client, ClientBuilder};
-use reqwest;
+
 
 #[function_component(App)]
 fn app() -> Html {
