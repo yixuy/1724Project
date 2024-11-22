@@ -1,12 +1,13 @@
-mod components;
 mod api;
+mod components;
 mod router;
 
+// use reqwasm::http::Request;
 use router::{switch, Route};
+// use serde_json;
 use stylist::style;
 use yew::prelude::*;
 use yew_router::prelude::*;
-
 
 #[function_component(App)]
 fn app() -> Html {
@@ -36,6 +37,14 @@ fn app() -> Html {
             position: absolute;
             top: 0;
             right: 0;
+            margin: 50px;
+            display: flex;
+            gap: 20px; /* 20px margin between each link */
+        }
+        .top-left-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
             margin: 50px;
             display: flex;
             gap: 20px; /* 20px margin between each link */
@@ -92,14 +101,41 @@ fn app() -> Html {
             }
     }
 
+    // let onclick = Callback::from(move |_| {
+    //     wasm_bindgen_futures::spawn_local(async move {
+    //         let response = Request::get("http://127.0.0.1:5000/test")
+    //             .send()
+    //             .await
+    //             .unwrap();
+    //         // print!("The response is: {:?}", response.status());
+    //     });
+    // });
+    let printed_information = use_state(|| "nothing".to_string());
+
+    // let printed_information = printed_information
+    let onclick = {
+        let printed_information = printed_information.clone();
+        Callback::from(move |_| {
+            let printed_information = printed_information.clone();
+            wasm_bindgen_futures::spawn_local(async move {
+                api::fetch_data(printed_information).await;
+            });
+        })
+    };
+
     html! {
         <div class={css.get_class_name().to_string()}>
             <div class="container">
 
                 <NavBar />
                 <divider/>
+                <div class="top-left-nav">
+                    <button {onclick}>{"Test"}</button>
+                    <br/>
+                    <p  >{ (*printed_information).clone() }</p>
+                </div>
                     // <div class="inner_container">
-                    //     <h1>{ "Welcome to the chat app" }</h1>
+                    //     <h1>{ "Welcome sto the chat app" }</h1>
                     //     <p>{ "Please Register the username before you can join the room" }</p>
                     //     <input />
                     //     <button>{"Join the room"}</button>

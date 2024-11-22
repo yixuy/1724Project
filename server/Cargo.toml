@@ -6,12 +6,14 @@ edition = "2021"
 [dependencies]
 validator = { version = "0.19.0", features = ["derive"] }
 actix-web = "4.9.0"
+actix-cors = "0.7.0"
 faker_rand = "0.1.1"
 rand = "0.8.5"
-serde = { version = "1.0.209", features = ["derive"] }
+serde = { version = "1.0.209" }
 surrealdb = "2.1.0"
 thiserror = "2.0.3"
 tokio = { version = "1", features = ["full"] }
 uuid = { version = "1.11.0", features = ["v4"] }
 derive_more = { version = "1.0.0", features = ["full"] }
 async-trait = "0.1.51"
+serde_json = { version = "1.0.133" }

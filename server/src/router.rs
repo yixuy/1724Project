@@ -20,9 +20,12 @@ async fn get_user() -> impl Responder {
 
 #[get("/test")]
 async fn test_handler() -> impl Responder {
-    HttpResponse::Ok().body("This is a test!")
+    Json("This is a test!".to_string())
 }
-
+// #[get("/test")]
+// async fn test_handler() -> impl Responder {
+//     Json("This is a test!".to_string())
+// }
 #[get("/users")]
 async fn get_users(db: Data<Database>) -> Result<Json<Vec<user::User>>, UserError> {
     let users = Database::get_all_users(&db).await;

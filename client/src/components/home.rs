@@ -62,6 +62,16 @@ pub fn home() -> Html {
         })
     };
 
+    // let test_onclick = Callback::from(move |_| {
+    //     wasm_bindgen_futures::spawn_local(async move {
+    //         let response = Request::get("http://127.0.0.1:5000/test")
+    //             .send()
+    //             .await
+    //             .unwrap();
+    //         gloo_console::log!("Response received:", response.text().await.unwrap());
+    //     });
+    // });
+
     html! {
          <div class={css.get_class_name().to_string()}>
         //  <div class="container">
@@ -71,6 +81,7 @@ pub fn home() -> Html {
                 <input value={room_number.to_string()} {oninput} />
                 <p>{ format!("Room number: {}", *room_number) }</p>
                 <button {onclick}>{"Join the room"}</button>
+                // <button {test_onclick}>{"Join the room"}</button>
             </div>
             // </div>
         </div>
