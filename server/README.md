@@ -1,3 +1,4 @@
+#### Please run those commands in the terminal as the order below
 ### For the backend in MacOS
 - install before runnng the database
 `brew install surrealdb/tap/surreal`
