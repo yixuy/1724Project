@@ -20,14 +20,16 @@ pub struct User {
     pub uuid: String,
     pub username: String,
     pub password: String,
+    pub status: bool,
 }
 
 impl User {
-    pub fn new(uuid: String, username: String, password: String) -> User {
+    pub fn new(uuid: String, username: String, password: String, status: bool) -> User {
         User {
             uuid,
             username,
             password,
+            status,
         }
     }
 }

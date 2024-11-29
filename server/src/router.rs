@@ -54,6 +54,7 @@ async fn create_user(
                     new_uuid.to_string(),
                     body.username.clone(),
                     body.password.clone(),
+                    false
                 ),
             )
             .await;

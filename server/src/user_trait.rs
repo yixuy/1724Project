@@ -58,6 +58,7 @@ impl UserTrait for Database {
                                 //need to change this to the username
                                 username: "John".to_string(),
                                 password: found_user.password.clone(),
+                                status: found_user.status.clone(),
                             })
                             .await;
                         match updated_user {

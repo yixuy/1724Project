@@ -3388,9 +3388,12 @@ version = "0.1.0"
 dependencies = [
  "actix-cors",
  "actix-web",
+ "argon2",
  "async-trait",
+ "chrono",
  "derive_more 1.0.0",
  "faker_rand",
+ "jsonwebtoken",
  "rand",
  "serde",
  "serde_json",

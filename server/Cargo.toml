@@ -17,3 +17,6 @@ uuid = { version = "1.11.0", features = ["v4"] }
 derive_more = { version = "1.0.0", features = ["full"] }
 async-trait = "0.1.51"
 serde_json = { version = "1.0.133" }
+chrono = "0.4.38"
+jsonwebtoken = "9.3.0"
+argon2 = "0.5.3"
