@@ -15,13 +15,6 @@ fn app() -> Html {
 
     let css = style!(
         r#"
-        .container {
-            background-color: lightblue;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            
-        }
 
         .inner_container {
             background-color: green; /* Keeps your background color */

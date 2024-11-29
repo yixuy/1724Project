@@ -4,6 +4,7 @@ use crate::error;
 // use crate::user_trait::UserTrait;
 use crate::models::user;
 use crate::models::user_trait::UserTrait;
+use crate::services::jwt;
 use actix_web::web::Data;
 use actix_web::{get, post, web::Json, web::Path, HttpResponse, Responder};
 use db::Database;
@@ -13,8 +14,8 @@ use user::UpdateUserURL;
 use uuid::Uuid;
 use validator::Validate;
 
-// Import the hash_password function
-use crate::services::hash::hash_password;
+// Import the hash_password and verify_password functions
+use crate::services::hash::{hash_password, verify_password};
 
 // Implement the routers for the server
 
@@ -101,23 +102,42 @@ async fn update_user(
 }
 
 #[post("login")]
-async fn login_user(
-    body: Json<NewUser>,
-    db: Data<Database>,
-) -> Result<Json<user::User>, UserError> {
+async fn login_user(body: Json<NewUser>, db: Data<Database>) -> Result<Json<String>, UserError> {
     let users = Database::get_all_users(&db).await;
     match users {
         Some(all_users) => {
             let user = all_users
                 .into_iter()
-                .find(|user| user.username == body.username && user.password == body.password)
+                .find(|user| {
+                    user.username == body.username
+                        && verify_password(&body.password, &user.password).unwrap_or(false)
+                })
                 .ok_or(UserError::NoSuchUser)?;
             // user.status = true;
             match Database::update_user_status(&db, &user.uuid).await {
-                Some(_) => Ok(Json(user)),
+                Some(_) => {
+                    let token =
+                        jwt::generate_token(&user.username).map_err(|_| UserError::NoSuchUser)?;
+                    Ok(Json(token))
+                }
                 None => Err(UserError::UserUpdateFailed),
             }
         }
         None => Err(UserError::NoUserFound),
     }
 }
+
+// pub async fn logout_user(token: &str) -> Result<(), AuthError> {
+//     // validate the token and get the username
+//     let username = verify_token(token)?;
+
+//     // update the user's status to offline
+//     status_service::set_offline(&username)
+//         .await
+//         .map_err(|err| {
+//             eprintln!("Error updating user status to offline: {:?}", err);
+//             AuthError::StatusUpdateError
+//         })?;
+
+//     Ok(())
+// }

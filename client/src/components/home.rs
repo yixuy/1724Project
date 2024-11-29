@@ -10,7 +10,7 @@ pub fn home() -> Html {
     let css = style!(
         r#"
         .container {
-            background-color: green; /* Keeps your background color */
+            background-color: #4287f5; /* Keeps your background color */
             height: 100vh; /* Ensures full height of the viewport */
             display: flex; /* Enables Flexbox */
             justify-content: center; /* Centers horizontally */
@@ -19,7 +19,7 @@ pub fn home() -> Html {
             text-align: center; /* Centers text inside the container */
         }
        .card {
-        background-color: #4287f5;  /* Card's background color */
+        background-color: white;  /* Card's background color */
         border-radius: 20px; /* Rounded corners */
         padding: 20px; /* Padding inside the card */
         height: 150%; /* Set height for the card */
@@ -74,7 +74,7 @@ pub fn home() -> Html {
 
     html! {
          <div class={css.get_class_name().to_string()}>
-        //  <div class="container">
+         <div class="container">
             <div class="card">
                 // <h1>{ "Please login the application" }</h1>
                 <h2>{ "Please Sign up the username before you can join the room" }</h2>
@@ -83,7 +83,7 @@ pub fn home() -> Html {
                 <button {onclick}>{"Join the room"}</button>
                 // <button {test_onclick}>{"Join the room"}</button>
             </div>
-            // </div>
+            </div>
         </div>
     }
 }

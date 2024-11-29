@@ -32,20 +32,7 @@ use crate::services::{hash, jwt};
 //     Ok(token)
 // }
 
-// pub async fn logout_user(token: &str) -> Result<(), AuthError> {
-//     // validate the token and get the username
-//     let username = verify_token(token)?;
 
-//     // update the user's status to offline
-//     status_service::set_offline(&username)
-//         .await
-//         .map_err(|err| {
-//             eprintln!("Error updating user status to offline: {:?}", err);
-//             AuthError::StatusUpdateError
-//         })?;
-
-//     Ok(())
-// }
 
 pub async fn verify_auth_token(token: &str) -> Result<String, AuthError> {
     // verifies JWT for protected routes
