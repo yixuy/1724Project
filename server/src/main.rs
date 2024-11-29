@@ -3,14 +3,15 @@ use actix_web::web::Data;
 mod db;
 mod models;
 use db::Database;
+mod auth;
+mod endpoints;
 mod error;
-mod router;
-use router::{create_user, get_user, get_users, test_handler, update_user};
+mod services;
+use endpoints::{create_user, get_user, get_users, test_handler, update_user, login_user};
 // mod user_trait;
 use actix_web::{App, HttpServer};
 const BANK_END_URL: &str = "127.0.0.1:5000";
 #[actix_web::main]
-
 async fn main() -> std::io::Result<()> {
     // Connect to the database
     let db = Database::init()
@@ -34,6 +35,7 @@ async fn main() -> std::io::Result<()> {
             .service(create_user)
             .service(update_user)
             .service(get_users)
+            .service(login_user)
     })
     .bind(BANK_END_URL)?
     .run()

@@ -11,14 +11,14 @@ pub async fn create_user(username: &str, hashed_password: &str) -> Result<(), Da
     // Ok(()) or Err(UsernameExists)
 }
 
-pub async fn get_user_by_username(username: &str) -> Result<User, DatabaseError> {
-    todo!();
-    // fetches a user by username
-    // query should get the user info for this username
-    // let user;
-    // user = user.from_db_model();
-    // Ok(user) or Err(UserNotFound)
-}
+// pub async fn get_user_by_username(username: &str) -> Result<User, DatabaseError> {
+//     todo!();
+//     // fetches a user by username
+//     // query should get the user info for this username
+//     // let user;
+//     // user = user.from_db_model();
+//     // Ok(user) or Err(UserNotFound)
+// }
 
 pub async fn update_user_status(username: &str, is_online: bool) -> Result<(), DatabaseError> {
     todo!();

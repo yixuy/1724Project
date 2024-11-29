@@ -13,11 +13,27 @@ use user::UpdateUserURL;
 use uuid::Uuid;
 use validator::Validate;
 
+// Import the hash_password function
+use crate::services::hash::hash_password;
+
 // Implement the routers for the server
 
 #[get("/user/{id}")]
-async fn get_user() -> impl Responder {
-    HttpResponse::Ok().body("User")
+async fn get_user(
+    username: Path<String>,
+    db: Data<Database>,
+) -> Result<Json<user::User>, UserError> {
+    let username = username.clone();
+    let users = Database::get_all_users(&db).await;
+    match users {
+        Some(all_users) => Ok(Json(
+            all_users
+                .into_iter()
+                .find(|user| user.username == username)
+                .ok_or(UserError::NoSuchUser)?,
+        )),
+        None => Err(UserError::NoUserFound),
+    }
 }
 
 #[get("/test")]
@@ -49,13 +65,14 @@ async fn create_user(
         Ok(_) => {
             let mut buffer = Uuid::encode_buffer();
             let new_uuid = Uuid::new_v4().simple().encode_lower(&mut buffer);
+            let hash_password = hash_password(body.password.clone()).unwrap();
 
             let new_user = Database::add_user(
                 &db,
                 user::User::new(
                     new_uuid.to_string(),
                     body.username.clone(),
-                    body.password.clone(),
+                    hash_password,
                     false,
                 ),
             )
@@ -80,5 +97,27 @@ async fn update_user(
     match updated_user {
         Some(user) => Ok(Json(user)),
         None => Err(UserError::NoSuchUser),
+    }
+}
+
+#[post("login")]
+async fn login_user(
+    body: Json<NewUser>,
+    db: Data<Database>,
+) -> Result<Json<user::User>, UserError> {
+    let users = Database::get_all_users(&db).await;
+    match users {
+        Some(all_users) => {
+            let user = all_users
+                .into_iter()
+                .find(|user| user.username == body.username && user.password == body.password)
+                .ok_or(UserError::NoSuchUser)?;
+            // user.status = true;
+            match Database::update_user_status(&db, &user.uuid).await {
+                Some(_) => Ok(Json(user)),
+                None => Err(UserError::UserUpdateFailed),
+            }
+        }
+        None => Err(UserError::NoUserFound),
     }
 }
