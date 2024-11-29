@@ -1,6 +1,14 @@
 use crate::router::Route;
+use serde::Serialize;
+use web_sys::HtmlInputElement;
 use yew::prelude::*;
 use yew_router::prelude::*;
+
+#[derive(Serialize)]
+struct SignInData {
+    username: String,
+    password: String,
+}
 
 #[function_component(SignIn)]
 pub fn sign_in() -> Html {
@@ -18,24 +26,83 @@ pub fn sign_in() -> Html {
         }
     };
 
-    // let go_to_first_post_button = {
-    //     let navigator = navigator.clone();
-    //     let onclick = Callback::from(move |_| navigator.push(&Route::Post { id: "first-post".to_string() }));
-    //     html! {
-    //         <button {onclick}>{"click to go the first post"}</button>
-    //     }
-    // };
+    let username = use_state(|| "".to_string());
+    let password = use_state(|| "".to_string());
+    let message = use_state(|| "".to_string());
 
-    // let go_to_secure_button = {
-    //     let onclick = Callback::from(move |_| navigator.push(&Route::Secure));
-    //     html! {
-    //         <button {onclick}>{"click to go to secure"}</button>
-    //     }
-    // };
+    let on_submit = {
+        let username = username.clone();
+        let password = password.clone();
+        // let message = message.clone();
+
+        Callback::from(move |e: SubmitEvent| {
+            e.prevent_default();
+            let data = SignInData {
+                username: (*username).clone(),
+                password: (*password).clone(),
+            };
+            let navigator = navigator.clone();
+
+            wasm_bindgen_futures::spawn_local(async move {
+                match reqwest::Client::new()
+                    .post("http://127.0.0.1:5000/new_user")
+                    .json(&data)
+                    .send()
+                    .await
+                {
+                    Ok(response) if response.status().is_success() => {
+                        // message.set("Sign-in successful!".to_string());
+                        navigator.push(&Route::Home);
+                    }
+                    _ => {
+                        // message.set("Sign-in failed!".to_string());
+                    }
+                }
+            });
+        })
+    };
+
+    let on_username_change = {
+        let username = username.clone();
+        Callback::from(move |e: InputEvent| {
+            let input: HtmlInputElement = e.target_unchecked_into();
+            username.set(input.value());
+        })
+    };
+
+    let on_password_change = {
+        let password = password.clone();
+        Callback::from(move |e: InputEvent| {
+            let input: HtmlInputElement = e.target_unchecked_into();
+            password.set(input.value());
+        })
+    };
 
     html! {
-        <>
-            {go_home_button}
-        </>
+        <div class="signin-container">
+            <form onsubmit={Some(on_submit)} class="signin-form">
+                <h1>{"Sign In"}</h1>
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={(*username).clone()}
+                    oninput={on_username_change}
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={(*password).clone()}
+                    oninput={on_password_change}
+                />
+                <button type="submit">{"Sign In"}</button>
+            </form>
+            // <p>{(*message).clone()}</p>
+        </div>
     }
+
+    // html! {
+    //     <>
+    //         {go_home_button}
+    //     </>
+    // }
 }

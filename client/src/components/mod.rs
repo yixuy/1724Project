@@ -2,7 +2,6 @@
 pub mod logout;
 pub mod notfound;
 pub mod room;
-pub mod settings;
 pub mod signin;
 pub mod signup;
 pub mod home;
@@ -12,7 +11,6 @@ pub mod prelude {
     pub use super::logout::LogOut;
     pub use super::notfound::NotFound;
     pub use super::room::Room;
-    pub use super::settings::Settings;
     pub use super::signin::SignIn;
     pub use super::signup::SignUp;
     pub use super::home::Home;

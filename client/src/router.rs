@@ -12,8 +12,6 @@ pub enum Route {
     SignUp,
     #[at("/signin")]
     SignIn,
-    #[at("/settings")]
-    Settings,
     #[at("/logout")]
     LogOut,
     #[not_found]
@@ -27,7 +25,6 @@ pub fn switch(route: Route) -> Html {
         Route::Room { room } => html! { <Room room={room} /> },
         Route::SignUp => html! { <SignUp /> },
         Route::SignIn => html! { <SignIn /> },
-        Route::Settings => html! { <Settings /> },
         Route::LogOut => html! { <LogOut /> },
         Route::NotFound => html! { <NotFound /> },
     }
