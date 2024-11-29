@@ -1,7 +1,9 @@
 use crate::db;
 use crate::error;
-use crate::user;
-use crate::user_trait::UserTrait;
+// use crate::user;
+// use crate::user_trait::UserTrait;
+use crate::models::user;
+use crate::models::user_trait::UserTrait;
 use actix_web::web::Data;
 use actix_web::{get, post, web::Json, web::Path, HttpResponse, Responder};
 use db::Database;
@@ -54,7 +56,7 @@ async fn create_user(
                     new_uuid.to_string(),
                     body.username.clone(),
                     body.password.clone(),
-                    false
+                    false,
                 ),
             )
             .await;
