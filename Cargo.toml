@@ -17,7 +17,7 @@ tokio-tungstenite = "0.17"
 
 [[bin]]
 name = "server"
-path = "src/main.rs"  # 或者你直接让 main.rs 引入 server.rs
+path = "src/main.rs" 
 
 [[bin]]
 name = "client"
