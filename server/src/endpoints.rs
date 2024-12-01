@@ -101,7 +101,7 @@ async fn update_user(
     }
 }
 
-#[post("login")]
+#[post("/login")]
 async fn login_user(body: Json<NewUser>, db: Data<Database>) -> Result<Json<String>, UserError> {
     let users = Database::get_all_users(&db).await;
     match users {
