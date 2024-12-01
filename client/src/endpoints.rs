@@ -40,8 +40,11 @@ pub fn get_user_token(username: &str) -> Option<String> {
 
 pub async fn get_user(printed_information: UseStateHandle<String>) {
     let fetch_api_url = format!("{}/user", API_URL);
-    let username = get_current_user().unwrap();
-    let token = get_user_token(&username).unwrap().replace(r#"""#, "");
+    let username = get_current_user().unwrap_or_else(|| "".to_string());
+    let token = get_user_token(&username)
+        .unwrap_or_else(|| "".to_string())
+        .to_string()
+        .replace(r#"""#, "");
     let url_with_token = format!("{}/{}", fetch_api_url, token);
     gloo_console::log!("URL with token:", url_with_token.clone());
     match Request::get(&url_with_token).send().await {

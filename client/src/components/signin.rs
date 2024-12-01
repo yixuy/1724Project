@@ -2,14 +2,10 @@ use crate::models::user::User;
 use crate::router::Route;
 use gloo::storage::{LocalStorage, Storage};
 use stylist::style;
+use web_sys::window;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 use yew_router::prelude::*;
-// #[derive(Serialize)]
-// struct SignInData {
-//     username: String,
-//     password: String,
-// }
 
 #[function_component(SignIn)]
 pub fn sign_in() -> Html {
@@ -107,6 +103,9 @@ pub fn sign_in() -> Html {
 
                             // Navigate to the Home page
                             navigator.push(&Route::Home);
+                            if let Some(window) = window() {
+                                window.location().reload().unwrap(); // Refresh the page
+                            }
                         }
                     }
                     _ => {

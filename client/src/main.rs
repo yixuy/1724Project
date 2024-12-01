@@ -15,22 +15,26 @@ use yew_router::prelude::*;
 
 #[function_component(App)]
 fn app() -> Html {
-    let username = get_current_user().unwrap();
+    let username = get_current_user().unwrap_or_else(|| "".to_string());
     let fetched = use_state(|| false);
-    let user = User::new(username.clone(), "".to_string());
     let user_string = use_state(|| "".to_string());
-    {
-        let mut user = user.clone();
-        let user_string_clone = user_string.clone();
-        let fetched = fetched.clone();
-        if *fetched == false {
-            wasm_bindgen_futures::spawn_local(async move {
-                get_user(user_string_clone.clone()).await;
-                let user_json: User = serde_json::from_str(&*user_string_clone).unwrap();
-                user.set_username(user_json.username);
-                // user.set_username(user_json);
-                fetched.set(true);
-            });
+
+    if username != "" {
+        let user = User::new(username.clone(), "".to_string());
+        {
+            let mut user = user.clone();
+            let user_string_clone = user_string.clone();
+            let fetched = fetched.clone();
+            if *fetched == false {
+                wasm_bindgen_futures::spawn_local(async move {
+                    get_user(user_string_clone.clone()).await;
+                    let user_json: User = serde_json::from_str(&*user_string_clone)
+                        .unwrap_or(User::new("".to_string(), "".to_string()));
+                    user.set_username(user_json.username);
+                    // user.set_username(user_json);
+                    fetched.set(true);
+                });
+            }
         }
     }
 
@@ -90,31 +94,12 @@ fn app() -> Html {
     )
     .unwrap();
 
-    #[function_component(NavBar)]
-    pub fn nav_bar() -> Html {
-        html! {
-            <div >
-                <BrowserRouter>
-            <div class = "card" >
-                <h1>{ "Welcome to the chat app" }</h1>
-                        <nav class = "top-right-nav">
+    // #[function_component(NavBar)]
+    // pub fn nav_bar() -> Html {
+    //     html! {
 
-                            // <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
-                            <Link<Route> to={Route::SignIn}>{ "Sign In" }</Link<Route>>
-
-                            <Link<Route> to={Route::SignUp}>{ "Sign Up" }</Link<Route>>
-                            // <Link<Route> to={Route::Settings}>{ "Settings" }</Link<Route>>
-                            // <Link<Route> to={Route::LogOut}>{ "Log Out" }</Link<Route>>
-                        </nav>
-            </div>
-                        <hr />
-                        <Switch<Route> render={switch} />
-
-                    </BrowserRouter>
-                    <divider/>
-        </div>
-            }
-    }
+    //         }
+    // }
 
     let printed_information = use_state(|| "nothing".to_string());
 
@@ -132,18 +117,33 @@ fn app() -> Html {
     html! {
         <div class={css.get_class_name().to_string()}>
             <div class="container">
-                
-                <NavBar />
+                <div >
+                        <BrowserRouter>
+                    <div class = "card" >
+
+                        if username == "" {
+                        <h1>{format!("Welcome to the chat app {}",username )}</h1>
+                                <nav class = "top-right-nav">
+                            <Link<Route> to={Route::SignIn}>{ "Sign In" }</Link<Route>>
+
+                            <Link<Route> to={Route::SignUp}>{ "Sign Up" }</Link<Route>>
+                        </nav>
+                            }else{
+                                <h1>{format!("Welcome to the chat app, {}!",username )}</h1>
+                            }
+
+                            </div>
+                                <hr />
+                                <Switch<Route> render={switch} />
+
+                            </BrowserRouter>
+                            <divider/>
+                </div>
                 <divider/>
                 <div class="top-left-nav">
                     <button {onclick}>{"Test"}</button>
                     <br/>
                     <p  >{ (*printed_information).clone() }</p>
-                    if username != "" {
-                        <h2>{ format!("Welcome, {}!", (*user_string).clone()) }</h2>
-                    } else {
-                        <h2>{ "Please Sign up the username before you can join the room" }</h2>
-                    }
                 </div>
 
 
