@@ -1,14 +1,15 @@
-use crate::router::Route;
+use crate::{models::user::User, router::Route};
 use serde::Serialize;
 use stylist::style;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
-use yew_router::prelude::*;
-#[derive(Serialize)]
-struct SignUpData {
-    username: String,
-    password: String,
-}
+use yew_router::{prelude::*, utils::fetch_base_url};
+
+// #[derive(Serialize)]
+// struct SignUpData {
+//     username: String,
+//     password: String,
+// }
 
 #[function_component(SignUp)]
 pub fn sign_in() -> Html {
@@ -84,12 +85,9 @@ pub fn sign_in() -> Html {
 
         Callback::from(move |e: SubmitEvent| {
             e.prevent_default();
-            let data = SignUpData {
-                username: (*username).clone(),
-                password: (*password).clone(),
-            };
+            let data = User::new((*username).clone(), (*password).clone());
             let navigator = navigator.clone();
-
+            // fetch_base_url(data, navigator);
             wasm_bindgen_futures::spawn_local(async move {
                 match reqwest::Client::new()
                     .post("http://127.0.0.1:5000/new_user")

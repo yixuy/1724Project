@@ -1,12 +1,37 @@
+use std::ops::Deref;
+
+use crate::endpoints::{get_current_user, get_user};
+use crate::models::user::User;
 use crate::router::Route;
 use stylist::style;
 use wasm_bindgen::JsCast;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 use yew_router::prelude::*;
-
 #[function_component(Home)]
 pub fn home() -> Html {
+    let username = get_current_user().unwrap();
+    let user = User::new(username.clone(), "".to_string());
+    let fetched = use_state(|| false);
+
+    let user_string = use_state(|| "".to_string());
+    {
+        let mut user = user.clone();
+        let user_string_clone = user_string.clone();
+        let fetched = fetched.clone();
+        if *fetched == false {
+            wasm_bindgen_futures::spawn_local(async move {
+                get_user(user_string_clone.clone()).await; // Assuming `get_user` fetches user data
+                let user_json: User = serde_json::from_str(&*user_string_clone).unwrap();
+                user.set_username(user_json.username);
+                // user.set_username(user_json);
+                fetched.set(true);
+            });
+            // user.set_username(user_jso);Welcome,
+        }
+    }
+    // let user_json = serde_json::from_str::<User>(&*user_string).unwrap();
+
     let css = style!(
         r#"
         .container {
@@ -62,24 +87,24 @@ pub fn home() -> Html {
         })
     };
 
-    // let test_onclick = Callback::from(move |_| {
-    //     wasm_bindgen_futures::spawn_local(async move {
-    //         let response = Request::get("http://127.0.0.1:5000/test")
-    //             .send()
-    //             .await
-    //             .unwrap();
-    //         gloo_console::log!("Response received:", response.text().await.unwrap());
-    //     });
-    // });
-
     html! {
          <div class={css.get_class_name().to_string()}>
          <div class="container">
             <div class="card">
                 // <h1>{ "Please login the application" }</h1>
-                <h2>{ "Please Sign up the username before you can join the room" }</h2>
+                // if let Some(room) = room_number.get() {
+                //     <h2>{ format!("Room number: {}", room) }</h2>
+                // }
+                <h2>{ format!("Welcome, {}!", user.username) }</h2>
+                if user.username != ""{
+                    <h2>{ format!("Welcome, {}!",username) }</h2>
+                } else {
+                    <h2>{ "Please Sign up the username before you can join the room" }</h2>
+                }
+                // <h2>{ "Please Sign up the username before you can join the room" }</h2>
                 <input value={room_number.to_string()} {oninput} />
                 <p>{ format!("Room number: {}", *room_number) }</p>
+                // <p>{user_token.as_deref().unwrap_or("No user token")}</p>
                 <button {onclick}>{"Join the room"}</button>
                 // <button {test_onclick}>{"Join the room"}</button>
             </div>

@@ -1,14 +1,15 @@
+use crate::models::user::User;
 use crate::router::Route;
-use serde::Serialize;
+use gloo::storage::{LocalStorage, Storage};
 use stylist::style;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 use yew_router::prelude::*;
-#[derive(Serialize)]
-struct SignInData {
-    username: String,
-    password: String,
-}
+// #[derive(Serialize)]
+// struct SignInData {
+//     username: String,
+//     password: String,
+// }
 
 #[function_component(SignIn)]
 pub fn sign_in() -> Html {
@@ -84,10 +85,7 @@ pub fn sign_in() -> Html {
 
         Callback::from(move |e: SubmitEvent| {
             e.prevent_default();
-            let data = SignInData {
-                username: (*username).clone(),
-                password: (*password).clone(),
-            };
+            let data = User::new((*username).clone(), (*password).clone());
             let navigator = navigator.clone();
 
             wasm_bindgen_futures::spawn_local(async move {
@@ -98,8 +96,18 @@ pub fn sign_in() -> Html {
                     .await
                 {
                     Ok(response) if response.status().is_success() => {
-                        // message.set("Sign-in successful!".to_string());
-                        navigator.push(&Route::Home);
+                        if let Ok(body) = response.text().await {
+                            // Store the response in a cookie
+                            LocalStorage::set("current_user", data.username.clone())
+                                .expect("Failed to set current user");
+                            let user_key = format!("user_{}", data.username.clone());
+                            LocalStorage::set(user_key, body.clone())
+                                .expect("Failed to set cookie");
+                            web_sys::console::log_1(&format!("Stored in cookie: {}", body).into());
+
+                            // Navigate to the Home page
+                            navigator.push(&Route::Home);
+                        }
                     }
                     _ => {
                         web_sys::console::log_1(&"Sign-in failed!".into());

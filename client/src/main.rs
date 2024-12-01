@@ -1,7 +1,11 @@
-mod api;
 mod components;
+mod endpoints;
+// mod error;
+mod models;
 mod router;
+use endpoints::{get_current_user, get_user};
 
+use models::user::User;
 // use reqwasm::http::Request;
 use router::{switch, Route};
 // use serde_json;
@@ -11,7 +15,24 @@ use yew_router::prelude::*;
 
 #[function_component(App)]
 fn app() -> Html {
-    // request::get_request();
+    let username = get_current_user().unwrap();
+    let fetched = use_state(|| false);
+    let user = User::new(username.clone(), "".to_string());
+    let user_string = use_state(|| "".to_string());
+    {
+        let mut user = user.clone();
+        let user_string_clone = user_string.clone();
+        let fetched = fetched.clone();
+        if *fetched == false {
+            wasm_bindgen_futures::spawn_local(async move {
+                get_user(user_string_clone.clone()).await;
+                let user_json: User = serde_json::from_str(&*user_string_clone).unwrap();
+                user.set_username(user_json.username);
+                // user.set_username(user_json);
+                fetched.set(true);
+            });
+        }
+    }
 
     let css = style!(
         r#"
@@ -77,6 +98,7 @@ fn app() -> Html {
             <div class = "card" >
                 <h1>{ "Welcome to the chat app" }</h1>
                         <nav class = "top-right-nav">
+
                             // <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
                             <Link<Route> to={Route::SignIn}>{ "Sign In" }</Link<Route>>
 
@@ -94,15 +116,6 @@ fn app() -> Html {
             }
     }
 
-    // let onclick = Callback::from(move |_| {
-    //     wasm_bindgen_futures::spawn_local(async move {
-    //         let response = Request::get("http://127.0.0.1:5000/test")
-    //             .send()
-    //             .await
-    //             .unwrap();
-    //         // print!("The response is: {:?}", response.status());
-    //     });
-    // });
     let printed_information = use_state(|| "nothing".to_string());
 
     // let printed_information = printed_information
@@ -111,7 +124,7 @@ fn app() -> Html {
         Callback::from(move |_| {
             let printed_information = printed_information.clone();
             wasm_bindgen_futures::spawn_local(async move {
-                api::fetch_data(printed_information).await;
+                endpoints::fetch_test_data(printed_information).await;
             });
         })
     };
@@ -119,22 +132,20 @@ fn app() -> Html {
     html! {
         <div class={css.get_class_name().to_string()}>
             <div class="container">
-
+                
                 <NavBar />
                 <divider/>
                 <div class="top-left-nav">
                     <button {onclick}>{"Test"}</button>
                     <br/>
                     <p  >{ (*printed_information).clone() }</p>
+                    if username != "" {
+                        <h2>{ format!("Welcome, {}!", (*user_string).clone()) }</h2>
+                    } else {
+                        <h2>{ "Please Sign up the username before you can join the room" }</h2>
+                    }
                 </div>
-                    // <div class="inner_container">
-                    //     <h1>{ "Welcome sto the chat app" }</h1>
-                    //     <p>{ "Please Register the username before you can join the room" }</p>
-                    //     <input />
-                    //     <button>{"Join the room"}</button>
-                    // <div/>
-                // <ChatArea />
-                // <TypeArea />
+
 
             </div>
         </div>

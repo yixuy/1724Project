@@ -1,5 +1,7 @@
 use crate::db;
 use crate::error;
+use crate::error::AuthError;
+use crate::error::TokenError;
 // use crate::user;
 // use crate::user_trait::UserTrait;
 use crate::models::user;
@@ -9,6 +11,7 @@ use actix_web::web::Data;
 use actix_web::{get, post, web::Json, web::Path, HttpResponse, Responder};
 use db::Database;
 use error::UserError;
+// use futures::future::{FutureExt, TryFutureExt};
 use user::NewUser;
 use user::UpdateUserURL;
 use uuid::Uuid;
@@ -19,12 +22,13 @@ use crate::services::hash::{hash_password, verify_password};
 
 // Implement the routers for the server
 
-#[get("/user/{id}")]
-async fn get_user(
-    username: Path<String>,
-    db: Data<Database>,
-) -> Result<Json<user::User>, UserError> {
-    let username = username.clone();
+#[get("/user/{token}")]
+async fn get_user(token: Path<String>, db: Data<Database>) -> Result<Json<user::User>, AuthError> {
+    let token = token.clone();
+    let username = jwt::verify_token(&token)
+        .await
+        .map_err(|_| TokenError::TokenInvalid)?
+        .sub;
     let users = Database::get_all_users(&db).await;
     match users {
         Some(all_users) => Ok(Json(
@@ -33,7 +37,7 @@ async fn get_user(
                 .find(|user| user.username == username)
                 .ok_or(UserError::NoSuchUser)?,
         )),
-        None => Err(UserError::NoUserFound),
+        None => Err(UserError::NoUserFound.into()),
     }
 }
 

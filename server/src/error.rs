@@ -4,8 +4,6 @@ use actix_web::{
 };
 use thiserror::Error;
 
-// Error message for the models
-use derive_more::Display;
 
 impl ResponseError for UserError {
     fn error_response(&self) -> HttpResponse {
