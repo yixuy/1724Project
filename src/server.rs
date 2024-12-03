@@ -39,7 +39,7 @@ impl Actor for ChatServer {
     type Context = Context<Self>;
 }
 
-//2. 
+//2. Connect
 #[derive(Message)]
 #[rtype(result = "()")]
 pub struct Connect {
@@ -55,14 +55,37 @@ impl Handler<Connect> for ChatServer {
     }
 }
 
-//3. 
+//3.1 CRATE ROOM消息
 #[derive(Message)]
-#[rtype(result = "()")]
-pub struct JoinRoom {
+#[rtype(result = "Result<(), String>")] 
+pub struct CreateRoom {
     pub id: usize,
     pub room: String,
 }
 
+impl Handler<CreateRoom> for ChatServer {
+    type Result = Result<(), String>;
+
+    fn handle(&mut self, msg: CreateRoom, _: &mut Context<Self>) -> Self::Result {
+        if self.rooms.contains_key(&msg.room) {
+            Err(format!("Room '{}' already exists!", msg.room))
+        } else {
+            self.rooms.insert(msg.room.clone(), HashSet::new());
+            self.rooms.get_mut(&msg.room).unwrap().insert(msg.id);
+            Ok(())
+        }
+    }
+}
+
+
+//3.2 JOIN ROOM消息
+#[derive(Message)]
+#[rtype(result = "Result<(), String>")]
+pub struct JoinRoom {
+    pub id: usize,
+    pub room: String,
+}
+/** 修改原逻辑
 impl Handler<JoinRoom> for ChatServer {
     type Result = ();
 
@@ -73,8 +96,47 @@ impl Handler<JoinRoom> for ChatServer {
             .insert(msg.id);
     }
 }
+**/
 
-// WebSocket Session
+impl Handler<JoinRoom> for ChatServer {
+    type Result = Result<(), String>;
+
+    fn handle(&mut self, msg: JoinRoom, _: &mut Context<Self>) -> Self::Result {
+        if let Some(participants) = self.rooms.get_mut(&msg.room) {
+            participants.insert(msg.id);
+            Ok(())
+        } else {
+            Err(format!("Room '{}' does not exist!", msg.room))
+        }
+    }
+}
+
+
+//3.3 LEAVE ROOM消息
+#[derive(Message)]
+#[rtype(result = "()")]
+pub struct LeaveRoom {
+    pub id: usize,
+    pub room: String,
+}
+
+// if a room is empty, remove it
+impl Handler<LeaveRoom> for ChatServer {
+    type Result = ();
+
+    fn handle(&mut self, msg: LeaveRoom, _: &mut Context<Self>) {
+        if let Some(participants) = self.rooms.get_mut(&msg.room) {
+            participants.remove(&msg.id);
+            if participants.is_empty() {
+                self.rooms.remove(&msg.room);
+            }
+        }
+    }
+}
+
+
+
+// 4. WebSocket Session
 pub struct ChatSession {
     id: usize, // 客户端唯一ID
     room: Option<String>, // 当前所在聊天室
@@ -115,42 +177,14 @@ impl Actor for ChatSession {
     }
 }
 
-//4.
-#[derive(Message)]
-#[rtype(result = "()")]
-pub struct LeaveRoom {
-    pub id: usize,
-    pub room: String,
-}
+///////////////////////////////////////////
 
-// if a room is empty, remove it
-impl Handler<LeaveRoom> for ChatServer {
-    type Result = ();
-
-    fn handle(&mut self, msg: LeaveRoom, _: &mut Context<Self>) {
-        if let Some(participants) = self.rooms.get_mut(&msg.room) {
-            participants.remove(&msg.id);
-            if participants.is_empty() {
-                self.rooms.remove(&msg.room);
-            }
-        }
-    }
-}
-
-impl Handler<TextMessage> for ChatSession {
-    type Result = ();
-
-    fn handle(&mut self, msg: TextMessage, ctx: &mut Self::Context) {
-        ctx.text(msg.0);
-    }
-}
-
-//handle the command sent from clients
+/** 
 impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for ChatSession {
     fn handle(&mut self, msg: Result<ws::Message, ws::ProtocolError>, _ctx: &mut Self::Context) {
         if let Ok(ws::Message::Text(text)) = msg {
             let text = text.to_string();
-
+            
             if text.starts_with("/join ") {
                 let room = text.trim_start_matches("/join ").to_owned();
                 self.room = Some(room.clone());
@@ -167,6 +201,89 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for ChatSession {
         }
     }
 }
+**/
+
+//streamhandler修改
+//SteamHandler是Actix的一个特性，表示该结构体可以处理流式事件
+//ctx 是 Actix 提供的上下文对象，用于控制会话状态或发送响应
+
+impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for ChatSession {
+    fn handle(&mut self, msg: Result<ws::Message, ws::ProtocolError>, ctx: &mut Self::Context) {
+        if let Ok(ws::Message::Text(text)) = msg {
+            let trimmed_text = text.trim();
+
+            if trimmed_text.starts_with("/create ") {
+                let room = trimmed_text.trim_start_matches("/create ").to_owned();
+                let addr = self.addr.clone();
+                let id = self.id;
+
+                ctx.spawn(
+                    async move {
+                        let result = addr.send(CreateRoom { id, room: room.clone() }).await.unwrap_or(Err("Error".into()));
+                        (result, room)
+                    }
+                    .into_actor(self)
+                    .map(|(result, room), _act, ctx| {
+                        match result {
+                            Ok(_) => ctx.text(format!("Room '{}' created successfully. ", room)),
+                            Err(err) if err == "Room already exists" => {
+                                ctx.text(format!("Room '{}' already exists! Type '/join {}' to join it.", room, room));
+                            }
+                            Err(err) => ctx.text(format!("Failed to create room: {}", err)),
+                        }
+                    }),
+                );
+
+            } else if trimmed_text.starts_with("/join ") {
+                let room = trimmed_text.trim_start_matches("/join ").to_owned();
+                let addr = self.addr.clone();
+                let id = self.id;
+
+                if room.is_empty() {
+                    ctx.text("Invalid command. Usage: '/join <room_name>'");
+                    return;
+                }
+
+                ctx.spawn(
+                    async move {
+                        let result = addr.send(JoinRoom { id, room: room.clone() }).await.unwrap_or(Err("Error".into()));
+                        (result, room)
+                    }
+                    .into_actor(self)
+                    .map(|(result, room), act, ctx| {
+                        match result {
+                            Ok(_) => {
+                                act.room = Some(room.clone());
+                                ctx.text(format!("Successfully joined the room '{}'. ", room));
+                                ctx.text(format!("You can now start chatting!"));
+                            }
+                            Err(err) => ctx.text(format!("Failed to join room: {}", err)),
+                        }
+                    }),
+                );
+
+            } else if let Some(room) = &self.room {
+                // 如果用户已加入房间，则广播消息
+                self.addr.do_send(BroadcastMessage {
+                    room_name: room.clone(),
+                    message: trimmed_text.to_owned(),
+                });
+            } else {
+                // 用户未加入房间，提示加入房间
+                ctx.text("You must join a room first. Use '/join <room_name>' to join an existing room.");
+            }
+
+        } else if let Ok(ws::Message::Close(_)) = msg {
+            // 处理连接关闭
+            ctx.stop();
+        } else if let Ok(ws::Message::Ping(msg)) = msg {
+            // 处理 Ping 消息
+            ctx.pong(&msg);
+        }
+    }
+}
+
+
 
 //5.
 #[derive(Message)]
@@ -181,6 +298,14 @@ impl Handler<BroadcastMessage> for ChatServer {
 
     fn handle(&mut self, msg: BroadcastMessage, _: &mut Context<Self>) {
         self.send_message(&msg.room_name, &msg.message);
+    }
+}
+
+impl Handler<TextMessage> for ChatSession {
+    type Result = ();
+
+    fn handle(&mut self, msg: TextMessage, ctx: &mut Self::Context) {
+        ctx.text(msg.0);
     }
 }
 

@@ -17,71 +17,102 @@ async fn main() {
     println!("Enter your name:");
     let name = match lines.next_line().await {
         Ok(Some(name)) => name,
-        Ok(None) => {
-            eprintln!("Error reading input.");
-            return;
-        }
-        Err(e) => {
-            eprintln!("Error reading input: {}", e);
+        _ => {
+            eprintln!("Failed to read your name.");
             return;
         }
     };
 
-    // Step 2: Ask whether the user wants to create a new room or join an existing one
-    println!("Do you want to create a new chat room or join an existing one?");
-    println!("Type 'create' to create a new room or 'join' to join an existing room:");
+    // update''
+    //let mut current_room: Option<String> = None;  // Track the current room
 
-    let room_action = match lines.next_line().await {
-        Ok(Some(action)) => action,
-        Ok(None) => {
-            eprintln!("Error reading input.");
-            return;
+    // Step 2: Ask for action (create/join)
+    let room_action = loop {
+        println!("Do you want to create a new chat room or join an existing one?");
+        println!("Type 'create' to create a new room or 'join' to join an existing room:");
+        match lines.next_line().await {
+            Ok(Some(action)) if action.to_lowercase() == "create" || action.to_lowercase() == "join" => break action,
+            Ok(Some(_)) => println!("Invalid action. Please type 'create' or 'join'."),
+            _ => {
+                eprintln!("Failed to read your action.");
+                return;
+            }
         }
-        Err(e) => {
-            eprintln!("Error reading input: {}", e);
+    };
+
+    // Step 3: Ask for the room name
+    let room_name = match room_action.to_lowercase().as_str() {
+        "create" => {
+            println!("Enter the new room name:");
+            match lines.next_line().await {
+                Ok(Some(name)) => name,
+                _ => {
+                    eprintln!("Failed to read the room name.");
+                    return;
+                }
+            }
+        },
+        "join" => {
+            println!("Enter the room name you want to join:");
+            match lines.next_line().await {
+                Ok(Some(name)) => name,
+                _ => {
+                    eprintln!("Failed to read the room name.");
+                    return;
+                }
+            }
+        },
+        _ => {
+            eprintln!("Invalid action.");
             return;
         }
     };
 
-    // Step 3: Handle the room action
-    let room_name = if room_action.to_lowercase() == "create" {
-        println!("Enter the new room name:");
-        match lines.next_line().await {
-            Ok(Some(room_name)) => room_name,
-            Ok(None) => {
-                eprintln!("Error reading input.");
-                return;
-            }
-            Err(e) => {
-                eprintln!("Error reading input: {}", e);
-                return;
-            }
+    // Step 4: Send command to server
+    let command = format!("/{action} {room}", action = room_action, room = room_name);
+    write.send(Message::Text(command)).await.unwrap();
+
+    // Step 5: Handle server response
+    let server_response = match read.next().await {
+        Some(Ok(Message::Text(text))) => text,
+        _ => {
+            eprintln!("Failed to receive server response.");
+            return;
         }
-    } else if room_action.to_lowercase() == "join" {
-        println!("Enter the room name you want to join:");
-        match lines.next_line().await {
-            Ok(Some(room_name)) => room_name,
-            Ok(None) => {
-                eprintln!("Error reading input.");
-                return;
-            }
-            Err(e) => {
-                eprintln!("Error reading input: {}", e);
-                return;
-            }
+    };
+
+    // Step 6: Interpret server response
+    if server_response.contains("already exists") {
+        println!("{}", server_response);
+        println!("Would you like to join the existing room? (yes/no)");
+        let join_existing = match lines.next_line().await {
+            Ok(Some(answer)) if answer.to_lowercase() == "yes" => true,
+            _ => false,
+        };
+
+        if join_existing {
+            write
+                .send(Message::Text(format!("/join {}", room_name)))
+                .await
+                .unwrap();
+            //current_room = Some(room_name.clone()); 
+        } else {
+            println!("Exiting...");
+            return;
         }
+    } else if server_response.contains("created successfully") {
+        // 房间创建成功, 更新房间状态并且将用户加入对应的房间
+        println!("{}", server_response);
+        write
+            .send(Message::Text(format!("/join {}", room_name)))
+            .await
+            .unwrap();
+        //current_room = Some(room_name.clone()); 
     } else {
-        eprintln!("Invalid action, must be 'create' or 'join'.");
-        return;
-    };
+        println!("{}", server_response); 
+    }
 
-    // Step 4: Send room creation/join message to server
-    write
-        .send(Message::Text(format!("/join {}", room_name)))
-        .await
-        .unwrap();
-
-    // Step 5: Start listening for messages
+    // Step 7: Start listening for messages
     tokio::spawn(async move {
         while let Some(Ok(msg)) = read.next().await {
             if let Message::Text(text) = msg {
@@ -90,11 +121,34 @@ async fn main() {
         }
     });
 
-    // Step 6: Send messages --- with the user's name attached
-    println!("You can now start chatting!");
-
+    /*
     while let Ok(Some(line)) = lines.next_line().await {
         let message = format!("{}: {}", name, line);
+
+        // 在发送消息之前检查是否已加入房间
         write.send(Message::Text(message)).await.unwrap();
     }
+    */
+
+    loop {
+        let message = match lines.next_line().await {
+            Ok(Some(line)) => line,
+            _ => break,
+        };
+
+        if message.to_lowercase() == "/exit" {
+            println!("Exiting chat...");
+            write.send(Message::Text("/exit".to_string())).await.unwrap();
+            break;
+        } 
+        else {
+            let formatted_message = format!("{}: {}", name, message);
+            write.send(Message::Text(formatted_message)).await.unwrap();
+        }
+    }
+
+    // Close the connection when exiting
+    write.send(Message::Close(None)).await.unwrap();
+
 }
+
