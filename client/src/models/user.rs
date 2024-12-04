@@ -1,8 +1,7 @@
-use gloo::storage::{LocalStorage, Storage};
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
-#[derive(Validate, Debug, Serialize, Deserialize, Clone, Default)]
+#[derive(Validate, Debug, Serialize, Deserialize, Clone, Default, PartialEq)]
 pub struct User {
     #[validate(length(min = 3, message = "Username must be at least 3 characters long"))]
     pub username: String,

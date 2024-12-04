@@ -22,7 +22,7 @@ pub enum Route {
 pub fn switch(route: Route) -> Html {
     match route {
         Route::Home => html! { <Home /> },
-        Route::Room { room } => html! { <Room room={room} /> },
+        Route::Room { room } => html! { <Room room_id={room} /> },
         Route::SignUp => html! { <SignUp /> },
         Route::SignIn => html! { <SignIn /> },
         Route::LogOut => html! { <LogOut /> },

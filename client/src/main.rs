@@ -1,14 +1,11 @@
 mod components;
 mod endpoints;
-// mod error;
 mod models;
 mod router;
 use endpoints::{get_current_user, get_user};
 
 use models::user::User;
-// use reqwasm::http::Request;
 use router::{switch, Route};
-// use serde_json;
 use stylist::style;
 use yew::prelude::*;
 use yew_router::prelude::*;
@@ -93,18 +90,12 @@ fn app() -> Html {
         "#
     )
     .unwrap();
-
-    // #[function_component(NavBar)]
-    // pub fn nav_bar() -> Html {
-    //     html! {
-
-    //         }
-    // }
-
+    // let navigator = use_navigator().unwrap();
+    // let home_on_click: Callback<MouseEvent> = Callback::from(move |_| navigator.push(&Route::Home));
     let printed_information = use_state(|| "nothing".to_string());
 
     // let printed_information = printed_information
-    let onclick = {
+    let test_on_click = {
         let printed_information = printed_information.clone();
         Callback::from(move |_| {
             let printed_information = printed_information.clone();
@@ -120,7 +111,11 @@ fn app() -> Html {
                 <div >
                         <BrowserRouter>
                     <div class = "card" >
-
+                            <div class="top-left-nav">
+                                <button onclick={test_on_click.clone()}>{"Test"}</button>
+                                <br/>
+                                <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
+                            </div>
                         if username == "" {
                         <h1>{format!("Welcome to the chat app {}",username )}</h1>
                                 <nav class = "top-right-nav">
@@ -135,14 +130,18 @@ fn app() -> Html {
                             </div>
                                 <hr />
                                 <Switch<Route> render={switch} />
-
+                                //     <div class="top-left-nav">
+                                //     <button onclick={home_on_click}>{ "Home" }</button>
+                                // </div>
                             </BrowserRouter>
                             <divider/>
                 </div>
                 <divider/>
                 <div class="top-left-nav">
-                    <button {onclick}>{"Test"}</button>
-                    <br/>
+
+
+
+
                     <p  >{ (*printed_information).clone() }</p>
                 </div>
 
