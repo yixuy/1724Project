@@ -4,7 +4,6 @@ use actix_web::{
 };
 use thiserror::Error;
 
-
 impl ResponseError for UserError {
     fn error_response(&self) -> HttpResponse {
         HttpResponse::build(self.status_code())
@@ -18,6 +17,23 @@ impl ResponseError for UserError {
             UserError::NoUserFound => StatusCode::NOT_FOUND,
             UserError::NoSuchUser => StatusCode::NOT_FOUND,
             UserError::UserUpdateFailed => StatusCode::INTERNAL_SERVER_ERROR,
+        }
+    }
+}
+
+impl ResponseError for RoomError {
+    fn error_response(&self) -> HttpResponse {
+        HttpResponse::build(self.status_code())
+            .insert_header((CONTENT_TYPE, HeaderValue::from_static("text/plain")))
+            .body(self.to_string())
+    }
+
+    fn status_code(&self) -> StatusCode {
+        match self {
+            RoomError::RoomCreationFailed => StatusCode::INTERNAL_SERVER_ERROR,
+            RoomError::NoRoomFound => StatusCode::NOT_FOUND,
+            RoomError::NoSuchRoom => StatusCode::NOT_FOUND,
+            RoomError::RoomUpdateFailed => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 }
@@ -82,6 +98,8 @@ pub enum AuthError {
     InputError(#[from] InputError),
     #[error(transparent)]
     UserError(#[from] UserError),
+    #[error(transparent)]
+    RoomError(#[from] RoomError),
 }
 #[derive(Debug, Error)]
 pub enum UserError {
@@ -93,6 +111,18 @@ pub enum UserError {
     NoSuchUser = 2,
     #[error("The user can not be updated")]
     UserUpdateFailed = 3,
+}
+
+#[derive(Debug, Error)]
+pub enum RoomError {
+    #[error("Room creation failed")]
+    RoomCreationFailed = 0,
+    #[error("No room found")]
+    NoRoomFound = 1,
+    #[error("The room is not found")]
+    NoSuchRoom = 2,
+    #[error("The room can not be updated")]
+    RoomUpdateFailed = 3,
 }
 // Define the Response struct
 #[derive(serde::Serialize)]
@@ -138,6 +168,14 @@ impl ResponseError for AuthError {
                 | UserError::NoUserFound
                 | UserError::NoSuchUser
                 | UserError::UserUpdateFailed => HttpResponse::BadRequest().json(Response {
+                    message: err.to_string(),
+                }),
+            },
+            AuthError::RoomError(err) => match err {
+                RoomError::RoomCreationFailed
+                | RoomError::NoRoomFound
+                | RoomError::NoSuchRoom
+                | RoomError::RoomUpdateFailed => HttpResponse::BadRequest().json(Response {
                     message: err.to_string(),
                 }),
             },

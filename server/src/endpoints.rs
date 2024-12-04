@@ -1,16 +1,17 @@
 use crate::db;
-use crate::error;
 use crate::error::AuthError;
+use crate::error::RoomError;
 use crate::error::TokenError;
-// use crate::user;
-// use crate::user_trait::UserTrait;
+use crate::error::UserError;
+use crate::models::room::NewRoom;
+use crate::models::room::Room;
+use crate::models::room_trait::RoomTrait;
 use crate::models::user;
 use crate::models::user_trait::UserTrait;
 use crate::services::jwt;
 use actix_web::web::Data;
-use actix_web::{get, post, web::Json, web::Path, HttpResponse, Responder};
+use actix_web::{get, post, web::Json, web::Path, Responder};
 use db::Database;
-use error::UserError;
 // use futures::future::{FutureExt, TryFutureExt};
 use user::NewUser;
 use user::UpdateUserURL;
@@ -145,3 +146,42 @@ async fn login_user(body: Json<NewUser>, db: Data<Database>) -> Result<Json<Stri
 
 //     Ok(())
 // }
+
+#[post("/create_room")]
+async fn create_room(body: Json<NewRoom>, db: Data<Database>) -> Result<Json<Room>, RoomError> {
+    // Create a new user with id and password
+    // let is_valid = body.validate();
+    // match is_valid {
+    println!("body: {:?}", body.room_id);
+    let new_room = Database::create_new_room(&db, Room::new(body.room_id.clone())).await;
+
+    match new_room {
+        Some(new_room) => Ok(Json(new_room)),
+        None => Err(RoomError::RoomCreationFailed),
+    }
+}
+
+#[get("/rooms")]
+async fn get_rooms(db: Data<Database>) -> Result<Json<Vec<Room>>, RoomError> {
+    let rooms = Database::get_all_rooms(&db).await;
+    match rooms {
+        Some(all_rooms) => Ok(Json(all_rooms)),
+        None => Err(RoomError::NoRoomFound),
+    }
+    // HttpResponse::Ok().body("Get all users")
+}
+
+#[get("/room/{room_id}")]
+async fn get_room(room_id: Path<String>, db: Data<Database>) -> Result<Json<Room>, AuthError> {
+    let room_id = room_id.clone();
+    let rooms = Database::get_all_rooms(&db).await;
+    match rooms {
+        Some(all_rooms) => Ok(Json(
+            all_rooms
+                .into_iter()
+                .find(|room| room.room_id == room_id)
+                .ok_or(RoomError::NoSuchRoom)?,
+        )),
+        None => Err(RoomError::NoRoomFound.into()),
+    }
+}

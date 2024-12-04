@@ -4,8 +4,6 @@ use actix_web::web::Data;
 use async_trait::async_trait;
 use surrealdb::Error;
 
-use super::user;
-
 // Implement the UserTrait(function) for the Database struct
 #[async_trait]
 pub trait UserTrait {
@@ -117,4 +115,5 @@ impl UserTrait for Database {
             }
         }
     }
+    
 }

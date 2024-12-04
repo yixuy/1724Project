@@ -9,3 +9,19 @@ pub struct Room {
     pub users: Vec<User>,
     pub messages: Vec<Message>,
 }
+
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct NewRoom {
+    pub room_id: String,
+}
+
+impl Room {
+    pub fn new(room_id: String) -> Room {
+        Room {
+            room_id,
+            users: Vec::new(),
+            messages: Vec::new(),
+        }
+    }
+}

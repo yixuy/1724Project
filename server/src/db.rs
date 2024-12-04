@@ -2,10 +2,6 @@ use surrealdb::engine::remote::ws::{Client, Ws};
 use surrealdb::opt::auth::Root;
 use surrealdb::{Error, Surreal};
 
-// struct User {
-//     first_name: String,
-//     last_name: String,
-// }
 #[derive(Debug, Clone)]
 pub struct Database {
     pub client: Surreal<Client>,

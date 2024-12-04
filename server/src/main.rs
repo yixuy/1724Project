@@ -7,10 +7,10 @@ mod auth;
 mod endpoints;
 mod error;
 mod services;
-use endpoints::{create_user, get_user, get_users, test_handler, update_user, login_user};
+use endpoints::*;
 // mod user_trait;
 use actix_web::{App, HttpServer};
-const BANK_END_URL: &str = "127.0.0.1:5000";
+const BACKEND_URL: &str = "127.0.0.1:5000";
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // Connect to the database
@@ -36,8 +36,11 @@ async fn main() -> std::io::Result<()> {
             .service(update_user)
             .service(get_users)
             .service(login_user)
+            .service(create_room)
+            .service(get_rooms)
+            .service(get_room)
     })
-    .bind(BANK_END_URL)?
+    .bind(BACKEND_URL)?
     .run()
     .await
     .map_err(|e| {
