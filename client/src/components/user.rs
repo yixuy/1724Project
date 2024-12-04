@@ -1,13 +1,21 @@
 use crate::endpoints::{get_current_user, get_room, get_user};
+use crate::models::room::Room; // Add this line to import the Room type
 use crate::models::user::User;
 use crate::router::Route;
+use serde::{Deserialize, Serialize};
 use stylist::style;
 use wasm_bindgen::JsCast;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 use yew_router::prelude::*;
-#[function_component(Home)]
-pub fn home() -> Html {
+
+#[derive(Properties, PartialEq, Clone, Debug, Serialize, Deserialize)]
+pub struct UserAttribute {
+    // #[validate(regex(path = "NUMERIC_REGEX", message = "Room number must be numeric"))]
+    pub username: String,
+}
+#[function_component(UserComponent)]
+pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
     // let user_json = serde_json::from_str::<User>(&*user_string).unwrap();
 
     let css = style!(
@@ -39,7 +47,9 @@ pub fn home() -> Html {
     )
     .unwrap();
 
-    let username = get_current_user().unwrap_or_else(|| "".to_string());
+    let navigator = use_navigator().unwrap();
+    // let username = get_current_user().unwrap_or_else(|| "".to_string());
+    let user = User::new(username.clone(), "".to_string());
     let fetched = use_state(|| false);
     let user_string = use_state(|| "".to_string());
     if username != "" {
@@ -87,28 +97,79 @@ pub fn home() -> Html {
         })
     };
 
+    let onclick = {
+        let room_number = room_number.to_string().clone();
+        let navigator = navigator.clone();
+    
+        let username = username.clone();
+
+        Callback::from(move |_| {
+            let room_number = room_number.clone();
+            let navigator = navigator.clone();
+            let username = username.clone();
+            wasm_bindgen_futures::spawn_local(async move {
+                if let Some(room) = get_room(&room_number).await {
+                    navigator.push(&Route::Room {
+                        username: username.clone(),
+                        room: room.room_id,
+                    });
+                    // is_room_created.set(true);
+                }
+            });
+        })
+    };
+
+    let create_on_click = {
+        let room_number = room_number.to_string().clone();
+        let navigator = navigator.clone();
+        let username = username.clone();
+
+        Callback::from(move |e: MouseEvent| {
+            e.prevent_default();
+            let data = Room::new(room_number.to_string());
+            let navigator = navigator.clone();
+            // fetch_base_url(data, navigator);
+            let username = username.clone();
+            wasm_bindgen_futures::spawn_local(async move {
+                match reqwest::Client::new()
+                    .post("http://127.0.0.1:5000/create_room")
+                    .json(&data)
+                    .send()
+                    .await
+                {
+                    Ok(response) if response.status().is_success() => {
+                        navigator.push(&Route::Room {
+                            username: username,
+                            room: data.room_id,
+                        });
+                    }
+                    _ => {
+                        // message.set("Sign-in failed!".to_string());
+                    }
+                }
+            });
+        })
+    };
+
     html! {
          <div class={css.get_class_name().to_string()}>
          <div class="container">
-            <nav class = "top-right-nav">
-                            <Link<Route> to={Route::SignIn}>{ "Sign In" }</Link<Route>>
-
-                            <Link<Route> to={Route::SignUp}>{ "Sign Up" }</Link<Route>>
-            </nav>
             <div class="card">
-
+                if user.username != ""{
+                    <h2>{ format!("Welcome, {}!",user.username) }</h2>
+                } else {
                     <h2>{ "Please Sign up the username before you can join the room" }</h2>
-
+                }
 
                 <h2>{ format!("What is the room number you want to join?")}</h2>
                 <input value={room_number.to_string()} {oninput} />
                 <br />
                 if *is_room_created {
-                    <p>{ format!("Chat Room {} found", room_number.to_string()) }</p>
-                    // <button {onclick}>{"Join the room"}</button>
+                    <p>{ format!("Room {} found, Are you sure join now? ", room_number.to_string()) }</p>
+                    <button {onclick}>{"Join the room"}</button>
                 }else{
-                    <p>{ format!("Chat Room {} not found", room_number.to_string()) }</p>
-
+                    <p>{ format!("Room {} not found, Are you sure creating one ", room_number.to_string()) }</p>
+                    <button onclick={create_on_click}>{"Create the room"}</button>
                 }
             </div>
             </div>

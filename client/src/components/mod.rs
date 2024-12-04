@@ -5,7 +5,7 @@ pub mod notfound;
 pub mod room;
 pub mod signin;
 pub mod signup;
-
+pub mod user;
 pub mod prelude {
     pub use super::home::Home;
     pub use super::logout::LogOut;
@@ -13,4 +13,5 @@ pub mod prelude {
     pub use super::room::Room;
     pub use super::signin::SignIn;
     pub use super::signup::SignUp;
+    pub use super::user::UserComponent;
 }

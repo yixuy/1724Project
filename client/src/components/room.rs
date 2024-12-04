@@ -1,17 +1,16 @@
 use crate::models::message::Message;
-use crate::models::room::RoomId;
+use crate::models::room::RoomAttribute;
 use stylist::style;
 use yew::prelude::*;
 
 #[function_component(Room)]
-pub fn room(RoomId { room_id }: &RoomId) -> Html {
+pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
     // let user = get_user();
 
     let messages = use_state(|| vec![]);
-    let username = use_state(|| String::from("User"));
+    // let username = use_state(|| String::from("User"));
     let message_input = use_state(|| String::new());
 
-    
     // let on_submit = {
     //     let username = username.clone();
     //     let password = password.clone();
@@ -135,7 +134,7 @@ pub fn room(RoomId { room_id }: &RoomId) -> Html {
             if !message_input.is_empty() {
                 let mut new_messages = (*messages).clone();
                 new_messages.push(Message {
-                    username: (*username).clone(),
+                    username: username.clone(),
                     content: (*message_input).clone(),
                     timestamp: String::from("now"),
                 });

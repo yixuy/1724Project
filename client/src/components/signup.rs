@@ -1,15 +1,8 @@
 use crate::{models::user::User, router::Route};
-use serde::Serialize;
 use stylist::style;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
-use yew_router::{prelude::*, utils::fetch_base_url};
-
-// #[derive(Serialize)]
-// struct SignUpData {
-//     username: String,
-//     password: String,
-// }
+use yew_router::prelude::*;
 
 #[function_component(SignUp)]
 pub fn sign_in() -> Html {

@@ -5,7 +5,8 @@ use validator::Validate;
 use yew::Properties;
 
 #[derive(Properties, PartialEq, Validate, Clone, Debug, Serialize, Deserialize)]
-pub struct RoomId {
+pub struct RoomAttribute {
+    pub username: String,
     #[validate(length(min = 3, message = "Room number must be at least 3 characters long"))]
     // #[validate(regex(path = "NUMERIC_REGEX", message = "Room number must be numeric"))]
     pub room_id: String,

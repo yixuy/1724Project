@@ -102,7 +102,9 @@ pub fn sign_in() -> Html {
                             web_sys::console::log_1(&format!("Stored in cookie: {}", body).into());
 
                             // Navigate to the Home page
-                            navigator.push(&Route::Home);
+                            navigator.push(&Route::User {
+                                username: data.username.clone(),
+                            });
                             if let Some(window) = window() {
                                 window.location().reload().unwrap(); // Refresh the page
                             }

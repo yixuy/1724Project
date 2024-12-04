@@ -1,4 +1,5 @@
 use crate::components::prelude::*;
+use crate::components::user::UserComponent;
 use yew::{html, Html};
 use yew_router::prelude::*;
 
@@ -6,8 +7,10 @@ use yew_router::prelude::*;
 pub enum Route {
     #[at("/")]
     Home,
-    #[at("/room/:room")]
-    Room { room: String },
+    #[at("/user/:username")]
+    User { username: String },
+    #[at("/room/:username/:room")]
+    Room { username: String, room: String },
     #[at("/signup")]
     SignUp,
     #[at("/signin")]
@@ -22,7 +25,8 @@ pub enum Route {
 pub fn switch(route: Route) -> Html {
     match route {
         Route::Home => html! { <Home /> },
-        Route::Room { room } => html! { <Room room_id={room} /> },
+        Route::User { username } => html! { <UserComponent username={username} /> },
+        Route::Room { username, room } => html! { <Room username = {username} room_id={room} /> },
         Route::SignUp => html! { <SignUp /> },
         Route::SignIn => html! { <SignIn /> },
         Route::LogOut => html! { <LogOut /> },

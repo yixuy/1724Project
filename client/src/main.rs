@@ -8,6 +8,7 @@ use models::user::User;
 use router::{switch, Route};
 use stylist::style;
 use yew::prelude::*;
+use yew_router::history::{History, Location};
 use yew_router::prelude::*;
 
 #[function_component(App)]
@@ -15,7 +16,6 @@ fn app() -> Html {
     let username = get_current_user().unwrap_or_else(|| "".to_string());
     let fetched = use_state(|| false);
     let user_string = use_state(|| "".to_string());
-    
 
     if username != "" {
         let user = User::new(username.clone(), "".to_string());
@@ -106,7 +106,6 @@ fn app() -> Html {
         })
     };
 
-
     html! {
         <div class={css.get_class_name().to_string()}>
             <div class="container">
@@ -119,14 +118,10 @@ fn app() -> Html {
                                 <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
                             </div>
                         if username == "" {
-                        <h1>{format!("Welcome to the chat app {}",username )}</h1>
-                                <nav class = "top-right-nav">
-                            <Link<Route> to={Route::SignIn}>{ "Sign In" }</Link<Route>>
-
-                            <Link<Route> to={Route::SignUp}>{ "Sign Up" }</Link<Route>>
-                        </nav>
+                        <h1>{format!("Welcome to Rust Chat App {}",username )}</h1>
+                        
                             }else{
-                                <h1>{format!("Welcome to the chat app, {}!",username )}</h1>
+                                <h1>{format!("Welcome to the Rust Chat App!" )}</h1>
                             }
 
                             </div>

@@ -11,6 +11,8 @@ pub struct User {
     pub room_id: Option<String>,
 }
 
+
+
 impl User {
     pub fn new(username: String, password: String) -> User {
         User {
