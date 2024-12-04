@@ -1,15 +1,31 @@
+use crate::models::message::Message;
 use crate::models::user::User;
-use gloo::net::websocket::Message;
+use serde::{Deserialize, Serialize};
+use validator::Validate;
 use yew::Properties;
 
-#[derive(Properties, PartialEq)]
+#[derive(Properties, PartialEq, Validate, Clone, Debug, Serialize, Deserialize)]
 pub struct RoomId {
+    #[validate(length(min = 3, message = "Room number must be at least 3 characters long"))]
+    // #[validate(regex(path = "NUMERIC_REGEX", message = "Room number must be numeric"))]
     pub room_id: String,
 }
-
-#[derive(Properties, PartialEq)]
-pub struct RoomProps {
+// lazy_static::lazy_static! {
+//     static ref NUMERIC_REGEX: regex::Regex = regex::Regex::new(r"^\d+$").unwrap();
+// }
+#[derive(Validate, Debug, Serialize, Deserialize, Clone, Default, PartialEq)]
+pub struct Room {
     pub room_id: String,
     pub users: Vec<User>,
     pub messages: Vec<Message>,
+}
+
+impl Room {
+    pub fn new(room_id: String) -> Room {
+        Room {
+            room_id,
+            users: Vec::new(),
+            messages: Vec::new(),
+        }
+    }
 }

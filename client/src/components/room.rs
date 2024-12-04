@@ -10,6 +10,8 @@ pub fn room(RoomId { room_id }: &RoomId) -> Html {
     let messages = use_state(|| vec![]);
     let username = use_state(|| String::from("User"));
     let message_input = use_state(|| String::new());
+
+    
     // let on_submit = {
     //     let username = username.clone();
     //     let password = password.clone();

@@ -15,6 +15,7 @@ fn app() -> Html {
     let username = get_current_user().unwrap_or_else(|| "".to_string());
     let fetched = use_state(|| false);
     let user_string = use_state(|| "".to_string());
+    
 
     if username != "" {
         let user = User::new(username.clone(), "".to_string());
@@ -104,6 +105,7 @@ fn app() -> Html {
             });
         })
     };
+
 
     html! {
         <div class={css.get_class_name().to_string()}>
