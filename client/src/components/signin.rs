@@ -1,6 +1,8 @@
 use crate::models::user::User;
 use crate::router::Route;
 use gloo::storage::{LocalStorage, Storage};
+use serde::Serialize;
+use serde_json::Value;
 use stylist::style;
 use web_sys::window;
 use web_sys::HtmlInputElement;
@@ -12,52 +14,53 @@ pub fn sign_in() -> Html {
     let navigator = use_navigator().unwrap();
     let css = style!(
         r#"
-    .signin-container {
-    background-color: #4287f5; /* Card's background color */
-    display: flex; /* Enable flexbox */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    height: 100vh; /* Full height of the viewport */
-    width: 100vw; /* Full width of the viewport */
-    box-sizing: border-box; /* Include padding and border in dimensions */
-    margin: 0; /* Remove any extra margins */
-}
+        .signin-container {
+            background-color: #4287f5; /* Card's background color */
+            display: flex; /* Enable flexbox */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh; /* Full height of the viewport */
+            width: 100vw; /* Full width of the viewport */
+            box-sizing: border-box; /* Include padding and border in dimensions */
+            margin: 0; /* Remove any extra margins */
+        }
 
-.signin-form {
-    background: white; /* Background color of the form */
-    padding: 20px; /* Padding inside the form */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
-    text-align: center; /* Center the text */
-    width: 90%; /* Responsive width */
-    max-width: 300px; /* Restrict the form's maximum size */
-}
+        .signin-form {
+            background: white; /* Background color of the form */
+            padding: 20px; /* Padding inside the form */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
+            text-align: center; /* Center the text */
+            width: 90%; /* Responsive width */
+            max-width: 300px; /* Restrict the form's maximum size */
+        }
 
-    input[type="text"],
-    input[type="password"] {
-        width: 80%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
+        input[type="text"],
+        input[type="password"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-    button {
-        width: 70%;
-        padding: 10px;
-        color: white;
-        background-color: #007BFF;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
+        button {
+            width: 70%;
+            padding: 10px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-    button:hover {
-        background-color: #0056b3;
-    }
-    "#
+        button:hover {
+            background-color: #0056b3;
+        }
+        "#
     )
     .unwrap();
+
     let go_home_button = {
         let navigator = navigator.clone();
         let onclick = Callback::from(move |_| navigator.push(&Route::Home));
@@ -77,12 +80,13 @@ pub fn sign_in() -> Html {
     let on_submit = {
         let username = username.clone();
         let password = password.clone();
-        // let message = message.clone();
+        let message = message.clone();
 
         Callback::from(move |e: SubmitEvent| {
             e.prevent_default();
             let data = User::new((*username).clone(), (*password).clone());
             let navigator = navigator.clone();
+            let message = message.clone();
 
             wasm_bindgen_futures::spawn_local(async move {
                 match reqwest::Client::new()
@@ -108,8 +112,13 @@ pub fn sign_in() -> Html {
                             if let Some(window) = window() {
                                 window.location().reload().unwrap(); // Refresh the page
                             }
+                        } else {
+                            let body = response.text().await.unwrap();
+                            let v: Value = serde_json::from_str(&body).unwrap();
+                            message.set(v["message"].as_str().unwrap().to_string());
                         }
                     }
+
                     _ => {
                         web_sys::console::log_1(&"Sign-in failed!".into());
                         // message.set("Sign-in failed!".to_string());
@@ -139,7 +148,7 @@ pub fn sign_in() -> Html {
       <div class={css.get_class_name().to_string()}>
         <div class="signin-container">
             <form onsubmit={Some(on_submit)} class="signin-form">
-            <div >
+            // <div >
                 <h1>{"Sign In"}</h1>
                 <input
                     type="text"
@@ -156,9 +165,9 @@ pub fn sign_in() -> Html {
                 />
                 <br/>
                 <button type="submit">{"Sign In"}</button>
-                </div>
+                <p>{(*message).clone()}</p>
+                // </div>
             </form>
-            // <p>{(*message).clone()}</p>
         </div>
     </div>
     }

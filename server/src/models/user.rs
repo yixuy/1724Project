@@ -15,6 +15,11 @@ pub struct UpdateUserURL {
     pub uuid: String,
 }
 
+#[derive(Validate, Serialize, Deserialize)]
+pub struct Token {
+    pub token: String,
+}
+
 #[derive(Validate, Debug, Serialize, Deserialize)]
 pub struct User {
     pub uuid: String,

@@ -1,4 +1,5 @@
 use crate::db::Database;
+use crate::error::UserError;
 use crate::models::user::User;
 use actix_web::web::Data;
 use async_trait::async_trait;
@@ -8,9 +9,10 @@ use surrealdb::Error;
 #[async_trait]
 pub trait UserTrait {
     async fn get_all_users(db: &Data<Database>) -> Option<Vec<User>>;
-    async fn add_user(db: &Data<Database>, new_user: User) -> Option<User>;
+    async fn get_user(db: &Data<Database>, user: &str) -> Result<User, UserError>;
+    async fn add_user(db: &Data<Database>, new_user: User) -> Result<User, UserError>;
     async fn update_user(db: &Data<Database>, uuid: &str) -> Option<User>;
-    async fn update_user_status(db: &Data<Database>, uuid: &str) -> Option<User>;
+    async fn update_user_status(db: &Data<Database>, username: &str) -> Result<User, UserError>;
 }
 
 // #[derive(Validate, Debug, Serialize, Deserialize)]
@@ -26,18 +28,42 @@ impl UserTrait for Database {
             Err(_) => None,
         }
     }
-    async fn add_user(db: &Data<Database>, new_user: User) -> Option<User> {
-        let user = db
-            .client
-            .create(("user", new_user.uuid.clone())) // Specify the table and ID
-            .content(new_user)
-            .await;
+    async fn get_user(db: &Data<Database>, username: &str) -> Result<User, UserError> {
+        let user: Result<Option<User>, Error> = db.client.select(("user", username)).await;
 
         match user {
-            Ok(user) => user,
+            Ok(Some(found_user)) => Ok(found_user),
+            Ok(None) => Err(UserError::NoSuchUser),
+            Err(err) => {
+                eprintln!("Error getting user: {:?}", err); // Log the error
+                Err(UserError::UserSearchFailed)
+            }
+        }
+    }
+    async fn add_user(db: &Data<Database>, new_user: User) -> Result<User, UserError> {
+        let existing_user: Result<Option<User>, Error> =
+            db.client.select(("user", &new_user.username)).await;
+
+        match existing_user {
+            Ok(Some(_)) => Err(UserError::UsernameExists),
+            Ok(None) => {
+                let user = db
+                    .client
+                    .create(("user", new_user.username.clone()))
+                    .content(new_user)
+                    .await;
+
+                match user {
+                    Ok(user) => Ok(user.unwrap()),
+                    Err(err) => {
+                        eprintln!("Error creating user: {:?}", err); // Log the error
+                        Err(UserError::UserCreationFailed)
+                    }
+                }
+            }
             Err(err) => {
                 eprintln!("Error creating user: {:?}", err); // Log the error
-                None
+                Err(UserError::UserCreationFailed)
             }
         }
     }
@@ -62,13 +88,10 @@ impl UserTrait for Database {
                                 status: found_user.status.clone(),
                             })
                             .await;
-                        match updated_user {
-                            Ok(updated_user) => updated_user,
-                            Err(err) => {
-                                eprintln!("Error updating user: {:?}", err); // Log the error
-                                None
-                            }
-                        }
+                        updated_user.unwrap_or_else(|err| {
+                            eprintln!("Error updating user: {:?}", err); // Log the error
+                            None
+                        })
                     }
                     None => None,
                 }
@@ -80,40 +103,34 @@ impl UserTrait for Database {
         }
     }
 
-    async fn update_user_status(db: &Data<Database>, username: &str) -> Option<User> {
+    async fn update_user_status(db: &Data<Database>, username: &str) -> Result<User, UserError> {
         let user: Result<Option<User>, Error> = db.client.select(("user", username)).await;
-
         match user {
-            Ok(this_user) => {
-                match this_user {
-                    Some(found_user) => {
-                        let updated_user = db
-                            .client
-                            .update(("user", username))
-                            .merge(User {
-                                uuid: found_user.uuid.to_string(),
-                                //need to change this to the username
-                                username: found_user.username.to_string(),
-                                password: found_user.password.clone(),
-                                status: !found_user.status.clone(),
-                            })
-                            .await;
-                        match updated_user {
-                            Ok(updated_user) => updated_user,
-                            Err(err) => {
-                                eprintln!("Error updating user: {:?}", err); // Log the error
-                                None
-                            }
-                        }
+            Ok(Some(user)) => {
+                let updated_user = db
+                    .client
+                    .update(("user", username))
+                    .merge(User {
+                        uuid: user.uuid,
+                        username: user.username,
+                        password: user.password,
+                        status: !user.status,
+                    })
+                    .await;
+
+                match updated_user {
+                    Ok(updated_user) => Ok(updated_user.unwrap()),
+                    Err(err) => {
+                        eprintln!("Error updating user status: {:?}", err);
+                        Err(UserError::UserUpdateFailed)
                     }
-                    None => None,
                 }
             }
+            Ok(None) => Err(UserError::NoSuchUser),
             Err(err) => {
-                eprintln!("Error updating user: {:?}", err); // Log the error
-                None
+                eprintln!("Error updating user status: {:?}", err);
+                Err(UserError::UserUpdateFailed)
             }
         }
     }
-    
 }
