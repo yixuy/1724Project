@@ -89,12 +89,13 @@ pub fn sign_in() -> Html {
             let message = message.clone();
 
             wasm_bindgen_futures::spawn_local(async move {
-                match reqwest::Client::new()
+                let response = reqwest::Client::new()
                     .post("http://127.0.0.1:5000/login")
                     .json(&data)
                     .send()
-                    .await
-                {
+                    .await;
+
+                match response {
                     Ok(response) if response.status().is_success() => {
                         if let Ok(body) = response.text().await {
                             // Store the response in a cookie
@@ -112,16 +113,18 @@ pub fn sign_in() -> Html {
                             if let Some(window) = window() {
                                 window.location().reload().unwrap(); // Refresh the page
                             }
-                        } else {
-                            let body = response.text().await.unwrap();
-                            let v: Value = serde_json::from_str(&body).unwrap();
-                            message.set(v["message"].as_str().unwrap().to_string());
                         }
                     }
-
-                    _ => {
+                    Ok(response) => {
+                        let body = response.text().await.unwrap();
+                        let v: Value = serde_json::from_str(&body).unwrap();
+                        message.set(v["message"].as_str().unwrap().to_string());
                         web_sys::console::log_1(&"Sign-in failed!".into());
                         // message.set("Sign-in failed!".to_string());
+                    }
+                    Err(_) => {
+                        message.set("Sign-in failed!".to_string());
+                        web_sys::console::log_1(&"Sign-in failed!".into());
                     }
                 }
             });
