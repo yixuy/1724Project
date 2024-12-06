@@ -13,7 +13,9 @@ use user::NewUser;
 use user::UpdateUserURL;
 use uuid::Uuid;
 use validator::Validate;
-
+use crate::error::AuthError;
+use crate::models::user::Token;
+use crate::services::auth_service::verify_auth_token;
 // Import the hash_password and verify_password functions
 use crate::services::hash::{hash_password, verify_password};
 
@@ -80,11 +82,11 @@ async fn create_user(
             .await;
 
             match new_user {
-                Some(create_user) => Ok(Json(create_user)),
-                None => Err(UserError::UserCreationFailed),
+                Ok(create_user) => Ok(Json(create_user)),
+                Err(err) => Err(err),
             }
         }
-        Err(_e) => Err(UserError::UserCreationFailed),
+        Err(_e) => Err(UserError::UserCreationInvalid),
     }
 }
 
@@ -102,42 +104,23 @@ async fn update_user(
 }
 
 #[post("/login")]
-async fn login_user(body: Json<NewUser>, db: Data<Database>) -> Result<Json<String>, UserError> {
-    let users = Database::get_all_users(&db).await;
-    match users {
-        Some(all_users) => {
-            let user = all_users
-                .into_iter()
-                .find(|user| {
-                    user.username == body.username
-                        && verify_password(&body.password, &user.password).unwrap_or(false)
-                })
-                .ok_or(UserError::NoSuchUser)?;
-            // user.status = true;
-            match Database::update_user_status(&db, &user.uuid).await {
-                Some(_) => {
-                    let token =
-                        jwt::generate_token(&user.username).map_err(|_| UserError::NoSuchUser)?;
-                    Ok(Json(token))
-                }
-                None => Err(UserError::UserUpdateFailed),
-            }
+async fn login_user(body: Json<NewUser>, db: Data<Database>) -> Result<Json<String>, AuthError> {
+    let user = Database::get_user(&db, &body.username).await?;
+    verify_password(&body.password, &user.password)?;
+    match Database::update_user_status(&db, &user.username).await {
+        Ok(_) => {
+            let token = jwt::generate_token(&user.username)?;
+            Ok(Json(token))
         }
-        None => Err(UserError::NoUserFound),
+        Err(err) => Err(AuthError::from(err)),
     }
 }
 
-// pub async fn logout_user(token: &str) -> Result<(), AuthError> {
-//     // validate the token and get the username
-//     let username = verify_token(token)?;
-
-//     // update the user's status to offline
-//     status_service::set_offline(&username)
-//         .await
-//         .map_err(|err| {
-//             eprintln!("Error updating user status to offline: {:?}", err);
-//             AuthError::StatusUpdateError
-//         })?;
-
-//     Ok(())
-// }
+#[post("/logout")]
+async fn logout_user(token: Json<Token>, db: Data<Database>) -> Result<Json<user::User>, AuthError> {
+    let username = verify_auth_token(&token.token).await?;
+    match Database::update_user_status(&db, &username).await {
+        Ok(user) => Ok(Json(user)),
+        Err(err) => Err(AuthError::from(err)),
+    }
+}

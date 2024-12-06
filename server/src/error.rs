@@ -8,39 +8,23 @@ use thiserror::Error;
 use derive_more::Display;
 
 impl ResponseError for UserError {
+    fn status_code(&self) -> StatusCode {
+        match self {
+            UserError::UserCreationInvalid => StatusCode::BAD_REQUEST,
+            UserError::UsernameExists => StatusCode::BAD_REQUEST,
+            UserError::UserCreationFailed => StatusCode::INTERNAL_SERVER_ERROR,
+            UserError::NoUserFound => StatusCode::NOT_FOUND,
+            UserError::NoSuchUser => StatusCode::NOT_FOUND,
+            UserError::UserSearchFailed => StatusCode::INTERNAL_SERVER_ERROR,
+            UserError::UserUpdateFailed => StatusCode::INTERNAL_SERVER_ERROR,
+        }
+    }
+
     fn error_response(&self) -> HttpResponse {
         HttpResponse::build(self.status_code())
             .insert_header((CONTENT_TYPE, HeaderValue::from_static("text/plain")))
             .body(self.to_string())
     }
-
-    fn status_code(&self) -> StatusCode {
-        match self {
-            UserError::UserCreationFailed => StatusCode::INTERNAL_SERVER_ERROR,
-            UserError::NoUserFound => StatusCode::NOT_FOUND,
-            UserError::NoSuchUser => StatusCode::NOT_FOUND,
-            UserError::UserUpdateFailed => StatusCode::INTERNAL_SERVER_ERROR,
-        }
-    }
-}
-#[derive(Debug, Error)]
-pub enum InputError {
-    #[error("Username must be between 3 and 20 characters.")]
-    UsernameInvalidLength,
-    #[error("Username can only contain letters and numbers.")]
-    UsernameInvalidFormat,
-    #[error("Password must be between 8 and 64 characters.")]
-    PasswordInvalidLength,
-    #[error("Password must contain at least one uppercase letter.")]
-    PasswordMissingUppercase,
-    #[error("Password must contain at least one lowercase letter.")]
-    PasswordMissingLowercase,
-    #[error("Password must contain at least one number.")]
-    PasswordMissingNumber,
-    #[error("Username cannot be empty.")]
-    UsernameEmpty,
-    #[error("Password cannot be empty.")]
-    PasswordEmpty,
 }
 #[derive(Debug, Error)]
 pub enum PasswordError {
@@ -51,7 +35,6 @@ pub enum PasswordError {
     #[error("Password invalid.")]
     PasswordInvalid,
 }
-
 #[derive(Debug, Error)]
 pub enum TokenError {
     #[error("Token generation failed.")]
@@ -61,27 +44,12 @@ pub enum TokenError {
     #[error("Token invalid")]
     TokenInvalid,
 }
-
-#[derive(Debug, Error)]
-pub enum DatabaseError {
-    #[error("Username does not exists.")]
-    UserNotFound,
-    #[error("Username already exists.")]
-    UsernameExists,
-}
-
 #[derive(Debug, Error)]
 pub enum AuthError {
-    #[error("Failed to update user status.")]
-    StatusUpdateError,
-    #[error(transparent)]
-    DatabaseError(#[from] DatabaseError),
     #[error(transparent)]
     PasswordError(#[from] PasswordError),
     #[error(transparent)]
     TokenError(#[from] TokenError),
-    #[error(transparent)]
-    InputError(#[from] InputError),
     #[error(transparent)]
     UserError(#[from] UserError),
 }
@@ -91,10 +59,16 @@ pub enum UserError {
     UserCreationFailed = 0,
     #[error("No user found")]
     NoUserFound = 1,
-    #[error("The user is not found")]
+    #[error("User does not exist")]
     NoSuchUser = 2,
     #[error("The user can not be updated")]
     UserUpdateFailed = 3,
+    #[error("Username or password too short")]
+    UserCreationInvalid,
+    #[error("Username already exists")]
+    UsernameExists,
+    #[error("User search failed")]
+    UserSearchFailed,
 }
 // Define the Response struct
 #[derive(serde::Serialize)]
@@ -105,15 +79,9 @@ struct Response {
 impl ResponseError for AuthError {
     fn error_response(&self) -> HttpResponse {
         match self {
-            AuthError::StatusUpdateError => HttpResponse::InternalServerError().json(Response {
-                message: "An unexpected error occurred.".to_string(),
-            }),
-            AuthError::InputError(err) => HttpResponse::BadRequest().json(Response {
-                message: err.to_string(),
-            }),
             AuthError::PasswordError(err) => match err {
                 PasswordError::PasswordInvalid => HttpResponse::Unauthorized().json(Response {
-                    message: "Invalid username or password.".to_string(),
+                    message: err.to_string(),
                 }),
                 _ => HttpResponse::InternalServerError().json(Response {
                     message: "An unexpected error occurred.".to_string(),
@@ -128,19 +96,18 @@ impl ResponseError for AuthError {
                     message: "An unexpected error occurred.".to_string(),
                 }),
             },
-            AuthError::DatabaseError(err) => match err {
-                DatabaseError::UserNotFound | DatabaseError::UsernameExists => {
-                    HttpResponse::BadRequest().json(Response {
-                        message: err.to_string(),
-                    })
-                }
-            },
             AuthError::UserError(err) => match err {
-                UserError::UserCreationFailed
-                | UserError::NoUserFound
+                UserError::NoUserFound
                 | UserError::NoSuchUser
                 | UserError::UserUpdateFailed => HttpResponse::BadRequest().json(Response {
                     message: err.to_string(),
+                }),
+                UserError::UserCreationInvalid
+                | UserError::UsernameExists => HttpResponse::BadRequest().json(Response {
+                    message: err.to_string(),
+                }),
+                _ => HttpResponse::InternalServerError().json(Response {
+                    message: "An unexpected error occurred.".to_string(),
                 }),
             },
         }
