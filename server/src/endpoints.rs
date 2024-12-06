@@ -86,7 +86,10 @@ async fn create_user(
                 Err(err) => Err(err),
             }
         }
-        Err(_e) => Err(UserError::UserCreationInvalid),
+        Err(err) => {
+            eprintln!("Error validating user: {:?}", err);
+            Err(UserError::UserCreationInvalid)
+        },
     }
 }
 

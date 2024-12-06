@@ -29,61 +29,42 @@ impl UserTrait for Database {
         }
     }
     async fn get_user(db: &Data<Database>, username: &str) -> Result<User, UserError> {
-        let result = db
-            .client
-            .query(format!(
-                r#"SELECT * FROM user WHERE username = '{}';"#,
-                username.escape_default()
-            ))
-            .await;
+        let user: Result<Option<User>, Error> = db.client.select(("user", username)).await;
 
-        match result {
-            Ok(mut result) => {
-                let user: Option<User> = result.take(0).unwrap();
-                match user {
-                    Some(user) => Ok(user),
-                    _ => Err(UserError::NoSuchUser),
-                }
-            }
+        match user {
+            Ok(Some(found_user)) => Ok(found_user),
+            Ok(None) => Err(UserError::NoSuchUser),
             Err(err) => {
-                eprintln!("Database error: {:?}", err);
+                eprintln!("Error getting user: {:?}", err); // Log the error
                 Err(UserError::UserSearchFailed)
             }
         }
     }
     async fn add_user(db: &Data<Database>, new_user: User) -> Result<User, UserError> {
-        let existing_user = db
+        let existing_user: Result<Option<User>, Error> = db
             .client
-            .query(format!(
-                r#"SELECT * FROM user WHERE username = '{}';"#,
-                new_user.username.escape_default()
-            ))
+            .select(("user", &new_user.username))
             .await;
 
         match existing_user {
-            Ok(mut user) => {
-                let user: Option<User> = user.take(0).unwrap();
-                if user.is_none() {
-                    let user = db
-                        .client
-                        .create(("user", new_user.uuid.clone())) // Specify the table and ID
-                        .content(new_user)
-                        .await;
+            Ok(Some(_)) => Err(UserError::UsernameExists),
+            Ok(None) => {
+                let user = db
+                    .client
+                    .create(("user", new_user.username.clone()))
+                    .content(new_user)
+                    .await;
 
-                    match user {
-                        Ok(user) => Ok(user.unwrap()),
-                        Err(err) => {
-                            eprintln!("Error creating user: {:?}", err); // Log the error
-                            Err(UserError::UserCreationFailed)
-                        }
+                match user {
+                    Ok(user) => Ok(user.unwrap()),
+                    Err(err) => {
+                        eprintln!("Error creating user: {:?}", err); // Log the error
+                        Err(UserError::UserCreationFailed)
                     }
-                } else {
-                    eprintln!("Error creating user: Username already exists");
-                    Err(UserError::UsernameExists)
                 }
             },
             Err(err) => {
-                eprintln!("Database error: {:?}", err);
+                eprintln!("Error creating user: {:?}", err); // Log the error
                 Err(UserError::UserCreationFailed)
             }
         }
@@ -139,12 +120,18 @@ impl UserTrait for Database {
                     }).await;
 
                 match updated_user {
-                    Ok(Some(updated_user)) => Ok(updated_user),
-                    _ =>  Err(UserError::UserUpdateFailed),
+                    Ok(updated_user) => Ok(updated_user.unwrap()),
+                    Err(err) =>  {
+                        eprintln!("Error updating user status: {:?}", err);
+                        Err(UserError::UserUpdateFailed)
+                    },
                 }
             },
             Ok(None) => Err(UserError::NoSuchUser),
-            _ => Err(UserError::UserUpdateFailed),
+            Err(err) => {
+                eprintln!("Error updating user status: {:?}", err);
+                Err(UserError::UserUpdateFailed)
+            },
         }
     }
 }
