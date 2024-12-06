@@ -98,8 +98,7 @@ impl ResponseError for AuthError {
             },
             AuthError::UserError(err) => match err {
                 UserError::NoUserFound
-                | UserError::NoSuchUser
-                | UserError::UserUpdateFailed => HttpResponse::BadRequest().json(Response {
+                | UserError::NoSuchUser => HttpResponse::BadRequest().json(Response {
                     message: err.to_string(),
                 }),
                 UserError::UserCreationInvalid
