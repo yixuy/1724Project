@@ -69,7 +69,7 @@ pub async fn get_user(printed_information: UseStateHandle<String>) {
     match Request::get(&url_with_token).send().await {
         Ok(response) => match response.json::<User>().await {
             Ok(data) => {
-                // gloo_console::log!("Data:", data.clone());
+                gloo_console::log!("Data:", &serde_json::to_string(&data).unwrap());
                 let user_info = serde_json::to_string(&data).unwrap();
                 printed_information.set(user_info);
             }

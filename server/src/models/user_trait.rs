@@ -114,7 +114,7 @@ impl UserTrait for Database {
                         uuid: user.uuid,
                         username: user.username,
                         password: user.password,
-                        status: !user.status,
+                        status: true,
                     })
                     .await;
 

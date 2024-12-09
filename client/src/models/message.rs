@@ -5,5 +5,5 @@ use yew::Properties;
 pub struct Message {
     pub username: String,
     pub content: String,
-    pub timestamp: String,
+    // pub timestamp: String,
 }

@@ -1,15 +1,27 @@
 use crate::db::Database;
 use crate::models::room::*;
+use crate::models::user::User;
 use actix_web::web::Data;
 use async_trait::async_trait;
 use surrealdb::Error;
+use super::message::{self, Message};
 
 // Implement the UserTrait(function) for the Database struct
 #[async_trait]
 pub trait RoomTrait {
     async fn create_new_room(db: &Data<Database>, new_room: Room) -> Option<Room>;
     async fn get_all_rooms(db: &Data<Database>) -> Option<Vec<Room>>;
-    // async fn update_user(db: &Data<Database>, uuid: &str) -> Option<User>;
+    // async fn update_room_user(
+    //     db: &Data<Database>,
+    //     room_id: &str,
+    //     user: User,
+    // ) -> Result<Vec<Room>, Error>;
+
+    // async fn update_room_message(
+    //     db: &Data<Database>,
+    //     room_id: &str,
+    //     message: Message,
+    // ) -> Result<Vec<Room>, Error>;
     // async fn update_user_status(db: &Data<Database>, uuid: &str) -> Option<User>;
 }
 
@@ -43,6 +55,51 @@ impl RoomTrait for Database {
         }
     }
 
+    // async fn update_room_user(
+    //     db: &Data<Database>,
+    //     room_id: &str,
+    //     user: User,
+    // ) -> Result<Vec<Room>, Error> {
+    //     let rooms = db.client.select("room").await;
+
+    //     match rooms {
+    //         Ok(rooms) => {
+    //             let mut rooms: Vec<Room> = rooms.try_into().unwrap();
+    //             let room = rooms
+    //                 .iter_mut()
+    //                 .find(|room| room.room_id == room_id)
+    //                 .unwrap();
+    //             room.users.push(user);
+    //             db.client.update("room").content(rooms).await
+    //         }
+    //         Err(err) => Err(err),
+    //     }
+    // }
+
+    // async fn update_room_message(
+    //     db: &Data<Database>,
+    //     room_id: &str,
+    //     message: Message,
+    // ) -> Result<Vec<Room>, Error> {
+    //     let rooms = db.client.select("room").await;
+
+    //     match rooms {
+    //         Ok(rooms) => {
+    //             let mut rooms: Vec<Room> = rooms.try_into().unwrap();
+    //             let room = rooms
+    //                 .iter_mut()
+    //                 .find(|room| room.room_id == room_id)
+    //                 .unwrap();
+    //             room.messages.push(message);
+    //             db.client.update("room").content(rooms).await
+    //         }
+    //         Err(err) => Err(err),
+    //     }
+    // }
+
+    // async fn update_room_message(db: &Data<Database>, uuid: &str) -> Option<Message> {
+
+    // }
     // async fn add_user(db: &Data<Database>, new_user: User) -> Option<User> {
     //     let user = db
     //         .client

@@ -8,14 +8,17 @@ edition = "2021"
 yew = { git = "https://github.com/yewstack/yew/", features = ["csr"] }
 yew-router = { git = "https://github.com/yewstack/yew.git" }
 yew_styles = { version = "0.11", features = ["button", "text", "navbar"] }
-wasm-bindgen = "0.2.97"
+wasm-bindgen = "0.2.99"
 web-sys = { version = "0.3", features = ["HtmlInputElement", "EventTarget"] }
 stylist = "0.13.0"
 reqwasm = "0.5.0"
-wasm-bindgen-futures = "0.4.47"
+wasm-bindgen-futures = "0.4.49"
 gloo-console = "0.3.0"
 gloo = "0.11.0"
 serde = { version = "1.0.209", features = ["derive"] }
 serde_json = { version = "1.0.133" }
 reqwest = { version = "0.12.9", features = ["json"] }
 validator = { version = "0.19.0", features = ["derive"] }
+gloo-net = "0.6.0"
+futures-util = "0.3"
+yew-hooks = "0.3.0"
