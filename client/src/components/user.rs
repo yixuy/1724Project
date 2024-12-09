@@ -1,4 +1,4 @@
-use crate::endpoints::{get_current_user, get_room, get_user};
+use crate::endpoints::{get_room, get_user};
 use crate::models::room::Room; // Add this line to import the Room type
 use crate::models::user::User;
 use crate::router::Route;
@@ -100,7 +100,7 @@ pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
     let onclick = {
         let room_number = room_number.to_string().clone();
         let navigator = navigator.clone();
-    
+
         let username = username.clone();
 
         Callback::from(move |_| {

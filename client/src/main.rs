@@ -119,7 +119,7 @@ fn app() -> Html {
                             </div>
                         if username == "" {
                         <h1>{format!("Welcome to Rust Chat App {}",username )}</h1>
-                        
+
                             }else{
                                 <h1>{format!("Welcome to the Rust Chat App!" )}</h1>
                             }

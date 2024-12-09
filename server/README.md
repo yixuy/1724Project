@@ -10,7 +10,7 @@
 
 1. `cd server`
 2. `surreal start --log info --user root --pass root --bind 127.0.0.1:5050 file://mydatabase.db`
-3. copy the `127.0.0.1:5050` in the browser to test the database
+3. copy the `127.0.0.1:5050` in the browser to test the database if it is required
 
 #### Run the backend in the terminal
 

@@ -1,11 +1,13 @@
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-
+use crate::models::prelude::*;
 use actix::prelude::*;
 use actix::{Actor, Addr, Context, Handler, Message, StreamHandler};
+use actix_web::web::Data;
 use actix_web::{web, Error, HttpRequest, HttpResponse};
 use actix_web_actors::ws;
 
+use crate::db::Database;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 // Define messages
 #[derive(Message)]
 #[rtype(result = "()")]
@@ -29,23 +31,19 @@ struct MessageToRoom {
     message: String,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct ChatMessage {
-    pub username: String,
-    pub content: String,
-}
-
-// ChatServer manages chat rooms
+#[derive(Debug, Clone)]
 pub struct ChatServer {
     rooms: HashMap<String, Vec<Addr<WebSocketSession>>>,
     histories: HashMap<String, Vec<ChatMessage>>,
+    db: Data<Database>,
 }
 
 impl ChatServer {
-    pub fn new() -> Self {
+    pub fn new(db: Data<Database>) -> Self {
         ChatServer {
             rooms: HashMap::new(),
             histories: HashMap::new(),
+            db,
         }
     }
 }
@@ -56,18 +54,35 @@ impl Actor for ChatServer {
 
 // Handle Join
 impl Handler<Join> for ChatServer {
-    type Result = ();
+    type Result = ResponseActFuture<Self, ()>;
 
-    fn handle(&mut self, msg: Join, _: &mut Context<Self>) {
+    fn handle(&mut self, msg: Join, _: &mut Context<Self>) -> Self::Result {
         let room_users = self.rooms.entry(msg.room_id.clone()).or_default();
         room_users.push(msg.addr);
-        for user in room_users {
-            if let Some(history) = self.histories.get(&msg.room_id) {
-                let history_json = serde_json::to_string(history).unwrap();
+        let db_clone = self.db.clone();
+        let room_id = msg.room_id.clone();
+        let username = msg.username.clone();
+        let room_users_clone = room_users.clone();
+        // let histories_clone = self.histories.clone();
+        let fut = async move {
+            let update_room =
+                Database::update_room_user(&db_clone, room_id.clone(), username.clone()).await;
+            let room_msg;
+            if update_room.is_some() {
+                room_msg = update_room.unwrap().messages.clone();
+            } else {
+                room_msg = Database::get_messages_from_room(&db_clone, &room_id)
+                    .await
+                    .unwrap_or_default();
+            }
+            println!("Room messages: {:?}", room_msg);
+            for user in room_users_clone {
+                let history_json = serde_json::to_string(&room_msg).unwrap();
                 user.do_send(ClientMessage(history_json));
             }
-        }
-        println!("User '{}' joined room '{}'", msg.username, msg.room_id);
+            println!("User '{}' joined room '{}'", username, room_id);
+        };
+        Box::pin(fut.into_actor(self).map(|_, _, _| ()))
     }
 }
 
@@ -84,24 +99,39 @@ impl Handler<Leave> for ChatServer {
 }
 
 impl Handler<MessageToRoom> for ChatServer {
-    type Result = ();
+    type Result = ResponseActFuture<Self, ()>;
 
-    fn handle(&mut self, msg: MessageToRoom, _: &mut Context<Self>) {
+    fn handle(&mut self, msg: MessageToRoom, _: &mut Context<Self>) -> Self::Result {
         if let Some(users) = self.rooms.get(&msg.room_id) {
-            println!("aaa{}", msg.message);
+            // println!("aaa{}", msg.message);
             let chat_message: ChatMessage = serde_json::from_str(&msg.message).unwrap();
 
-            self.histories
-                .entry(msg.room_id.clone())
-                .or_insert_with(Vec::new)
-                .push(chat_message);
-            // println!("history{:?}", self.histories.get(&msg.room_id));
-            for user in users {
-                if let Some(history) = self.histories.get(&msg.room_id) {
-                    let history_json = serde_json::to_string(history).unwrap();
-                    user.do_send(ClientMessage(history_json));
+            let db_clone = self.db.clone();
+            let room_id = msg.room_id.clone();
+            let chat_message_clone = chat_message.clone();
+            let users_clone = users.clone();
+
+            let fut = async move {
+                let update_room = Database::update_messages_from_room(
+                    &db_clone,
+                    room_id.to_string(),
+                    chat_message_clone,
+                )
+                .await;
+                if update_room.is_some() {
+                    let room_msg = update_room.unwrap().messages.clone();
+
+                    for user in users_clone {
+                        let history_json = serde_json::to_string(&room_msg).unwrap();
+                        user.do_send(ClientMessage(history_json));
+                    }
                 }
-            }
+                println!("Send message to room '{}'", room_id);
+            };
+
+            Box::pin(fut.into_actor(self).map(|_, _, _| ()))
+        } else {
+            Box::pin(async {}.into_actor(self).map(|_, _, _| ()))
         }
     }
 }
@@ -181,6 +211,7 @@ pub async fn ws_index(
     stream: web::Payload,
     path: web::Path<(String, String)>,
     server_addr: web::Data<Addr<ChatServer>>,
+    // db: Data<Database>,
 ) -> Result<HttpResponse, Error> {
     let (username, room_id) = path.into_inner();
     let session = WebSocketSession {

@@ -1,7 +1,6 @@
-use super::message::{self, Message};
+use super::message::{self, ChatMessage};
 use crate::db::Database;
 use crate::models::room::*;
-use crate::models::user::User;
 use actix_web::web::Data;
 use async_trait::async_trait;
 use surrealdb::Error;
@@ -11,12 +10,14 @@ use surrealdb::Error;
 pub trait RoomTrait {
     async fn create_new_room(db: &Data<Database>, new_room: Room) -> Option<Room>;
     async fn get_all_rooms(db: &Data<Database>) -> Option<Vec<Room>>;
-    async fn update_room_user(
+    async fn get_messages_from_room(db: &Data<Database>, room_id: &str)
+        -> Option<Vec<ChatMessage>>;
+    async fn update_room_user(db: &Data<Database>, room_id: String, user: String) -> Option<Room>;
+    async fn update_messages_from_room(
         db: &Data<Database>,
-        room_id: &str,
-        user: User,
-    ) -> Result<Vec<Room>, Error>;
-
+        room_id: String,
+        message: ChatMessage,
+    ) -> Option<Room>;
     // async fn update_room_message(
     //     db: &Data<Database>,
     //     room_id: &str,
@@ -38,14 +39,14 @@ impl RoomTrait for Database {
         match room {
             Ok(room) => room,
             Err(err) => {
-                eprintln!("Error creating user: {:?}", err); // Log the error
+                eprintln!("Error creating room: {:?}", err); // Log the error
                 None
             }
         }
     }
 
     async fn get_all_rooms(db: &Data<Database>) -> Option<Vec<Room>> {
-        let rooms = db.client.select("room").await;
+        let mut rooms = db.client.select("room").await;
         match rooms {
             Ok(rooms) => {
                 let rooms: Vec<Room> = rooms.try_into().unwrap();
@@ -55,138 +56,100 @@ impl RoomTrait for Database {
         }
     }
 
-    async fn update_room_user(
+    async fn get_messages_from_room(
         db: &Data<Database>,
         room_id: &str,
-        user: User,
-    ) -> Result<Vec<Room>, Error> {
+    ) -> Option<Vec<ChatMessage>> {
         let rooms = db.client.select("room").await;
-
         match rooms {
             Ok(rooms) => {
-                let mut rooms: Vec<Room> = rooms.try_into().unwrap();
-                let room = rooms
+                let mut cloned_rooms = rooms.clone();
+                let room = cloned_rooms
                     .iter_mut()
-                    .find(|room| room.room_id == room_id)
+                    .find(|room: &&mut Room| room.room_id == room_id)
                     .unwrap();
-                room.users.push(user);
-                db.client.update("room").content(rooms).await
+                Some(room.messages.clone())
             }
-            Err(err) => Err(err),
+            Err(_) => None,
         }
     }
 
-    // async fn update_room_message(
-    //     db: &Data<Database>,
-    //     room_id: &str,
-    //     message: Message,
-    // ) -> Result<Vec<Room>, Error> {
-    //     let rooms = db.client.select("room").await;
+    async fn update_room_user(db: &Data<Database>, room_id: String, user: String) -> Option<Room> {
+        let room_id_clone = room_id.clone();
+        let room: Result<Option<Room>, Error> = db.client.select(("room", room_id_clone)).await;
+        match room {
+            Ok(Some(room)) => {
+                let mut users = room.users.clone();
+                if users.contains(&user) {
+                    return None;
+                }
+                users.push(user);
+                let updated_room = db
+                    .client
+                    .update(("room", room_id.clone()))
+                    .merge(Room {
+                        room_id: room.room_id.to_string(),
+                        users,
+                        messages: room.messages.clone(),
+                    })
+                    .await;
 
-    //     match rooms {
-    //         Ok(rooms) => {
-    //             let mut rooms: Vec<Room> = rooms.try_into().unwrap();
-    //             let room = rooms
-    //                 .iter_mut()
-    //                 .find(|room| room.room_id == room_id)
-    //                 .unwrap();
-    //             room.messages.push(message);
-    //             db.client.update("room").content(rooms).await
-    //         }
-    //         Err(err) => Err(err),
-    //     }
-    // }
+                match updated_room {
+                    Ok(updated_room) => updated_room,
+                    Err(err) => {
+                        eprintln!("Error updating user status: {:?}", err);
+                        None
+                    }
+                }
+            }
+            Ok(None) => {
+                eprintln!("Room not found");
+                None
+            }
+            Err(err) => {
+                eprintln!("Error fetching room: {:?}", err);
+                None
+            }
+        }
+    }
 
-    // async fn update_room_message(db: &Data<Database>, uuid: &str) -> Option<Message> {
+    async fn update_messages_from_room(
+        db: &Data<Database>,
+        room_id: String,
+        message: ChatMessage,
+    ) -> Option<Room> {
+        let room_id_clone = room_id.clone();
+        let room: Result<Option<Room>, Error> = db.client.select(("room", room_id_clone)).await;
+        match room {
+            Ok(Some(room)) => {
+                let mut messages = room.messages.clone();
+                messages.push(message);
+                let updated_room = db
+                    .client
+                    .update(("room", room_id))
+                    .merge(Room {
+                        room_id: room.room_id.to_string(),
+                        users: room.users.clone(),
+                        messages: messages,
+                    })
+                    .await;
 
-    // }
-    // async fn add_user(db: &Data<Database>, new_user: User) -> Option<User> {
-    //     let user = db
-    //         .client
-    //         .create(("user", new_user.uuid.clone())) // Specify the table and ID
-    //         .content(new_user)
-    //         .await;
-
-    //     match user {
-    //         Ok(user) => user,
-    //         Err(err) => {
-    //             eprintln!("Error creating user: {:?}", err); // Log the error
-    //             None
-    //         }
-    //     }
-    // }
-
-    // async fn update_user(db: &Data<Database>, uuid: &str) -> Option<User> {
-    //     let user: Result<Option<User>, Error> = db.client.select(("user", uuid)).await;
-
-    //     match user {
-    //         Ok(this_user) => {
-    //             match this_user {
-    //                 Some(found_user) => {
-    //                     // user.first_name = "John".to_string();
-    //                     // user.last_name = "Doe".to_string();
-    //                     let updated_user = db
-    //                         .client
-    //                         .update(("user", uuid))
-    //                         .merge(User {
-    //                             uuid: found_user.uuid.to_string(),
-    //                             //need to change this to the username
-    //                             username: "John".to_string(),
-    //                             password: found_user.password.clone(),
-    //                             status: found_user.status.clone(),
-    //                         })
-    //                         .await;
-    //                     match updated_user {
-    //                         Ok(updated_user) => updated_user,
-    //                         Err(err) => {
-    //                             eprintln!("Error updating user: {:?}", err); // Log the error
-    //                             None
-    //                         }
-    //                     }
-    //                 }
-    //                 None => None,
-    //             }
-    //         }
-    //         Err(err) => {
-    //             eprintln!("Error updating user: {:?}", err); // Log the error
-    //             None
-    //         }
-    //     }
-    // }
-
-    // async fn update_user_status(db: &Data<Database>, username: &str) -> Option<User> {
-    //     let user: Result<Option<User>, Error> = db.client.select(("user", username)).await;
-
-    //     match user {
-    //         Ok(this_user) => {
-    //             match this_user {
-    //                 Some(found_user) => {
-    //                     let updated_user = db
-    //                         .client
-    //                         .update(("user", username))
-    //                         .merge(User {
-    //                             uuid: found_user.uuid.to_string(),
-    //                             //need to change this to the username
-    //                             username: found_user.username.to_string(),
-    //                             password: found_user.password.clone(),
-    //                             status: !found_user.status.clone(),
-    //                         })
-    //                         .await;
-    //                     match updated_user {
-    //                         Ok(updated_user) => updated_user,
-    //                         Err(err) => {
-    //                             eprintln!("Error updating user: {:?}", err); // Log the error
-    //                             None
-    //                         }
-    //                     }
-    //                 }
-    //                 None => None,
-    //             }
-    //         }
-    //         Err(err) => {
-    //             eprintln!("Error updating user: {:?}", err); // Log the error
-    //             None
-    //         }
-    //     }
-    // }
+                match updated_room {
+                    Ok(updated_room) => updated_room,
+                    Err(err) => {
+                        eprintln!("Error updating user status: {:?}", err);
+                        None
+                    }
+                }
+            }
+            Ok(None) => {
+                eprintln!("Room not found");
+                None
+            }
+            Err(err) => {
+                eprintln!("Error fetching room: {:?}", err);
+                None
+            }
+        }
+    }
 }

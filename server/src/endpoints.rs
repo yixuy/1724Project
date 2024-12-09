@@ -10,6 +10,7 @@ use crate::models::user;
 use crate::models::user::Token;
 use crate::models::user_trait::UserTrait;
 use crate::services::auth_service::verify_auth_token;
+use crate::services::hash::{hash_password, verify_password};
 use crate::services::jwt;
 use actix_web::web::Data;
 use actix_web::{get, post, web::Json, web::Path, Responder};
@@ -18,8 +19,6 @@ use user::NewUser;
 use user::UpdateUserURL;
 use uuid::Uuid;
 use validator::Validate;
-// Import the hash_password and verify_password functions
-use crate::services::hash::{hash_password, verify_password};
 
 // Implement the routers for the server
 
@@ -46,10 +45,7 @@ async fn get_user(token: Path<String>, db: Data<Database>) -> Result<Json<user::
 async fn test_handler() -> impl Responder {
     Json("This is a test!".to_string())
 }
-// #[get("/test")]
-// async fn test_handler() -> impl Responder {
-//     Json("This is a test!".to_string())
-// }
+
 #[get("/users")]
 async fn get_users(db: Data<Database>) -> Result<Json<Vec<user::User>>, UserError> {
     let users = Database::get_all_users(&db).await;
@@ -139,12 +135,8 @@ async fn login_user(body: Json<NewUser>, db: Data<Database>) -> Result<Json<Stri
 
 #[post("/create_room")]
 async fn create_room(body: Json<NewRoom>, db: Data<Database>) -> Result<Json<Room>, RoomError> {
-    // Create a new user with id and password
-    // let is_valid = body.validate();
-    // match is_valid {
-    println!("body: {:?}", body.room_id);
     let new_room = Database::create_new_room(&db, Room::new(body.room_id.clone())).await;
-
+    
     match new_room {
         Some(new_room) => Ok(Json(new_room)),
         None => Err(RoomError::RoomCreationFailed),
@@ -175,11 +167,3 @@ async fn get_room(room_id: Path<String>, db: Data<Database>) -> Result<Json<Room
         None => Err(RoomError::NoRoomFound.into()),
     }
 }
-// #[post("/logout")]
-// async fn logout_user(token: Json<Token>, db: Data<Database>) -> Result<Json<user::User>, AuthError> {
-//     let username = verify_auth_token(&token.token).await?;
-//     match Database::update_user_status(&db, &username).await {
-//         Ok(user) => Ok(Json(user)),
-//         Err(err) => Err(AuthError::from(err)),
-//     }
-// }

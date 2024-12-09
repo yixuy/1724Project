@@ -1,10 +1,10 @@
 use actix_cors::Cors;
 use actix_web::web::Data;
-use actix_web::{ web, App, HttpServer};
+use actix_web::{web, App, HttpServer};
 mod db;
 mod models;
-use db::Database;
 use actix::Actor;
+use db::Database;
 mod auth;
 mod endpoints;
 mod error;
@@ -13,27 +13,29 @@ mod services;
 use endpoints::*;
 
 const BACKEND_URL: &str = "127.0.0.1:5000";
+// const FRONTR_URL: &str = "http://127.0.0.1:8080";
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // Connect to the database
-    let db = Database::init()
+    let db: Database = Database::init()
         .await
         .expect("Failed to connect to the database");
-    let server = server::ChatServer::new().start();
-    let db_data = Data::new(db);
+    let db_data = Data::new(db.clone());
+    let server = Data::new(server::ChatServer::new(db_data.clone()).start());
 
     // Check point
     // Don’t forget to add the service to the app
-    
+
     HttpServer::new(move || {
         // Allow cors for the server
         let cors = Cors::default()
             .allow_any_origin()
             .allow_any_method()
             .allow_any_header();
+
         App::new()
             .wrap(cors)
-            .app_data(web::Data::new(server.clone()))
+            .app_data(server.clone())
             .app_data(db_data.clone())
             .service(test_handler)
             .service(get_user)

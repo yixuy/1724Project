@@ -6,9 +6,9 @@ pub mod user;
 pub mod user_trait;
 
 pub mod prelude {
+    pub use super::message::ChatMessage;
+    pub use super::room::Room;
+    pub use super::room_trait::RoomTrait;
     pub use super::user::User;
     pub use super::user_trait::UserTrait;
-    // pub use super::room::Room;
-    // pub use super::room_trait::RoomTrait;
-    pub use super::message::Message;
 }

@@ -20,7 +20,7 @@ pub struct Token {
     pub token: String,
 }
 
-#[derive(Validate, Debug, Serialize, Deserialize)]
+#[derive(Validate, Debug, Serialize, Deserialize, Clone)]
 pub struct User {
     pub uuid: String,
     pub username: String,
