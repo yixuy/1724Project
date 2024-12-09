@@ -24,49 +24,61 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
     let room_id_clone = room_id.clone();
     let room_id = room_id.clone();
     let has_run = use_state(|| false);
+    let join_msg = use_state(|| String::new());
+    let join_msg_clone = join_msg.clone();
 
     use_effect(move || {
-        let messages_for_effect = messages_for_receive.clone();
+        let join_msg = join_msg_clone.clone();
+        let messages_for_effect = messages_for_receive;
         let username = username_clone.clone();
         let room_id = room_id.clone();
         let has_run = has_run.clone();
-        gloo_console::log!(format!("move{:?}", messages_for_effect.clone()));
+
         if !*has_run {
             let ws_url = format!("ws://127.0.0.1:5000/ws/{}/{}", username, room_id);
             let ws = WebSocket::open(&ws_url).expect("Failed to connect to WebSocket");
 
             let (w, mut r) = ws.split();
             writer_for_effect.set(Rc::new(RefCell::new(Some(w))));
-            let messages_for_effect = messages_for_effect.clone();
+
             gloo_console::log!(format!("spawn_local{:?}", messages_for_effect.clone()));
             spawn_local(async move {
                 let messages_for_effect = messages_for_effect.clone();
                 while let Some(Ok(WsMessage::Text(text))) = r.next().await {
-                    // gloo_console::log!(format!("while{:?}", messages_for_effect.clone()));
-                    // gloo_console::log!("Received a message:", &text);
+                    gloo_console::log!(format!("text: {}", text));
 
-                    if let Some((prefix, json_part)) = text.split_once(':') {
-                        let prefix = prefix.trim();
-                        let json_str = json_part.trim();
-                        if prefix.to_string() != username {
-                            let msg = Message {
-                                username: prefix.to_string(),
-                                content: serde_json::from_str::<Message>(json_str).unwrap().content,
-                            };
-                            let json_msg = serde_json::to_string(&msg).unwrap();
-                            gloo_console::log!(format!("COn{:?}", json_str));
-
-                            if let Ok(received_msg) =
-                                serde_json::from_str::<Message>(json_msg.as_str())
-                            {
-                                let mut new_messages = (*messages_for_effect).clone();
-                                new_messages.push(received_msg);
-                                messages_for_effect.set(new_messages);
-                            } else {
-                                gloo_console::log!("Failed to parse message");
+                    if text.contains("joined") {
+                        join_msg.set(text.clone());
+                    } else {
+                        let raw_messages: Vec<Message> = match serde_json::from_str(&text) {
+                            Ok(messages) => messages,
+                            Err(e) => {
+                                gloo_console::log!("Failed to parse message:", &format!("{:?}", e));
+                                continue;
                             }
-                        }
+                        };
+                        messages_for_effect.set(raw_messages);
                     }
+
+                    // if let Some((prefix, json_part)) = text.split_once(':') {
+                    //     let prefix = prefix.trim();
+                    //     let json_str = json_part.trim();
+                    //     if prefix.to_string() != username {
+                    //         let msg = Message {
+                    //             username: prefix.to_string(),
+                    //             content: serde_json::from_str::<Message>(json_str).unwrap().content,
+                    //         };
+                    //         let json_msg = serde_json::to_string(&msg).unwrap();
+
+                    //         if let Ok(received_msg) =
+                    //             serde_json::from_str::<Message>(json_msg.as_str())
+                    //         {
+
+                    //         } else {
+                    //             gloo_console::log!("Failed to parse message");
+                    //         }
+                    //     }
+                    // }
                 }
             });
             has_run.set(true);
@@ -97,21 +109,18 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
                             content: msg_input.clone(),
                         };
 
-                        // Serialize message to JSON
                         if let Ok(msg_json) = serde_json::to_string(&msg) {
                             // Send over WebSocket
+                            gloo_console::log!("Message", &format!("{:?}", msg_json));
                             if let Err(e) = w.send(WsMessage::Text(msg_json)).await {
                                 gloo_console::log!("Failed to send message:", &format!("{:?}", e));
                             } else {
-                                // Since message sent successfully, update UI immediately
                                 let mut new_messages = (*messages_for_async).clone();
                                 new_messages.push(msg);
-                                // gloo_console::log!(format!("{:?}", new_messages));
                                 messages_for_async.set(new_messages);
                             }
                         }
 
-                        // Clear the input box
                         message_input_for_async.set(String::new());
                     } else {
                         gloo_console::log!("WebSocket not connected");
@@ -206,18 +215,20 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
         <>
             <div class={css.get_class_name().to_string()}>
                     <div class = "title">
-                    <h1>{ format!("User {} in Room {}", username_display, room_id_clone ) }</h1>
-
+                        <h1>{ format!("User {} in Room {}", username_display, room_id_clone ) }</h1>
                     </div>
 
             <div class="messages">
+                <p>{ (*join_msg).clone() }</p>
                 { for ((*messages).clone()).iter().map(|message| html! {
                     <div class="message">
                         <span>{ format!("{}[{}]:", &message.username, "status")}</span>
                         <br />
                         <strong>{ &message.content }</strong>
+
                     </div>
                 })}
+
             </div>
             <form onsubmit={on_message_submit}>
                 <input
@@ -228,6 +239,9 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
                 />
                 <button type="submit">{ "Send" }</button>
             </form>
+            <div>
+
+            </div>
         </div>
         </>
     }

@@ -1,6 +1,6 @@
 use actix_cors::Cors;
 use actix_web::web::Data;
-use actix_web::{http, web, App, HttpServer};
+use actix_web::{ web, App, HttpServer};
 mod db;
 mod models;
 use db::Database;
@@ -11,7 +11,6 @@ mod error;
 mod server;
 mod services;
 use endpoints::*;
-// mod user_trait;
 
 const BACKEND_URL: &str = "127.0.0.1:5000";
 #[actix_web::main]

@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 use actix::prelude::*;
@@ -28,15 +29,23 @@ struct MessageToRoom {
     message: String,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ChatMessage {
+    pub username: String,
+    pub content: String,
+}
+
 // ChatServer manages chat rooms
 pub struct ChatServer {
     rooms: HashMap<String, Vec<Addr<WebSocketSession>>>,
+    histories: HashMap<String, Vec<ChatMessage>>,
 }
 
 impl ChatServer {
     pub fn new() -> Self {
         ChatServer {
             rooms: HashMap::new(),
+            histories: HashMap::new(),
         }
     }
 }
@@ -52,6 +61,12 @@ impl Handler<Join> for ChatServer {
     fn handle(&mut self, msg: Join, _: &mut Context<Self>) {
         let room_users = self.rooms.entry(msg.room_id.clone()).or_default();
         room_users.push(msg.addr);
+        for user in room_users {
+            if let Some(history) = self.histories.get(&msg.room_id) {
+                let history_json = serde_json::to_string(history).unwrap();
+                user.do_send(ClientMessage(history_json));
+            }
+        }
         println!("User '{}' joined room '{}'", msg.username, msg.room_id);
     }
 }
@@ -73,8 +88,19 @@ impl Handler<MessageToRoom> for ChatServer {
 
     fn handle(&mut self, msg: MessageToRoom, _: &mut Context<Self>) {
         if let Some(users) = self.rooms.get(&msg.room_id) {
+            println!("aaa{}", msg.message);
+            let chat_message: ChatMessage = serde_json::from_str(&msg.message).unwrap();
+
+            self.histories
+                .entry(msg.room_id.clone())
+                .or_insert_with(Vec::new)
+                .push(chat_message);
+            // println!("history{:?}", self.histories.get(&msg.room_id));
             for user in users {
-                user.do_send(ClientMessage(msg.message.clone()));
+                if let Some(history) = self.histories.get(&msg.room_id) {
+                    let history_json = serde_json::to_string(history).unwrap();
+                    user.do_send(ClientMessage(history_json));
+                }
             }
         }
     }
@@ -126,7 +152,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WebSocketSession 
         match msg {
             Ok(ws::Message::Text(text)) => {
                 // Broadcast the received message to the room
-                let formatted_message = format!("{}: {}", self.username, text);
+                let formatted_message = format!("{}", text);
                 self.server_addr.do_send(MessageToRoom {
                     room_id: self.room_id.clone(),
                     message: formatted_message,
