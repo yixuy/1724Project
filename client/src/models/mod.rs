@@ -2,11 +2,10 @@
 pub mod message;
 pub mod room;
 pub mod user;
-// pub mod user_trait;
 
 pub mod prelude {
-    pub use super::message::Message;
+    pub use super::message::ChatMessage;
     pub use super::room::Room;
+    pub use super::room::RoomAttribute;
     pub use super::user::User;
-    // pub use super::user_trait::UserTrait;
 }

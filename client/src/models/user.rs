@@ -11,8 +11,6 @@ pub struct User {
     pub room_id: Option<String>,
 }
 
-
-
 impl User {
     pub fn new(username: String, password: String) -> User {
         User {
@@ -27,11 +25,11 @@ impl User {
         self.username = username;
     }
 
-    pub fn set_password(&mut self, password: String) {
-        self.password = password;
-    }
+    // pub fn set_password(&mut self, password: String) {
+    //     self.password = password;
+    // }
 
-    pub fn set_status(&mut self, status: bool) {
-        self.status = status;
-    }
+    // pub fn set_status(&mut self, status: bool) {
+    //     self.status = status;
+    // }
 }

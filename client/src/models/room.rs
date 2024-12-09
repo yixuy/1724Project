@@ -1,5 +1,4 @@
-use crate::models::message::Message;
-use crate::models::user::User;
+use crate::models::message::ChatMessage;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 use yew::Properties;
@@ -18,7 +17,7 @@ pub struct RoomAttribute {
 pub struct Room {
     pub room_id: String,
     pub users: Vec<String>,
-    pub messages: Vec<Message>,
+    pub messages: Vec<ChatMessage>,
 }
 
 impl Room {

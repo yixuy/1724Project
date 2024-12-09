@@ -46,6 +46,10 @@ impl ChatServer {
 
 impl Actor for ChatServer {
     type Context = Context<Self>;
+
+    fn started(&mut self, _: &mut Self::Context) {
+        println!("ChatServer started");
+    }
 }
 
 // Handle Join
@@ -76,7 +80,7 @@ impl Handler<Join> for ChatServer {
                 let history_json = serde_json::to_string(&room_msg).unwrap();
                 user.do_send(ClientMessage(history_json));
             }
-            // println!("User '{}' joined room '{}'", username, room_id);
+            println!("User '{}' joined room '{}'", username, room_id);
         };
         Box::pin(fut.into_actor(self).map(|_, _, _| ()))
     }

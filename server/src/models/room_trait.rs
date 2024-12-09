@@ -1,4 +1,4 @@
-use super::message::{self, ChatMessage};
+use super::message::ChatMessage;
 use crate::db::Database;
 use crate::models::room::*;
 use actix_web::web::Data;
@@ -46,7 +46,7 @@ impl RoomTrait for Database {
     }
 
     async fn get_all_rooms(db: &Data<Database>) -> Option<Vec<Room>> {
-        let mut rooms = db.client.select("room").await;
+        let rooms = db.client.select("room").await;
         match rooms {
             Ok(rooms) => {
                 let rooms: Vec<Room> = rooms.try_into().unwrap();

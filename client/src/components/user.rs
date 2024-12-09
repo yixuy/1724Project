@@ -86,7 +86,7 @@ pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
                     room_number.set(num);
                     let room_number = num.to_string();
                     wasm_bindgen_futures::spawn_local(async move {
-                        if let Some(room) = get_room(&room_number).await {
+                        if get_room(&room_number).await.is_some() {
                             is_room_created.set(true);
                         } else {
                             is_room_created.set(false);

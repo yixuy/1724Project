@@ -1,7 +1,4 @@
-use crate::endpoints::get_user;
-use crate::models::message::Message;
-use crate::models::room::RoomAttribute;
-use crate::models::user::User;
+use crate::models::prelude::*;
 use futures_util::{SinkExt, StreamExt};
 use reqwasm::websocket::{futures::WebSocket, Message as WsMessage};
 use serde_json;
@@ -50,7 +47,7 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
                     if text.contains("joined") {
                         join_msg.set(text.clone());
                     } else {
-                        let raw_messages: Vec<Message> = match serde_json::from_str(&text) {
+                        let raw_messages: Vec<ChatMessage> = match serde_json::from_str(&text) {
                             Ok(messages) => messages,
                             Err(e) => {
                                 gloo_console::log!("Failed to parse message:", &format!("{:?}", e));
@@ -104,7 +101,7 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
                 if !msg_input.is_empty() {
                     if let Some(w) = writer_for_async.borrow_mut().as_mut() {
                         // Construct the message to send
-                        let msg = Message {
+                        let msg = ChatMessage {
                             username: uname.clone(),
                             content: msg_input.clone(),
                         };

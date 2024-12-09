@@ -3,12 +3,10 @@ mod endpoints;
 mod models;
 mod router;
 use endpoints::{get_current_user, get_user};
-
-use models::user::User;
+use models::prelude::*;
 use router::{switch, Route};
 use stylist::style;
 use yew::prelude::*;
-use yew_router::history::{History, Location};
 use yew_router::prelude::*;
 
 #[function_component(App)]

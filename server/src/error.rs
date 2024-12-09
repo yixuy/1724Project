@@ -41,6 +41,7 @@ impl ResponseError for RoomError {
     }
 }
 #[derive(Debug, Error)]
+#[allow(dead_code)]
 pub enum InputError {
     #[error("Username must be between 3 and 20 characters.")]
     UsernameInvalidLength,
@@ -115,7 +116,7 @@ pub enum RoomError {
     #[error("The room is not found")]
     NoSuchRoom = 2,
     #[error("The room can not be updated")]
-    RoomUpdateFailed = 3,
+    RoomUpdateFailed,
 }
 // Define the Response struct
 #[derive(serde::Serialize)]

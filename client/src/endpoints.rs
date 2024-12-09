@@ -1,5 +1,4 @@
-use crate::models::room::Room; // Add this line to import the Room type
-use crate::models::user::User;
+use crate::models::prelude::*;
 use gloo::storage::{LocalStorage, Storage};
 use reqwasm::http::Request;
 use yew::prelude::*;

@@ -1,5 +1,5 @@
 use crate::models::message::ChatMessage; // Add this line to import the Message type
-use crate::models::user::User;
+                                         // use crate::models::user::User;
 use serde::{Deserialize, Serialize};
 use validator::Validate; // Add this line to import the User type
 

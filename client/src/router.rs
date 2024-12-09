@@ -1,5 +1,4 @@
 use crate::components::prelude::*;
-use crate::components::user::UserComponent;
 use yew::{html, Html};
 use yew_router::prelude::*;
 
