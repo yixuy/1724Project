@@ -136,7 +136,7 @@ async fn login_user(body: Json<NewUser>, db: Data<Database>) -> Result<Json<Stri
 #[post("/create_room")]
 async fn create_room(body: Json<NewRoom>, db: Data<Database>) -> Result<Json<Room>, RoomError> {
     let new_room = Database::create_new_room(&db, Room::new(body.room_id.clone())).await;
-    
+
     match new_room {
         Some(new_room) => Ok(Json(new_room)),
         None => Err(RoomError::RoomCreationFailed),
@@ -157,6 +157,7 @@ async fn get_rooms(db: Data<Database>) -> Result<Json<Vec<Room>>, RoomError> {
 async fn get_room(room_id: Path<String>, db: Data<Database>) -> Result<Json<Room>, AuthError> {
     let room_id = room_id.clone();
     let rooms = Database::get_all_rooms(&db).await;
+    println!("Rooms: {:?}", rooms);
     match rooms {
         Some(all_rooms) => Ok(Json(
             all_rooms

@@ -1,12 +1,10 @@
+use crate::db::Database;
 use crate::models::prelude::*;
 use actix::prelude::*;
 use actix::{Actor, Addr, Context, Handler, Message, StreamHandler};
 use actix_web::web::Data;
 use actix_web::{web, Error, HttpRequest, HttpResponse};
 use actix_web_actors::ws;
-
-use crate::db::Database;
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 // Define messages
 #[derive(Message)]
@@ -34,7 +32,6 @@ struct MessageToRoom {
 #[derive(Debug, Clone)]
 pub struct ChatServer {
     rooms: HashMap<String, Vec<Addr<WebSocketSession>>>,
-    histories: HashMap<String, Vec<ChatMessage>>,
     db: Data<Database>,
 }
 
@@ -42,7 +39,6 @@ impl ChatServer {
     pub fn new(db: Data<Database>) -> Self {
         ChatServer {
             rooms: HashMap::new(),
-            histories: HashMap::new(),
             db,
         }
     }
@@ -63,7 +59,7 @@ impl Handler<Join> for ChatServer {
         let room_id = msg.room_id.clone();
         let username = msg.username.clone();
         let room_users_clone = room_users.clone();
-        // let histories_clone = self.histories.clone();
+
         let fut = async move {
             let update_room =
                 Database::update_room_user(&db_clone, room_id.clone(), username.clone()).await;
@@ -75,12 +71,12 @@ impl Handler<Join> for ChatServer {
                     .await
                     .unwrap_or_default();
             }
-            println!("Room messages: {:?}", room_msg);
+            // println!("Room messages: {:?}", room_msg);
             for user in room_users_clone {
                 let history_json = serde_json::to_string(&room_msg).unwrap();
                 user.do_send(ClientMessage(history_json));
             }
-            println!("User '{}' joined room '{}'", username, room_id);
+            // println!("User '{}' joined room '{}'", username, room_id);
         };
         Box::pin(fut.into_actor(self).map(|_, _, _| ()))
     }
@@ -145,7 +141,6 @@ impl Handler<ClientMessage> for WebSocketSession {
     type Result = ();
 
     fn handle(&mut self, msg: ClientMessage, ctx: &mut Self::Context) {
-        println!("message: {}", msg.0);
         ctx.text(msg.0);
     }
 }

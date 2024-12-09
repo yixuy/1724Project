@@ -13,7 +13,7 @@ mod services;
 use endpoints::*;
 
 const BACKEND_URL: &str = "127.0.0.1:5000";
-// const FRONTR_URL: &str = "http://127.0.0.1:8080";
+const FRONT_URL: &str = "http://127.0.0.1:8080";
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // Connect to the database
@@ -29,7 +29,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         // Allow cors for the server
         let cors = Cors::default()
-            .allow_any_origin()
+            .allowed_origin(FRONT_URL)
             .allow_any_method()
             .allow_any_header();
 

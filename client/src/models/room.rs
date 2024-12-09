@@ -17,7 +17,7 @@ pub struct RoomAttribute {
 #[derive(Validate, Debug, Serialize, Deserialize, Clone, Default, PartialEq)]
 pub struct Room {
     pub room_id: String,
-    pub users: Vec<User>,
+    pub users: Vec<String>,
     pub messages: Vec<Message>,
 }
 
