@@ -1,4 +1,4 @@
-# ECE1724 Course Project Proposal
+# ECE1724 Course Project - Final Report
 
 | Student Name|  Student ID |  
 |-------------|-------------|
