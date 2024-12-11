@@ -1,10 +1,10 @@
 # ECE1724 Course Project - Final Report
 
-| Student Name|  Student ID |  
-|-------------|-------------|
-| Zhaoyu (Selena) Yan  | 1006521621 |
-| Yiran (Sheila) Chen | 1004392739 |
-| Yixu (Henry) Ye  | 1010506579 |
+| Student Name        | Student ID | Student Email               |
+|---------------------|------------|-----------------------------|
+| Zhaoyu (Selena) Yan | 1006521621 | zhaoyu.yan@mail.utoronto.ca |
+| Yiran (Sheila) Chen | 1004392739 |                             |
+| Yixu (Henry) Ye     | 1010506579 |                             |
 
 ## Motivation
 
