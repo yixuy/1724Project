@@ -32,6 +32,14 @@ Users can create new chat rooms with unique room numbers, allowing others to joi
 #### 4. Real-time messaging using WebSockets
 The application utilizes WebSocket technology, a protocol designed to establish a persistent, full-duplex connection between clients and the server. Unlike traditional HTTP, WebSocket supports continuous, two-way communication without the overhead of repeatedly opening and closing connections. This enables the application to transmit messages instantly, ensuring a smooth and interactive user experience. By facilitating immediate message delivery, the system offers a dynamic and responsive platform for efficient and real-time communication.
 
+#### 5. User Online/Offline status detection
+The system includes User Online/Offline status detection to show whether a user is online or offline in a chat room. This functionality helps improve user engagement by enabling participants to see who is currently active in the conversation.
+
+#### 6. Message persistence and history retrieval
+To ensure a reliable communication experience, all chat room messages are stored in a database, enabling both persistence and easy access to message history. This feature prevents message loss caused by unexpected disconnections or browser refreshes. Upon re-entering a chat room, users can retrieve previously exchanged messages, seamlessly resuming their conversations without missing any context. With the help of SurrealDB, the message retrieval process is fast and reliable, enhancing the user experience by providing consistent and efficient access to message history
+
+#### 7. Frontend user interface
+A simple and responsive interface has been developed, enabling users to register, log in, create or join chat rooms, and exchange messages in real time. Built with the Yew framework, the design prioritizes ease of use and smooth navigation. Key features such as user authentication, room creation, and message display are fully integrated. The frontend works seamlessly with the backend, ensuring a unified and efficient chat experience.
 
 
 
