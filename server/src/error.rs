@@ -66,7 +66,7 @@ pub enum PasswordError {
     HashingError,
     #[error("Password verification failed.")]
     VerificationError,
-    #[error("Password invalid.")]
+    #[error("Invalid password.")]
     PasswordInvalid,
 }
 #[derive(Debug, Error)]
