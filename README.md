@@ -28,20 +28,29 @@ Ultimately, the project aims to create a fully functional chat application writt
 
 ## Features
 
-#### 3. Chat room creation and joining
+Our real-time chat application incorporates several essential features designed to ensure a seamless and engaging user experience. Each feature supports the objective of building a scalable and efficient communication platform. Below are the main features:
+
+#### 1. User Registration
+Users can register by providing a username and password. To ensure security, the username must be at least three characters long, and the password at least five characters. The system validates the input and provides feedback if the criteria are not met (e.g., "username or password too short"). The username must also be unique, verified against existing records in the database. If the username already exists, the user is prompted to choose another one. Successful registration securely stores the username and a hashed password in the database to protect against unauthorized access.
+
+#### 2. User Login and Authentication
+Users can log in with their registered credentials. If the username is unregistered, the system notifies the user to sign up first. If the username exists but the password is incorrect, the user is prompted with "Invalid password." Upon successful login, the system generates a JWT token valid for 12 hours, allowing access to protected features such as chat rooms without re-entering credentials. Once the token expires, users are required to re-login to maintain security.
+
+#### 3. User Session Management
+Logged-in users can log out at any time, which invalidates their session. They cannot access chat rooms or send messages without re-logging in. This mechanism ensures that only authenticated users can interact with the system, enhancing security and scalability.
+
+#### 4. Chat room creation and joining
 Users can create new chat rooms with unique room numbers, allowing others to join and engage in conversations. Each chat room operates independently, ensuring that messages sent within a specific room are visible only to its participants. This isolation enhances privacy and minimizes distractions, enabling users to focus on their discussions. By providing dedicated spaces for communication, this feature empowers users to engage in their favorite topics with ease and efficiency.
 
-#### 4. Real-time messaging using WebSockets
+#### 5. Real-time messaging using WebSockets
 The application utilizes WebSocket technology, a protocol designed to establish a persistent, full-duplex connection between clients and the server. Unlike traditional HTTP, WebSocket supports continuous, two-way communication without the overhead of repeatedly opening and closing connections. This enables the application to transmit messages instantly, ensuring a smooth and interactive user experience. By facilitating immediate message delivery, the system offers a dynamic and responsive platform for efficient and real-time communication.
 
-#### 5. User Online/Offline status detection
-The system includes User Online/Offline status detection to show whether a user is online or offline in a chat room. This functionality helps improve user engagement by enabling participants to see who is currently active in the conversation.
+#### 6. User Status Detection
+The application tracks user presence in real-time, displaying statuses such as online, offline, and left room to other participants in a chat room. Logged-in users are marked as online, while logged-out users are marked as offline. When a user leaves a chat room, a notification appears on the chat page to inform others of their departure. This feature enhances the interactive experience by fostering awareness of user activity within chat rooms.
 
-#### 6. Message persistence and history retrieval
+#### 7. Message persistence and history retrieval
 To ensure a reliable communication experience, all chat room messages are stored in a database, enabling both persistence and easy access to message history. This feature prevents message loss caused by unexpected disconnections or browser refreshes. Upon re-entering a chat room, users can retrieve previously exchanged messages, seamlessly resuming their conversations without missing any context. With the help of SurrealDB, the message retrieval process is fast and reliable, enhancing the user experience by providing consistent and efficient access to message history
 
-#### 7. Frontend user interface
-A simple and responsive interface has been developed, enabling users to register, log in, create or join chat rooms, and exchange messages in real time. Built with the Yew framework, the design prioritizes ease of use and smooth navigation. Key features such as user authentication, room creation, and message display are fully integrated. The frontend works seamlessly with the backend, ensuring a unified and efficient chat experience.
-
-
+#### 8. User-Friendly Frontend Interface
+The application includes an intuitive and responsive user interface designed with a simple and minimal aesthetic. It features clear and obvious buttons, easy navigation, and clear instructions, ensuring a seamless experience for all users, regardless of technical expertise. The interface allows users to effortlessly register, log in, create or join chat rooms, and exchange messages. Within chat rooms, real-time user status updates are prominently displayed, making interactions more engaging and transparent.
 
