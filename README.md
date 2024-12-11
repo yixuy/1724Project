@@ -24,5 +24,6 @@ The backend will use Actix Web, a powerful and scalable framework for high-perfo
 
 Ultimately, the project aims to create a fully functional chat application written entirely in Rust, showcasing the language's potential for building more than just system-level software. By connecting a high-performance backend with a responsive, user-friendly frontend, this project explores how Rust can be used to create innovative web applications and contribute to its growing adoption in the industry.
 
+## Features
 
 
