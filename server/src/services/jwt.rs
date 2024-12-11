@@ -17,7 +17,7 @@ const SECRET: &str = "secret"; // placeholder; consider load from env vars
 pub fn generate_token(username: &str) -> Result<String, TokenError> {
     // creates a JWT for authenticated users
     let expiration_time = Utc::now()
-        .checked_add_signed(Duration::hours(1))
+        .checked_add_signed(Duration::hours(12))
         .ok_or_else(|| {
             eprintln!("Failed to compute expiration time.");
             TokenError::TokenGenerationError
