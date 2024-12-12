@@ -42,9 +42,7 @@ pub fn home() -> Html {
     let username = get_current_user().unwrap_or_else(|| "".to_string());
     let fetched = use_state(|| false);
     let user_status = use_state(|| "".to_string());
-    let user_status_clone = user_status.clone();
     if username != "" {
-        let user = User::new(username.clone(), "".to_string());
         {
             let fetched = fetched.clone();
             if *fetched == false {

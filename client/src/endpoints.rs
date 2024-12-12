@@ -4,24 +4,24 @@ use reqwasm::http::Request;
 use yew::prelude::*;
 const API_URL: &str = "http://127.0.0.1:5000";
 
-pub async fn fetch_test_data(printed_information: UseStateHandle<String>) {
-    let fetch_api_url = format!("{}/test", API_URL);
-    match Request::get(&fetch_api_url).send().await {
-        Ok(response) => match response.json::<String>().await {
-            Ok(data) => {
-                printed_information.set(data);
-            }
-            Err(err) => {
-                gloo_console::error!("Failed to parse JSON:", err.to_string());
-                printed_information.set("Error: Invalid JSON response.".to_string());
-            }
-        },
-        Err(err) => {
-            gloo_console::error!("Request failed:", err.to_string());
-            printed_information.set("Error: Request failed.".to_string());
-        }
-    }
-}
+// pub async fn fetch_test_data(printed_information: UseStateHandle<String>) {
+//     let fetch_api_url = format!("{}/test", API_URL);
+//     match Request::get(&fetch_api_url).send().await {
+//         Ok(response) => match response.json::<String>().await {
+//             Ok(data) => {
+//                 printed_information.set(data);
+//             }
+//             Err(err) => {
+//                 gloo_console::error!("Failed to parse JSON:", err.to_string());
+//                 printed_information.set("Error: Invalid JSON response.".to_string());
+//             }
+//         },
+//         Err(err) => {
+//             gloo_console::error!("Request failed:", err.to_string());
+//             printed_information.set("Error: Request failed.".to_string());
+//         }
+//     }
+// }
 
 pub fn get_current_user() -> Option<String> {
     LocalStorage::get("current_user").ok()
