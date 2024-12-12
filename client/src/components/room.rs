@@ -153,7 +153,12 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
         }
 
         .message {
-            margin-bottom: 10px;
+            border: 2px solid white; /* White border */
+            border-radius: 5px; /* Optional: adds rounded corners */
+            padding: 10px; /* Adds some space inside the border */
+            margin: 5px; /* Adds space between messages */
+            background-color: #f0f8ff; /* Optional: subtle background color for contrast */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: adds a shadow for better visibility */
         }
 
         .title {
@@ -206,8 +211,9 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
                 // <p>{ status.len() }</p>
                 { for messages.iter().zip(status_clone.iter()).map(|(message, status)| html! {
                     <div class="message">
-                        <span>{ format!("{} [{}] {}:", &message.username, status, &message.timestamp) }</span>
-                        <br />
+                        <span>{ format!("Username: {} ----- Status: [{}] ----- {}", &message.username, status,  message.timestamp ) }</span>
+                        <br/>
+
                         <strong>{ &message.content }</strong>
                     </div>
                 })}

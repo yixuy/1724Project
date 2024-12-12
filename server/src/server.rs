@@ -137,7 +137,7 @@ impl Handler<MessageToRoom> for ChatServer {
             let room_id = msg.room_id.clone();
             let chat_message_clone = chat_message.clone();
             let users_clone = users.clone();
-            print!("{:?}", users_clone);
+            // print!("{:?}", users_clone);
             let fut = async move {
                 let update_room = Database::update_messages_from_room(
                     &db_clone,
