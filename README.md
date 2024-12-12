@@ -106,6 +106,50 @@ Please run those commands in the terminal as the order below using MacOs, and pl
 | Integration         | Backend and Frontend Connection                                                   | 1 Week        | Yixu (Henry) Ye     |
 | Testing             | Features Testing                                                                  | 1 Week        | Team                |
 
+<table class="tg">
+  <thead>
+    <tr>
+      <th>Project Phase</th>
+      <th>Task</th>
+      <th>Duration</th>
+      <th>Task Taker</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Initialization</td>
+      <td>Requirement Analysis and Basic Design</td>
+      <td>1 Week</td>
+      <td>Team</td>
+    </tr>
+    <tr>
+      <td rowspan=3>Development</td>
+      <td>Backend Implementation(User Registration, Authentication and Status)</td>
+      <td rowspan=3>2 weeks</td>
+      <td>Zhaoyu (Selena) Yan</td>
+    </tr>
+    <tr>
+      <td>Backend Implementation(Chat room creation and joining, Real-time messaging)</td>
+      <td>Yiran (Sheila) Chen</td>
+    </tr>
+    <tr>
+      <td>Frontend Implementation(UI Design)</td>
+      <td>Yixu (Henry) Ye</td>
+    </tr>
+    <tr>
+      <td>Integration</td>
+      <td>Backend and Frontend Connection</td>
+      <td>1 Week</td>
+      <td>Yixu (Henry) Ye</td>
+    </tr>
+    <tr>
+      <td>Testing</td>
+      <td>All Features Testing</td>
+      <td>1 Week</td>
+      <td>Team</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Lessons Learned
 
