@@ -54,12 +54,94 @@ To ensure a reliable communication experience, all chat room messages are stored
 #### 8. User-Friendly Frontend Interface
 The application includes an intuitive and responsive user interface designed with a simple and minimal aesthetic. It features clear and obvious buttons, easy navigation, and clear instructions, ensuring a seamless experience for all users, regardless of technical expertise. The interface allows users to effortlessly register, log in, create or join chat rooms, and exchange messages. Within chat rooms, real-time user status updates are prominently displayed, making interactions more engaging and transparent.
 
-## Video Demo
 
 ## User’s Guide
 
 ## Reproducibility Guide
 
+Please run those commands in the terminal as the order below using MacOs, and please make sure you have installed all the dependencies before running the commands. Meanwhile, the port 5050, 8080, and 5000 should be available for the application to run.
+
+### Backend
+
+#### Before running the backend
+
+- install before running the database
+`brew install surrealdb/tap/surreal`
+- install before running the backend
+`cargo install cargo-watch`
+
+#### Run the database in the terminal
+
+1. `cd server`
+2. `surreal start --log info --user root --pass root --bind 127.0.0.1:5050 file://mydatabase.db`
+
+#### Run the backend in the terminal
+
+1. `cd server`
+2. `cargo watch -x run`
+
+### Frontend
+
+#### Before running the frontend
+
+- install before running the frontend
+  
+1. `rustup target add wasm32-unknown-unknown`
+2. `cargo install --locked trunk`
+
+#### Run the frontend
+
+1. `cd client`
+2. `trunk serve --open`
+
+
 ## Contributions
+<table class="tg">
+  <thead>
+    <tr>
+      <th>Project Phase</th>
+      <th>Task</th>
+      <th>Duration</th>
+      <th>Task Taker</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Initialization</td>
+      <td>Requirement Analysis and Basic Design</td>
+      <td>1 Week</td>
+      <td>Team</td>
+    </tr>
+    <tr>
+      <td rowspan=3>Development</td>
+      <td>Backend Implementation<br>(User Registration, Authentication and Status)</td>
+      <td rowspan=3>2 Weeks</td>
+      <td>Selena</td>
+    </tr>
+    <tr>
+      <td>Backend Implementation<br>(Chat Room Creation and Joining, Real-time Messaging)</td>
+      <td>Sheila</td>
+    </tr>
+    <tr>
+      <td>Frontend Implementation<br>(User Interface)</td>
+      <td>Henry</td>
+    </tr>
+    <tr>
+      <td>Integration</td>
+      <td>Backend and Frontend Connection</td>
+      <td>1 Week</td>
+      <td>Henry</td>
+    </tr>
+    <tr>
+      <td>Testing</td>
+      <td>All Features Testing</td>
+      <td>1 Week</td>
+      <td>Team</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Lessons Learned
+
+## Video Demo
+
