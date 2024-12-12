@@ -5,7 +5,12 @@ use actix::{Actor, Addr, Context, Handler, Message, StreamHandler};
 use actix_web::web::Data;
 use actix_web::{web, Error, HttpRequest, HttpResponse};
 use actix_web_actors::ws;
+use chrono::{
+    DateTime, Datelike, Duration, FixedOffset, Local, NaiveDate, NaiveDateTime, NaiveTime,
+    TimeZone, Utc,
+};
 use std::collections::HashMap;
+
 // Define messages
 #[derive(Message)]
 #[rtype(result = "()")]
@@ -104,8 +109,21 @@ impl Handler<MessageToRoom> for ChatServer {
     fn handle(&mut self, msg: MessageToRoom, _: &mut Context<Self>) -> Self::Result {
         if let Some(users) = self.rooms.get(&msg.room_id) {
             // println!("aaa{}", msg.message);
-            let chat_message: ChatMessage = serde_json::from_str(&msg.message).unwrap();
+            let local_time = Local::now().time().format("%H:%M:%S").to_string();
+            let local_date = Local::now().date().format("%Y-%m-%d").to_string();
+            
+            let chat_message_json: NewChatMessage = serde_json::from_str(&msg.message).unwrap();
 
+            let chat_message = ChatMessage {
+                username: chat_message_json.username.to_string(),
+                content: chat_message_json.content.clone(),
+                timestamp: local_date + " " + &local_time,
+            };
+
+            println!("aaa{}", msg.message);
+
+            // .to_string();
+            // println!("Local time: {}", local_time);
             let db_clone = self.db.clone();
             let room_id = msg.room_id.clone();
             let chat_message_clone = chat_message.clone();

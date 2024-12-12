@@ -56,26 +56,6 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
                         };
                         messages_for_effect.set(raw_messages);
                     }
-
-                    // if let Some((prefix, json_part)) = text.split_once(':') {
-                    //     let prefix = prefix.trim();
-                    //     let json_str = json_part.trim();
-                    //     if prefix.to_string() != username {
-                    //         let msg = Message {
-                    //             username: prefix.to_string(),
-                    //             content: serde_json::from_str::<Message>(json_str).unwrap().content,
-                    //         };
-                    //         let json_msg = serde_json::to_string(&msg).unwrap();
-
-                    //         if let Ok(received_msg) =
-                    //             serde_json::from_str::<Message>(json_msg.as_str())
-                    //         {
-
-                    //         } else {
-                    //             gloo_console::log!("Failed to parse message");
-                    //         }
-                    //     }
-                    // }
                 }
             });
             has_run.set(true);
@@ -95,13 +75,12 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
             let writer_for_async = writer.clone();
             let uname = username.clone();
             let message_input_for_async = message_input.clone();
-            let messages_for_async = messages.clone();
 
             spawn_local(async move {
                 if !msg_input.is_empty() {
                     if let Some(w) = writer_for_async.borrow_mut().as_mut() {
                         // Construct the message to send
-                        let msg = ChatMessage {
+                        let msg = NewChatMessage {
                             username: uname.clone(),
                             content: msg_input.clone(),
                         };
@@ -111,10 +90,6 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
                             gloo_console::log!("Message", &format!("{:?}", msg_json));
                             if let Err(e) = w.send(WsMessage::Text(msg_json)).await {
                                 gloo_console::log!("Failed to send message:", &format!("{:?}", e));
-                            } else {
-                                let mut new_messages = (*messages_for_async).clone();
-                                new_messages.push(msg);
-                                messages_for_async.set(new_messages);
                             }
                         }
 
@@ -219,7 +194,7 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
                 <p>{ (*join_msg).clone() }</p>
                 { for ((*messages).clone()).iter().map(|message| html! {
                     <div class="message">
-                        <span>{ format!("{}[{}]:", &message.username, "status")}</span>
+                        <span>{ format!("{}[{}] {}:", &message.username, "status", &message.timestamp)}</span>
                         <br />
                         <strong>{ &message.content }</strong>
 

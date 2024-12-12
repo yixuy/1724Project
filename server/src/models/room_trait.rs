@@ -66,9 +66,9 @@ impl RoomTrait for Database {
                 let mut cloned_rooms = rooms.clone();
                 let room = cloned_rooms
                     .iter_mut()
-                    .find(|room: &&mut Room| room.room_id == room_id)
-                    .unwrap();
-                Some(room.messages.clone())
+                    .find(|room: &&mut Room| room.room_id == room_id);
+
+                Some(room.unwrap().messages.clone())
             }
             Err(_) => None,
         }

@@ -3,8 +3,14 @@ use validator::Validate;
 
 #[derive(Validate, Debug, Serialize, Deserialize, Clone)]
 // #[serde(crate = "rocket::serde")]
+
+pub struct NewChatMessage {
+    pub username: String,
+    pub content: String,
+}
+#[derive(Validate, Debug, Serialize, Deserialize, Clone)]
 pub struct ChatMessage {
-    // pub room_id: String,
+    pub timestamp: String,
     pub username: String,
     pub content: String,
 }
