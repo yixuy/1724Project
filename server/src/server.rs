@@ -1,14 +1,13 @@
 use crate::db::Database;
 use crate::models::prelude::*;
+use crate::models::user::UserStatus;
+use crate::models::user_trait::UserTrait;
 use actix::prelude::*;
 use actix::{Actor, Addr, Context, Handler, Message, StreamHandler};
 use actix_web::web::Data;
 use actix_web::{web, Error, HttpRequest, HttpResponse};
 use actix_web_actors::ws;
-use chrono::{
-    DateTime, Datelike, Duration, FixedOffset, Local, NaiveDate, NaiveDateTime, NaiveTime,
-    TimeZone, Utc,
-};
+use chrono::Local;
 use std::collections::HashMap;
 
 // Define messages
@@ -67,11 +66,15 @@ impl Handler<Join> for ChatServer {
         let db_clone = self.db.clone();
         let room_id = msg.room_id.clone();
         let username = msg.username.clone();
+
         let room_users_clone = room_users.clone();
 
         let fut = async move {
             let update_room =
                 Database::update_room_user(&db_clone, room_id.clone(), username.clone()).await;
+            Database::update_user_status(&db_clone, &username, UserStatus::Online)
+                .await
+                .unwrap();
             let room_msg;
             if update_room.is_some() {
                 room_msg = update_room.unwrap().messages.clone();
@@ -96,8 +99,18 @@ impl Handler<Leave> for ChatServer {
     type Result = ();
 
     fn handle(&mut self, msg: Leave, _: &mut Context<Self>) {
+        let db_clone = self.db.clone();
+
+        let username = msg.username.clone();
         if let Some(users) = self.rooms.get_mut(&msg.room_id) {
             users.retain(|addr| addr.connected());
+            let db_clone = db_clone.clone();
+            let username = username.clone();
+            actix::spawn(async move {
+                Database::update_user_status(&db_clone, &username, UserStatus::Leave)
+                    .await
+                    .unwrap();
+            });
             println!("User '{}' left room '{}'", msg.username, msg.room_id);
         }
     }
@@ -111,24 +124,20 @@ impl Handler<MessageToRoom> for ChatServer {
             // println!("aaa{}", msg.message);
             let local_time = Local::now().time().format("%H:%M:%S").to_string();
             let local_date = Local::now().date().format("%Y-%m-%d").to_string();
-            
+
             let chat_message_json: NewChatMessage = serde_json::from_str(&msg.message).unwrap();
 
             let chat_message = ChatMessage {
                 username: chat_message_json.username.to_string(),
                 content: chat_message_json.content.clone(),
                 timestamp: local_date + " " + &local_time,
+                // user_status: UserStatus::Online,
             };
-
-            println!("aaa{}", msg.message);
-
-            // .to_string();
-            // println!("Local time: {}", local_time);
             let db_clone = self.db.clone();
             let room_id = msg.room_id.clone();
             let chat_message_clone = chat_message.clone();
             let users_clone = users.clone();
-
+            print!("{:?}", users_clone);
             let fut = async move {
                 let update_room = Database::update_messages_from_room(
                     &db_clone,
@@ -137,7 +146,7 @@ impl Handler<MessageToRoom> for ChatServer {
                 )
                 .await;
                 if update_room.is_some() {
-                    let room_msg = update_room.unwrap().messages.clone();
+                    let room_msg: Vec<ChatMessage> = update_room.unwrap().messages.clone();
 
                     for user in users_clone {
                         let history_json = serde_json::to_string(&room_msg).unwrap();

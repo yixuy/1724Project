@@ -23,12 +23,6 @@ pub async fn fetch_test_data(printed_information: UseStateHandle<String>) {
     }
 }
 
-// fn get_current_user_state() -> User {
-//     let username = get_current_user().unwrap();
-//     let token = get_user_token(&username).unwrap();
-//     let user = User::new(username, token);
-//     user
-// }
 pub fn get_current_user() -> Option<String> {
     LocalStorage::get("current_user").ok()
 }
@@ -56,6 +50,24 @@ pub async fn get_room(room_id: &str) -> Option<Room> {
     }
 }
 
+pub async fn get_user_status_by_username(username: String) -> Option<String> {
+    let fetch_api_url = format!("{}/get_status", API_URL);
+    let url_with_username = format!("{}/{}", fetch_api_url, username);
+    match Request::get(&url_with_username).send().await {
+        Ok(response) => match response.json::<String>().await {
+            Ok(data) => Some(data),
+            Err(err) => {
+                gloo_console::error!("Failed to parse JSON:", err.to_string());
+                None
+            }
+        },
+        Err(err) => {
+            gloo_console::error!("Request failed:", err.to_string());
+            None
+        }
+    }
+}
+
 pub async fn get_user(printed_information: UseStateHandle<String>) {
     let fetch_api_url = format!("{}/user", API_URL);
     let username = get_current_user().unwrap_or_else(|| "".to_string());
@@ -68,7 +80,6 @@ pub async fn get_user(printed_information: UseStateHandle<String>) {
     match Request::get(&url_with_token).send().await {
         Ok(response) => match response.json::<User>().await {
             Ok(data) => {
-                gloo_console::log!("Data:", &serde_json::to_string(&data).unwrap());
                 let user_info = serde_json::to_string(&data).unwrap();
                 printed_information.set(user_info);
             }

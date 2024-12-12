@@ -15,6 +15,7 @@ reqwasm = "0.5.0"
 wasm-bindgen-futures = "0.4.49"
 gloo-console = "0.3.0"
 gloo = "0.11.0"
+futures = "0.3.17"
 serde = { version = "1.0.216", features = ["derive"] }
 serde_json = { version = "1.0.133" }
 reqwest = { version = "0.12.9", features = ["json"] }

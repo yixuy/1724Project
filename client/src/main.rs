@@ -89,20 +89,6 @@ fn app() -> Html {
         "#
     )
     .unwrap();
-    // let navigator = use_navigator().unwrap();
-    // let home_on_click: Callback<MouseEvent> = Callback::from(move |_| navigator.push(&Route::Home));
-    let printed_information = use_state(|| "nothing".to_string());
-
-    // let printed_information = printed_information
-    let test_on_click = {
-        let printed_information = printed_information.clone();
-        Callback::from(move |_| {
-            let printed_information = printed_information.clone();
-            wasm_bindgen_futures::spawn_local(async move {
-                endpoints::fetch_test_data(printed_information).await;
-            });
-        })
-    };
 
     html! {
         <div class={css.get_class_name().to_string()}>
@@ -111,7 +97,7 @@ fn app() -> Html {
                         <BrowserRouter>
                     <div class = "card" >
                             <div class="top-left-nav">
-                                <button onclick={test_on_click.clone()}>{"Test"}</button>
+
                                 <br/>
                                 <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
                             </div>
@@ -125,19 +111,13 @@ fn app() -> Html {
                             </div>
                                 <hr />
                                 <Switch<Route> render={switch} />
-                                //     <div class="top-left-nav">
-                                //     <button onclick={home_on_click}>{ "Home" }</button>
-                                // </div>
+
                             </BrowserRouter>
                             <divider/>
                 </div>
                 <divider/>
                 <div class="top-left-nav">
 
-
-
-
-                    <p  >{ (*printed_information).clone() }</p>
                 </div>
 
 

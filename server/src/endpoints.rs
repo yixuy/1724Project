@@ -73,7 +73,7 @@ async fn create_user(
                     new_uuid.to_string(),
                     body.username.clone(),
                     hash_password,
-                    false,
+                    user::UserStatus::Offline,
                 ),
             )
             .await;
@@ -107,13 +107,23 @@ async fn update_user(
 async fn login_user(body: Json<NewUser>, db: Data<Database>) -> Result<Json<String>, AuthError> {
     let user = Database::get_user(&db, &body.username).await?;
     verify_password(&body.password, &user.password)?;
-    match Database::update_user_status(&db, &user.username).await {
+    match Database::update_user_status(&db, &user.username, user::UserStatus::Online).await {
         Ok(_) => {
             let token = jwt::generate_token(&user.username)?;
             Ok(Json(token))
         }
         Err(err) => Err(AuthError::from(err)),
     }
+}
+
+#[get("/get_status/{username}")]
+async fn get_user_status(
+    username: Path<String>,
+    db: Data<Database>,
+) -> Result<Json<user::UserStatus>, UserError> {
+    let username = username.clone();
+    let user = Database::get_user(&db, &username).await?;
+    Ok(Json(user.status.clone()))
 }
 
 // pub async fn logout_user(token: &str) -> Result<(), AuthError> {

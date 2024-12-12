@@ -1,6 +1,7 @@
 use crate::db::Database;
 use crate::error::UserError;
 use crate::models::user::User;
+use crate::models::user::UserStatus;
 use actix_web::web::Data;
 use async_trait::async_trait;
 use surrealdb::Error;
@@ -11,8 +12,14 @@ pub trait UserTrait {
     async fn get_all_users(db: &Data<Database>) -> Option<Vec<User>>;
     async fn get_user(db: &Data<Database>, user: &str) -> Result<User, UserError>;
     async fn add_user(db: &Data<Database>, new_user: User) -> Result<User, UserError>;
+    async fn get_user_status(db: &Data<Database>, username: &str) -> Result<UserStatus, UserError>;
+
     async fn update_user(db: &Data<Database>, uuid: &str) -> Option<User>;
-    async fn update_user_status(db: &Data<Database>, username: &str) -> Result<User, UserError>;
+    async fn update_user_status(
+        db: &Data<Database>,
+        username: &str,
+        status: UserStatus,
+    ) -> Result<User, UserError>;
 }
 
 // #[derive(Validate, Debug, Serialize, Deserialize)]
@@ -40,6 +47,7 @@ impl UserTrait for Database {
             }
         }
     }
+
     async fn add_user(db: &Data<Database>, new_user: User) -> Result<User, UserError> {
         let existing_user: Result<Option<User>, Error> =
             db.client.select(("user", &new_user.username)).await;
@@ -67,7 +75,18 @@ impl UserTrait for Database {
             }
         }
     }
+    async fn get_user_status(db: &Data<Database>, username: &str) -> Result<UserStatus, UserError> {
+        let user: Result<Option<User>, Error> = db.client.select(("user", username)).await;
 
+        match user {
+            Ok(Some(user)) => Ok(user.status),
+            Ok(None) => Err(UserError::NoSuchUser),
+            Err(err) => {
+                eprintln!("Error getting user status: {:?}", err); // Log the error
+                Err(UserError::UserSearchFailed)
+            }
+        }
+    }
     async fn update_user(db: &Data<Database>, uuid: &str) -> Option<User> {
         let user: Result<Option<User>, Error> = db.client.select(("user", uuid)).await;
 
@@ -103,7 +122,11 @@ impl UserTrait for Database {
         }
     }
 
-    async fn update_user_status(db: &Data<Database>, username: &str) -> Result<User, UserError> {
+    async fn update_user_status(
+        db: &Data<Database>,
+        username: &str,
+        status: UserStatus,
+    ) -> Result<User, UserError> {
         let user: Result<Option<User>, Error> = db.client.select(("user", username)).await;
         match user {
             Ok(Some(user)) => {
@@ -114,7 +137,7 @@ impl UserTrait for Database {
                         uuid: user.uuid,
                         username: user.username,
                         password: user.password,
-                        status: true,
+                        status: status,
                     })
                     .await;
 

@@ -4,8 +4,8 @@ pub mod room;
 pub mod user;
 
 pub mod prelude {
-    pub use super::message::NewChatMessage;
     pub use super::message::ChatMessage;
+    pub use super::message::NewChatMessage;
     pub use super::room::Room;
     pub use super::room::RoomAttribute;
     pub use super::user::User;

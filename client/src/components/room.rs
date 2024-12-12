@@ -1,3 +1,5 @@
+use crate::endpoints::*;
+use crate::models::message::DisplayMessage;
 use crate::models::prelude::*;
 use futures_util::{SinkExt, StreamExt};
 use reqwasm::websocket::{futures::WebSocket, Message as WsMessage};
@@ -11,8 +13,10 @@ use yew::prelude::*;
 #[function_component(Room)]
 pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
     let messages = use_state(|| vec![]);
+    let display_messages: UseStateHandle<Vec<DisplayMessage>> = use_state(|| vec![]);
+    let status: UseStateHandle<Vec<String>> = use_state::<Vec<String>, _>(|| vec![]);
+    let status_clone = status.clone();
     let messages_for_receive = messages.clone();
-    let messages_for_send = messages.clone();
     let message_input = use_state(|| String::new());
     let writer = use_state(|| Rc::new(RefCell::new(None)));
     let writer_for_effect = writer.clone();
@@ -23,6 +27,7 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
     let has_run = use_state(|| false);
     let join_msg = use_state(|| String::new());
     let join_msg_clone = join_msg.clone();
+    let user_info = use_state(|| "".to_string());
 
     use_effect(move || {
         let join_msg = join_msg_clone.clone();
@@ -38,12 +43,9 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
             let (w, mut r) = ws.split();
             writer_for_effect.set(Rc::new(RefCell::new(Some(w))));
 
-            gloo_console::log!(format!("spawn_local{:?}", messages_for_effect.clone()));
             spawn_local(async move {
                 let messages_for_effect = messages_for_effect.clone();
                 while let Some(Ok(WsMessage::Text(text))) = r.next().await {
-                    gloo_console::log!(format!("text: {}", text));
-
                     if text.contains("joined") {
                         join_msg.set(text.clone());
                     } else {
@@ -54,6 +56,18 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
                                 continue;
                             }
                         };
+                        let status_clone = status.clone();
+
+                        let mut temp_status_futures = vec![];
+                        for msg in raw_messages.iter() {
+                            let username = msg.username.clone();
+                            temp_status_futures.push(async move {
+                                get_user_status_by_username(username).await.unwrap()
+                            });
+                        }
+                        let temp_status: Vec<String> =
+                            futures::future::join_all(temp_status_futures).await;
+                        status.set(temp_status);
                         messages_for_effect.set(raw_messages);
                     }
                 }
@@ -67,7 +81,6 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
         let message_input = message_input.clone();
         let writer = writer.clone();
         let username = username.clone();
-        let messages = messages_for_send.clone();
 
         Callback::from(move |event: SubmitEvent| {
             event.prevent_default();
@@ -87,7 +100,6 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
 
                         if let Ok(msg_json) = serde_json::to_string(&msg) {
                             // Send over WebSocket
-                            gloo_console::log!("Message", &format!("{:?}", msg_json));
                             if let Err(e) = w.send(WsMessage::Text(msg_json)).await {
                                 gloo_console::log!("Failed to send message:", &format!("{:?}", e));
                             }
@@ -191,13 +203,12 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
                     </div>
 
             <div class="messages">
-                <p>{ (*join_msg).clone() }</p>
-                { for ((*messages).clone()).iter().map(|message| html! {
+                // <p>{ status.len() }</p>
+                { for messages.iter().zip(status_clone.iter()).map(|(message, status)| html! {
                     <div class="message">
-                        <span>{ format!("{}[{}] {}:", &message.username, "status", &message.timestamp)}</span>
+                        <span>{ format!("{} [{}] {}:", &message.username, status, &message.timestamp) }</span>
                         <br />
                         <strong>{ &message.content }</strong>
-
                     </div>
                 })}
 
