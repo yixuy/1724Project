@@ -46,13 +46,15 @@ Users can create new chat rooms with unique room numbers, allowing others to joi
 The application utilizes WebSocket technology, a protocol designed to establish a persistent, full-duplex connection between clients and the server. Unlike traditional HTTP, WebSocket supports continuous, two-way communication without the overhead of repeatedly opening and closing connections. This enables the application to transmit messages instantly, ensuring a smooth and interactive user experience. By facilitating immediate message delivery, the system offers a dynamic and responsive platform for efficient and real-time communication.
 
 #### 6. User Status Detection
-The application tracks user presence in real-time, displaying statuses such as online, offline, and left room to other participants in a chat room. Logged-in users are marked as online, while logged-out users are marked as offline. When a user leaves a chat room, a notification appears on the chat page to inform others of their departure. This feature enhances the interactive experience by fostering awareness of user activity within chat rooms.
+The application tracks user presence in real-time, displaying statuses such as online, offline, and leave to other participants in a chat room. Logged-in users are marked as online, while logged-out users are marked as offline. When a user leaves a chat room, their status is updated to leave, allowing others to see that the user has exited the room. This feature enhances the interactive experience by fostering awareness of user activity within chat rooms.
 
 #### 7. Message persistence and history retrieval
 To ensure a reliable communication experience, all chat room messages are stored in a database, enabling both persistence and easy access to message history. This feature prevents message loss caused by unexpected disconnections or browser refreshes. Upon re-entering a chat room, users can retrieve previously exchanged messages, seamlessly resuming their conversations without missing any context. With the help of SurrealDB, the message retrieval process is fast and reliable, enhancing the user experience by providing consistent and efficient access to message history.
 
 #### 8. User-Friendly Frontend Interface
 The application includes an intuitive and responsive user interface designed with a simple and minimal aesthetic. It features clear and obvious buttons, easy navigation, and clear instructions, ensuring a seamless experience for all users, regardless of technical expertise. The interface allows users to effortlessly register, log in, create or join chat rooms, and exchange messages. Within chat rooms, real-time user status updates are prominently displayed, making interactions more engaging and transparent.
+
+## Video Demo
 
 ## User’s Guide
 
@@ -61,5 +63,3 @@ The application includes an intuitive and responsive user interface designed wit
 ## Contributions
 
 ## Lessons Learned
-
-## Video Demo
