@@ -96,16 +96,6 @@ Please run those commands in the terminal as the order below using MacOs, and pl
 
 
 ## Contributions
-
-| Project Phase       | Task                                                                              | Duration      | Task Taker          |
-|---------------------|-----------------------------------------------------------------------------------|---------------|---------------------|
-| Initialization      | Requirement Analysis and Basic Design                                             | 1 Week        | Team                |
-| Development         | Backend Implementation<br>(User Registration, Authentication and Status)          | 2 weeks       | Zhaoyu (Selena) Yan |
-| Development         | Backend Implementation<br>(Chat room creation and joining, Real-time messaging)   | 2 Weeks       | Yiran (Sheila) Chen |
-| Development         | Frontend Implementation(UI Design)                                                | 2 Weeks       | Yixu (Henry) Ye     |
-| Integration         | Backend and Frontend Connection                                                   | 1 Week        | Yixu (Henry) Ye     |
-| Testing             | Features Testing                                                                  | 1 Week        | Team                |
-
 <table class="tg">
   <thead>
     <tr>
@@ -133,7 +123,7 @@ Please run those commands in the terminal as the order below using MacOs, and pl
       <td>Sheila</td>
     </tr>
     <tr>
-      <td>Frontend Implementation(UI Design)</td>
+      <td>Frontend Implementation<br>(User Interface)</td>
       <td>Henry</td>
     </tr>
     <tr>
