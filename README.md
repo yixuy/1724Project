@@ -124,23 +124,23 @@ Please run those commands in the terminal as the order below using MacOs, and pl
     </tr>
     <tr>
       <td rowspan=3>Development</td>
-      <td>Backend Implementation(User Registration, Authentication and Status)</td>
+      <td>Backend Implementation<br>(User Registration, Authentication and Status)</td>
       <td rowspan=3>2 weeks</td>
-      <td>Zhaoyu (Selena) Yan</td>
+      <td>Selena</td>
     </tr>
     <tr>
-      <td>Backend Implementation(Chat room creation and joining, Real-time messaging)</td>
-      <td>Yiran (Sheila) Chen</td>
+      <td>Backend Implementation<br>(Chat room creation and joining, Real-time messaging)</td>
+      <td>Sheila</td>
     </tr>
     <tr>
       <td>Frontend Implementation(UI Design)</td>
-      <td>Yixu (Henry) Ye</td>
+      <td>Henry</td>
     </tr>
     <tr>
       <td>Integration</td>
       <td>Backend and Frontend Connection</td>
       <td>1 Week</td>
-      <td>Yixu (Henry) Ye</td>
+      <td>Henry</td>
     </tr>
     <tr>
       <td>Testing</td>
