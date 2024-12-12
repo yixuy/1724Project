@@ -59,7 +59,15 @@ This User's Guide provides detailed instructions on how users can navigate and u
 
 #### 1. Main Page
 Once `trunk serve --open` is executed on the client side, the main page will be displayed.
-<img width="1470" alt="截屏2024-12-12 下午5 43 21" src="https://github.com/user-attachments/assets/1accef74-0115-41fa-b888-5e52df772534" />
+
+<img width="1470" alt="截屏2024-12-12 下午5 45 06" src="https://github.com/user-attachments/assets/ff2797f0-b21b-4716-9d37-47ae99dd3897" />
+
+#### 2. Sign In
+As indicated on the main page with the message "Please sign up with a username before you can join the room," you can click the "Sign In" button in the top-right corner. This will redirect you to the sign-in page.
+
+<img width="1470" alt="截屏2024-12-12 下午5 48 10" src="https://github.com/user-attachments/assets/bc0c25f5-2787-4d87-8d5f-27b3ba2f1a90" />
+<img width="1469" alt="截屏2024-12-12 下午5 50 05" src="https://github.com/user-attachments/assets/df8511bc-ccab-4249-9901-fd6ff74f2a83" />
+
 
 
 
