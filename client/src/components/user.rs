@@ -44,6 +44,17 @@ pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
         text-align: center; /* Center text inside the card */
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Adds shadow for a card effect */
     }
+     .logout-button {
+            height: 10%;
+            margin-left: auto; /* Push the button to the far right in a flex container */
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #FF4C4C;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
         "#
     )
     .unwrap();
@@ -193,7 +204,7 @@ pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
             <div class="card">
                 if user.username != ""{
                     <h2>{ format!("Welcome, {}!",user.username) }</h2>
-                    <button onclick = {log_out_click}>{"Sign Out"}</button>
+                    <button class = "logout-button" onclick = {log_out_click}>{"Sign Out"}</button>
                 } else {
                     <h2>{ "Please Sign up the username before you can join the room" }</h2>
                 }
