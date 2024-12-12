@@ -99,7 +99,7 @@ Please run those commands in the terminal as the order below using MacOs, and pl
 
 | Project Phase       | Task                          | Duration      | Task Taker          |
 |---------------------|-------------------------------|---------------|---------------------|
-| Initialization      | Requirement Analysis         | 2 Weeks       | Zhaoyu (Selena) Yan |
+| Initialization      | Requirement Analysis         | 1 Week        | Team |
 | Development         | Backend Implementation       | 3 Weeks       | Yiran (Sheila) Chen |
 | Frontend Development| UI Design and Integration    | 3 Weeks       | Yixu (Henry) Ye     |
 
