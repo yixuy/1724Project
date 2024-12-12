@@ -115,7 +115,7 @@ Please run those commands in the terminal as the order below using MacOs, and pl
     <tr>
       <td rowspan=3>Development</td>
       <td>Backend Implementation<br>(User Registration, Authentication and Status)</td>
-      <td rowspan=3>2 weeks</td>
+      <td rowspan=3>2 Weeks</td>
       <td>Selena</td>
     </tr>
     <tr>
