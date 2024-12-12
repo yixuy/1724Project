@@ -1,6 +1,7 @@
 use crate::endpoints::*;
-use crate::models::message::DisplayMessage;
+use crate::models::message::*;
 use crate::models::prelude::*;
+use crate::router::Route;
 use futures_util::{SinkExt, StreamExt};
 use reqwasm::websocket::{futures::WebSocket, Message as WsMessage};
 use serde_json;
@@ -9,11 +10,11 @@ use std::rc::Rc;
 use stylist::style;
 use wasm_bindgen_futures::spawn_local;
 use yew::prelude::*;
+use yew_router::prelude::*;
 
 #[function_component(Room)]
 pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
     let messages = use_state(|| vec![]);
-    let display_messages: UseStateHandle<Vec<DisplayMessage>> = use_state(|| vec![]);
     let status: UseStateHandle<Vec<String>> = use_state::<Vec<String>, _>(|| vec![]);
     let status_clone = status.clone();
     let messages_for_receive = messages.clone();
@@ -27,7 +28,6 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
     let has_run = use_state(|| false);
     let join_msg = use_state(|| String::new());
     let join_msg_clone = join_msg.clone();
-    let user_info = use_state(|| "".to_string());
 
     use_effect(move || {
         let join_msg = join_msg_clone.clone();
@@ -56,7 +56,6 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
                                 continue;
                             }
                         };
-                        let status_clone = status.clone();
 
                         let mut temp_status_futures = vec![];
                         for msg in raw_messages.iter() {
@@ -124,6 +123,48 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
         })
     };
 
+    let navigator = use_navigator().unwrap();
+    let on_leave = {
+        let writer = writer.clone(); // WebSocket writer
+        let username = username.clone();
+        let room_id = room_id_clone.clone();
+        let navigator = navigator.clone();
+
+        Callback::from(move |_| {
+            let writer = writer.clone();
+            let username = username.clone();
+            let room_id = room_id.clone();
+            let navigator = navigator.clone();
+
+            spawn_local(async move {
+                if let Some(w) = writer.borrow_mut().as_mut() {
+                    // Construct the leave message
+                    let leave_msg = serde_json::json!({
+                        "action": "leave",
+                        "username": username.clone(),
+                        "room_id": room_id.clone()
+                    });
+
+                    // Serialize the leave message to JSON
+                    if let Ok(msg_json) = serde_json::to_string(&leave_msg) {
+                        // Send the message over WebSocket
+                        if let Err(e) = w.send(WsMessage::Text(msg_json)).await {
+                            gloo_console::log!(
+                                "Failed to send leave message:",
+                                &format!("{:?}", e)
+                            );
+                        }
+                    }
+                }
+                // Close WebSocket connection
+                writer.borrow_mut().take();
+
+                // Navigate back to the user route (or another page)
+                navigator.push(&Route::User { username });
+            });
+        })
+    };
+
     let css = style! {
         r#"
         body {
@@ -163,8 +204,9 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
 
         .title {
             display: flex;
-            justify-content: center;
-            height: 100%;
+            align-items: center; /* Vertically centers content */
+            justify-content: center; /* Horizontally centers content */
+            gap: 10px; /* Adds spacing between the title and the logout button */
         }
 
         form {
@@ -197,41 +239,55 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
         button:hover {
             background-color: #0056b3;
         }
+        .logout-button {
+            height: 50%;
+            margin-left: auto; /* Push the button to the far right in a flex container */
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #FF4C4C;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background-color: #CC0000;
+}
         "#
     }
     .unwrap();
     html! {
         <>
             <div class={css.get_class_name().to_string()}>
-                    <div class = "title">
-                        <h1>{ format!("User {} in Room {}", username_display, room_id_clone ) }</h1>
-                    </div>
+                <div class="title">
+                    <h1>{ format!("User {} in Room {}", username_display, room_id_clone) }</h1>
+                </div>
+                <div class="chatbox">
+                    <button onclick={on_leave} class="logout-button">{ "Leave Room" }</button>
+                </div>
 
-            <div class="messages">
-                // <p>{ status.len() }</p>
-                { for messages.iter().zip(status_clone.iter()).map(|(message, status)| html! {
-                    <div class="message">
-                        <span>{ format!("Username: {} ----- Status: [{}] ----- {}", &message.username, status,  message.timestamp ) }</span>
-                        <br/>
+                <div class="messages">
+                    { for messages.iter().zip(status_clone.iter()).map(|(message, status)| html! {
+                        <div class="message">
+                            <span>{ format!("Username: {} ----- Status: [{}] ----- {}", &message.username, status,  message.timestamp ) }</span>
+                            <br/>
 
-                        <strong>{ &message.content }</strong>
-                    </div>
-                })}
+                            <strong>{ &message.content }</strong>
+                        </div>
+                    })}
+                </div>
 
+                <form onsubmit={on_message_submit}>
+                    <input
+                        type="text"
+                        value={(*message_input).clone()}
+                        oninput={on_input_change}
+                        placeholder="Type your message here..."
+                    />
+                    <button type="submit">{ "Send" }</button>
+                </form>
             </div>
-            <form onsubmit={on_message_submit}>
-                <input
-                    type="text"
-                    value={(*message_input).clone()}
-                    oninput={on_input_change}
-                    placeholder="Type your message here..."
-                />
-                <button type="submit">{ "Send" }</button>
-            </form>
-            <div>
-
-            </div>
-        </div>
         </>
     }
 }

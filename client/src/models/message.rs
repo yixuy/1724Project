@@ -22,3 +22,9 @@ pub struct DisplayMessage {
     pub content: String,
     pub timestamp: String,
 }
+
+#[derive(Serialize, Deserialize)]
+pub struct LeaveRoomMessage {
+    pub username: String,
+    pub room_id: String,
+}

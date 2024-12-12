@@ -96,15 +96,16 @@ fn app() -> Html {
                 <div >
                         <BrowserRouter>
                     <div class = "card" >
-                            <div class="top-left-nav">
 
-                                <br/>
-                                <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
-                            </div>
                         if username == "" {
-                        <h1>{format!("Welcome to Rust Chat App {}",username )}</h1>
+                                <h1>{format!("Welcome to Rust Chat App {}",username )}</h1>
 
                             }else{
+                                <div class="top-left-nav">
+
+                                    <br/>
+                                    <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
+                                </div>
                                 <h1>{format!("Welcome to the Rust Chat App!" )}</h1>
                             }
 

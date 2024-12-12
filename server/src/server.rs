@@ -83,7 +83,7 @@ impl Handler<Join> for ChatServer {
                     .await
                     .unwrap_or_default();
             }
-            // println!("Room messages: {:?}", room_msg);
+
             for user in room_users_clone {
                 let history_json = serde_json::to_string(&room_msg).unwrap();
                 user.do_send(ClientMessage(history_json));
@@ -107,9 +107,14 @@ impl Handler<Leave> for ChatServer {
             let db_clone = db_clone.clone();
             let username = username.clone();
             actix::spawn(async move {
-                Database::update_user_status(&db_clone, &username, UserStatus::Leave)
-                    .await
-                    .unwrap();
+                match Database::update_user_status(&db_clone, &username, UserStatus::Leave).await {
+                    Ok(_) => {
+                        // println!("Successfully updated status for user '{}'", username);
+                    }
+                    Err(e) => {
+                        println!("Failed to update status for user '{}': {:?}", username, e);
+                    }
+                }
             });
             println!("User '{}' left room '{}'", msg.username, msg.room_id);
         }
@@ -207,12 +212,26 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WebSocketSession 
     fn handle(&mut self, msg: Result<ws::Message, ws::ProtocolError>, ctx: &mut Self::Context) {
         match msg {
             Ok(ws::Message::Text(text)) => {
-                // Broadcast the received message to the room
-                let formatted_message = format!("{}", text);
-                self.server_addr.do_send(MessageToRoom {
-                    room_id: self.room_id.clone(),
-                    message: formatted_message,
-                });
+                let parsed: Result<serde_json::Value, _> = serde_json::from_str(&text);
+                if let Ok(parsed) = parsed {
+                    if let Some(action) = parsed.get("action").and_then(|v| v.as_str()) {
+                        if action == "leave" {
+                            // Trigger leave message to ChatServer
+                            self.server_addr.do_send(Leave {
+                                username: self.username.clone(),
+                                room_id: self.room_id.clone(),
+                            });
+                            ctx.stop(); // Optionally stop the context
+                        }
+                    } else {
+                        // Broadcast the received message to the room
+                        let formatted_message = format!("{}", text);
+                        self.server_addr.do_send(MessageToRoom {
+                            room_id: self.room_id.clone(),
+                            message: formatted_message,
+                        });
+                    }
+                }
             }
             Ok(ws::Message::Ping(msg)) => ctx.pong(&msg),
             Ok(ws::Message::Pong(_)) => {}
