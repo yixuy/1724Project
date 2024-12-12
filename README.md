@@ -1,4 +1,4 @@
-# ECE1724 Course Project - Final Report
+# ECE1724 Course Project (Real-Time Chat Application) - Final Report
 
 | Student Name        | Student ID | Student Email               |
 |---------------------|------------|-----------------------------|
