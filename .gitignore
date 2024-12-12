@@ -1,0 +1,6 @@
+/client/target/
+/client/dist/
+/server/target/
+/server/mydatabase.db
+/mydatabase.db
+/user/target/
