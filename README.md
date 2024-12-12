@@ -4,7 +4,7 @@
 |---------------------|------------|-----------------------------|
 | Zhaoyu (Selena) Yan | 1006521621 | zhaoyu.yan@mail.utoronto.ca |
 | Yiran (Sheila) Chen | 1004392739 | sheila.chen@mail.utoronto.ca|
-| Yixu (Henry) Ye     | 1010506579 |                             |
+| Yixu (Henry) Ye     | 1010506579 | yixu.ye@mail.utoronto.ca    |
 
 ## Motivation
 
