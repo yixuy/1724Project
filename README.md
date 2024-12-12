@@ -59,7 +59,8 @@ This User's Guide provides detailed instructions on how users can navigate and u
 
 #### 1. Main Page
 Once `trunk serve --open` is executed on the client side, the main page will be displayed.
-<img width="1470" alt="截屏2024-12-12 下午5 38 27" src="https://github.com/user-attachments/assets/ac40791f-86ed-40b3-918f-f2b8add20cbb" />
+<img width="1470" alt="截屏2024-12-12 下午5 43 21" src="https://github.com/user-attachments/assets/1accef74-0115-41fa-b888-5e52df772534" />
+
 
 
 ## Reproducibility Guide
