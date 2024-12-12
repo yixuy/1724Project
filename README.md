@@ -67,7 +67,7 @@ Once `trunk serve --open` is executed on the client side, the main page will be 
 As indicated on the main page with the message "Please sign up with a username before you can join the room", you can click the "Sign In" button in the top-right corner. This will redirect you to the sign-in page.
 <img src="https://github.com/yixuy/1724Project/blob/Final-Report/images/3-1.png" alt="sign_in_1" width="800">
 
-`Sign In` Page
+`Sign In` Page<br>
 <img src="https://github.com/yixuy/1724Project/blob/Final-Report/images/3-2.png" alt="sign_in_2" width="800">
 
 
