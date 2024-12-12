@@ -67,7 +67,7 @@ As indicated on the main page with the message "Please sign up with a username b
 
 <img width="1470" alt="截屏2024-12-12 下午5 48 10" src="https://github.com/user-attachments/assets/bc0c25f5-2787-4d87-8d5f-27b3ba2f1a90" />
 
-"Sign In" Page
+`Sign In` Page
 <img width="1469" alt="截屏2024-12-12 下午5 50 05" src="https://github.com/user-attachments/assets/df8511bc-ccab-4249-9901-fd6ff74f2a83" />
 
 
