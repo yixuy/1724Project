@@ -119,7 +119,7 @@ Please run those commands in the terminal as the order below using MacOs, and pl
       <td>Selena</td>
     </tr>
     <tr>
-      <td>Backend Implementation<br>(Chat room creation and joining, Real-time messaging)</td>
+      <td>Backend Implementation<br>(Chat Room Creation and Joining, Real-time Messaging)</td>
       <td>Sheila</td>
     </tr>
     <tr>
