@@ -1,5 +1,5 @@
 use crate::endpoints::*;
-use crate::models::user::{User, UserStatus};
+use crate::models::user::UserStatus;
 use crate::router::Route;
 use stylist::style;
 use wasm_bindgen::JsCast;
