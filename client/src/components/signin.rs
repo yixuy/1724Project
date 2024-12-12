@@ -80,6 +80,7 @@ pub fn sign_in() -> Html {
         let username = username.clone();
         let password = password.clone();
         let message = message.clone();
+        let navigator = navigator.clone();
 
         Callback::from(move |e: SubmitEvent| {
             e.prevent_default();
@@ -132,6 +133,7 @@ pub fn sign_in() -> Html {
 
     let on_username_change = {
         let username = username.clone();
+
         Callback::from(move |e: InputEvent| {
             let input: HtmlInputElement = e.target_unchecked_into();
             username.set(input.value());
@@ -144,6 +146,11 @@ pub fn sign_in() -> Html {
             let input: HtmlInputElement = e.target_unchecked_into();
             password.set(input.value());
         })
+    };
+
+    let on_sign_up_click = {
+        let navigator = navigator.clone();
+        Callback::from(move |_| navigator.push(&Route::SignUp))
     };
 
     html! {
@@ -166,8 +173,14 @@ pub fn sign_in() -> Html {
                     oninput={on_password_change}
                 />
                 <br/>
-                <button type="submit">{"Sign In"}</button>
-                <p>{(*message).clone()}</p>
+
+                if *message == "User does not exist" {
+                    <button onclick={on_sign_up_click}>{"Go to Sign-Up"}</button>
+                    <p>{"User does not exist"}</p>
+                }else{
+                    <button type="submit">{"Sign In"}</button>
+                    <p>{(*message).clone()}</p>
+                }
                 // </div>
             </form>
         </div>

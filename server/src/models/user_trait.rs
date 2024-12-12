@@ -13,6 +13,7 @@ pub trait UserTrait {
     async fn get_user(db: &Data<Database>, user: &str) -> Result<User, UserError>;
     async fn add_user(db: &Data<Database>, new_user: User) -> Result<User, UserError>;
     async fn get_user_status(db: &Data<Database>, username: &str) -> Result<UserStatus, UserError>;
+    async fn set_offline(db: &Data<Database>, username: &str) -> Result<User, UserError>;
 
     async fn update_user(db: &Data<Database>, uuid: &str) -> Option<User>;
     async fn update_user_status(
@@ -41,6 +42,37 @@ impl UserTrait for Database {
         match user {
             Ok(Some(found_user)) => Ok(found_user),
             Ok(None) => Err(UserError::NoSuchUser),
+            Err(err) => {
+                eprintln!("Error getting user: {:?}", err); // Log the error
+                Err(UserError::UserSearchFailed)
+            }
+        }
+    }
+    async fn set_offline(db: &Data<Database>, username: &str) -> Result<User, UserError> {
+        let user: Result<Option<User>, Error> = db.client.select(("user", username)).await;
+
+        match user {
+            Ok(None) => Err(UserError::NoSuchUser),
+            Ok(Some(found_user)) => {
+                let updated_user = db
+                    .client
+                    .update(("user", username))
+                    .content(User {
+                        uuid: found_user.uuid,
+                        username: found_user.username,
+                        password: found_user.password,
+                        status: UserStatus::Offline,
+                    })
+                    .await;
+
+                match updated_user {
+                    Ok(updated_user) => Ok(updated_user.unwrap()),
+                    Err(err) => {
+                        eprintln!("Error updating user status: {:?}", err);
+                        Err(UserError::UserUpdateFailed)
+                    }
+                }
+            }
             Err(err) => {
                 eprintln!("Error getting user: {:?}", err); // Log the error
                 Err(UserError::UserSearchFailed)

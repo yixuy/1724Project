@@ -1,4 +1,3 @@
-use crate::models::user::UserStatus;
 use serde::{Deserialize, Serialize};
 use yew::Properties;
 #[derive(Properties, PartialEq, Clone, Debug, Serialize, Deserialize)]

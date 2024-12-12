@@ -126,20 +126,20 @@ async fn get_user_status(
     Ok(Json(user.status.clone()))
 }
 
-// pub async fn logout_user(token: &str) -> Result<(), AuthError> {
-//     // validate the token and get the username
-//     let username = verify_token(token)?;
-
-//     // update the user's status to offline
-//     status_service::set_offline(&username)
-//         .await
-//         .map_err(|err| {
-//             eprintln!("Error updating user status to offline: {:?}", err);
-//             AuthError::StatusUpdateError
-//         })?;
-
-//     Ok(())
-// }
+#[post("/logout/{username}")]
+pub async fn logout_user(
+    username: Path<String>,
+    db: Data<Database>,
+) -> Result<Json<String>, AuthError> {
+    // update the user's status to offline
+    Database::set_offline(&db, &username.into_inner())
+        .await
+        .map_err(|err| {
+            eprintln!("Error updating user status to offline: {:?}", err);
+            AuthError::from(err)
+        })?;
+    Ok(Json("User logged out successfully".to_string()))
+}
 
 #[post("/create_room")]
 async fn create_room(body: Json<NewRoom>, db: Data<Database>) -> Result<Json<Room>, RoomError> {
@@ -165,7 +165,7 @@ async fn get_rooms(db: Data<Database>) -> Result<Json<Vec<Room>>, RoomError> {
 async fn get_room(room_id: Path<String>, db: Data<Database>) -> Result<Json<Room>, AuthError> {
     let room_id = room_id.clone();
     let rooms = Database::get_all_rooms(&db).await;
-    println!("Rooms: {:?}", rooms);
+    // println!("Rooms: {:?}", rooms);
     match rooms {
         Some(all_rooms) => Ok(Json(
             all_rooms

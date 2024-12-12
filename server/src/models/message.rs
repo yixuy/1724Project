@@ -2,7 +2,6 @@ use crate::models::user::UserStatus;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 #[derive(Validate, Debug, Serialize, Deserialize, Clone)]
-// #[serde(crate = "rocket::serde")]
 
 pub struct NewChatMessage {
     pub username: String,

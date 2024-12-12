@@ -103,8 +103,8 @@ fn app() -> Html {
                             }else{
                                 <div class="top-left-nav">
 
-                                    <br/>
-                                    <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
+                                    // <br/>
+                                    // <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
                                 </div>
                                 <h1>{format!("Welcome to the Rust Chat App!" )}</h1>
                             }

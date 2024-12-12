@@ -58,6 +58,9 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
                         };
 
                         let mut temp_status_futures = vec![];
+                        if raw_messages.is_empty() {
+                            continue;
+                        }
                         for msg in raw_messages.iter() {
                             let username = msg.username.clone();
                             temp_status_futures.push(async move {

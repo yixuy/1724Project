@@ -47,6 +47,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_rooms)
             .service(get_room)
             .service(get_user_status)
+            .service(logout_user)
             .route("/ws/{username}/{room_id}", web::get().to(server::ws_index))
     })
     .bind(BACKEND_URL)?

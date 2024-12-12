@@ -100,22 +100,19 @@ impl Handler<Leave> for ChatServer {
 
     fn handle(&mut self, msg: Leave, _: &mut Context<Self>) {
         let db_clone = self.db.clone();
-
         let username = msg.username.clone();
+
         if let Some(users) = self.rooms.get_mut(&msg.room_id) {
+            // Remove disconnected users
             users.retain(|addr| addr.connected());
-            let db_clone = db_clone.clone();
-            let username = username.clone();
+
             actix::spawn(async move {
-                match Database::update_user_status(&db_clone, &username, UserStatus::Leave).await {
-                    Ok(_) => {
-                        // println!("Successfully updated status for user '{}'", username);
-                    }
-                    Err(e) => {
-                        println!("Failed to update status for user '{}': {:?}", username, e);
-                    }
+                match update_user_status_with_retry(&db_clone, &username, UserStatus::Leave).await {
+                    Ok(_) => println!("Successfully updated status for user '{}'", username),
+                    Err(e) => println!("Failed to update status for user '{}': {}", username, e),
                 }
             });
+
             println!("User '{}' left room '{}'", msg.username, msg.room_id);
         }
     }
@@ -128,7 +125,7 @@ impl Handler<MessageToRoom> for ChatServer {
         if let Some(users) = self.rooms.get(&msg.room_id) {
             // println!("aaa{}", msg.message);
             let local_time = Local::now().time().format("%H:%M:%S").to_string();
-            let local_date = Local::now().date().format("%Y-%m-%d").to_string();
+            let local_date = Local::now().date_naive().format("%Y-%m-%d").to_string();
 
             let chat_message_json: NewChatMessage = serde_json::from_str(&msg.message).unwrap();
 
@@ -249,6 +246,41 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WebSocketSession 
             _ => {}
         }
     }
+}
+
+use tokio::time::{sleep, Duration};
+
+async fn update_user_status_with_retry(
+    db: &actix_web::web::Data<Database>,
+    username: &str,
+    status: UserStatus,
+) -> Result<(), String> {
+    const MAX_RETRIES: usize = 5;
+    const BASE_DELAY: u64 = 100; // Initial delay in milliseconds
+
+    for attempt in 0..MAX_RETRIES {
+        match Database::update_user_status(db, username, status.clone()).await {
+            Ok(_) => return Ok(()),
+            Err(e) => {
+                println!(
+                    "Attempt {} failed to update status for '{}': {:?}",
+                    attempt + 1,
+                    username,
+                    e
+                );
+                if attempt == MAX_RETRIES - 1 {
+                    return Err(format!(
+                        "Failed to update status after {} retries: {:?}",
+                        MAX_RETRIES, e
+                    ));
+                }
+                // Exponential backoff
+                let delay = Duration::from_millis(BASE_DELAY * 2u64.pow(attempt as u32));
+                sleep(delay).await;
+            }
+        }
+    }
+    Err("Retry logic failed unexpectedly".into())
 }
 
 pub async fn ws_index(

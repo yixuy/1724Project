@@ -36,7 +36,6 @@ impl ResponseError for RoomError {
             RoomError::RoomCreationFailed => StatusCode::INTERNAL_SERVER_ERROR,
             RoomError::NoRoomFound => StatusCode::NOT_FOUND,
             RoomError::NoSuchRoom => StatusCode::NOT_FOUND,
-            RoomError::RoomUpdateFailed => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 }
@@ -115,8 +114,6 @@ pub enum RoomError {
     NoRoomFound = 1,
     #[error("The room is not found")]
     NoSuchRoom = 2,
-    #[error("The room can not be updated")]
-    RoomUpdateFailed,
 }
 // Define the Response struct
 #[derive(serde::Serialize)]
@@ -160,12 +157,11 @@ impl ResponseError for AuthError {
                 }),
             },
             AuthError::RoomError(err) => match err {
-                RoomError::RoomCreationFailed
-                | RoomError::NoRoomFound
-                | RoomError::NoSuchRoom
-                | RoomError::RoomUpdateFailed => HttpResponse::BadRequest().json(Response {
-                    message: err.to_string(),
-                }),
+                RoomError::RoomCreationFailed | RoomError::NoRoomFound | RoomError::NoSuchRoom => {
+                    HttpResponse::BadRequest().json(Response {
+                        message: err.to_string(),
+                    })
+                }
             },
         }
     }

@@ -2,6 +2,7 @@ use crate::endpoints::{get_room, get_user};
 use crate::models::room::Room; // Add this line to import the Room type
 use crate::models::user::User;
 use crate::router::Route;
+use gloo::storage::{LocalStorage, Storage};
 use serde::{Deserialize, Serialize};
 use stylist::style;
 use wasm_bindgen::JsCast;
@@ -64,7 +65,7 @@ pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
                     let user_json: User = serde_json::from_str(&*user_string_clone)
                         .unwrap_or(User::new("".to_string(), "".to_string()));
                     user.set_username(user_json.username);
-                    // user.set_username(user_json);
+
                     fetched.set(true);
                 });
             }
@@ -151,12 +152,48 @@ pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
         })
     };
 
+    let log_out_click = {
+        let navigator = navigator.clone();
+        let username = username.clone();
+
+        Callback::from(move |e: MouseEvent| {
+            e.prevent_default();
+
+            let navigator = navigator.clone();
+            // fetch_base_url(data, navigator);
+            let username = username.clone();
+            wasm_bindgen_futures::spawn_local(async move {
+                match reqwest::Client::new()
+                    .post(format!(
+                        "http://127.0.0.1:5000/logout/{}
+                    ",
+                        username
+                    ))
+                    .send()
+                    .await
+                {
+                    Ok(response) if response.status().is_success() => {
+                        LocalStorage::delete("current_user");
+                        let user_key = format!("user_{}", username);
+                        LocalStorage::delete(user_key);
+
+                        navigator.push(&Route::SignIn);
+                    }
+                    _ => {
+                        // message.set("Sign-in failed!".to_string());
+                    }
+                }
+            });
+        })
+    };
+
     html! {
          <div class={css.get_class_name().to_string()}>
          <div class="container">
             <div class="card">
                 if user.username != ""{
                     <h2>{ format!("Welcome, {}!",user.username) }</h2>
+                    <button onclick = {log_out_click}>{"Sign Out"}</button>
                 } else {
                     <h2>{ "Please Sign up the username before you can join the room" }</h2>
                 }

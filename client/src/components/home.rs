@@ -1,5 +1,5 @@
-use crate::endpoints::{get_current_user, get_room, get_user};
-use crate::models::user::User;
+use crate::endpoints::*;
+use crate::models::user::{User, UserStatus};
 use crate::router::Route;
 use stylist::style;
 use wasm_bindgen::JsCast;
@@ -41,20 +41,17 @@ pub fn home() -> Html {
 
     let username = get_current_user().unwrap_or_else(|| "".to_string());
     let fetched = use_state(|| false);
-    let user_string = use_state(|| "".to_string());
+    let user_status = use_state(|| "".to_string());
+    let user_status_clone = user_status.clone();
     if username != "" {
         let user = User::new(username.clone(), "".to_string());
         {
-            let mut user = user.clone();
-            let user_string_clone = user_string.clone();
             let fetched = fetched.clone();
             if *fetched == false {
                 wasm_bindgen_futures::spawn_local(async move {
-                    get_user(user_string_clone.clone()).await;
-                    let user_json: User = serde_json::from_str(&*user_string_clone)
-                        .unwrap_or(User::new("".to_string(), "".to_string()));
-                    user.set_username(user_json.username);
-                    // user.set_username(user_json);
+                    let status = get_user_status_by_username(username.clone()).await;
+
+                    user_status.set(status.unwrap_or_else(|| UserStatus::Offline.to_string()));
                     fetched.set(true);
                 });
             }
@@ -90,10 +87,14 @@ pub fn home() -> Html {
     html! {
          <div class={css.get_class_name().to_string()}>
          <div class="container">
+
             <nav class = "top-right-nav">
+                    // <p> { format!("Welcome, {}!", *user_status_clone) }</p>
+                    // if *user_status_clone == "" || *user_status_clone == UserStatus::Offline.to_string() {
                             <Link<Route> to={Route::SignIn}>{ "Sign In" }</Link<Route>>
 
                             <Link<Route> to={Route::SignUp}>{ "Sign Up" }</Link<Route>>
+                        // }
             </nav>
             <div class="card">
 
