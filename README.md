@@ -54,8 +54,8 @@ To ensure a reliable communication experience, all chat room messages are stored
 #### 8. User-Friendly Frontend Interface
 The application includes an intuitive and responsive user interface designed with a simple and minimal aesthetic. It features clear and obvious buttons, easy navigation, and clear instructions, ensuring a seamless experience for all users, regardless of technical expertise. The interface allows users to effortlessly register, log in, create or join chat rooms, and exchange messages. Within chat rooms, real-time user status updates are prominently displayed, making interactions more engaging and transparent.
 
-
 ## User’s Guide
+This User's Guide provides detailed instructions on how users can navigate and utilize the chat application’s features, such as signing up, logging in, joining chat rooms, sending messages, and more.
 
 ## Reproducibility Guide
 
