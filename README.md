@@ -59,7 +59,7 @@ This User's Guide provides detailed instructions on how users can navigate and u
 
 #### 1. Main Page
 Once `trunk serve --open` is executed on the client side, the main page will be displayed.
-
+<img src="https://github.com/yixuy/1724Project/blob/Final-Report/images/1.png" alt="main_page" width="800">
 
 #### 2. Sign Up
 
@@ -68,7 +68,7 @@ As indicated on the main page with the message "Please sign up with a username b
 <img src="https://github.com/yixuy/1724Project/blob/Final-Report/images/3-1.png" alt="sign_in_1" width="800">
 
 `Sign In` Page
-
+<img src="https://github.com/yixuy/1724Project/blob/Final-Report/images/3-2.png" alt="sign_in_2" width="800">
 
 
 
