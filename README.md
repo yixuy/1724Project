@@ -102,7 +102,7 @@ Please run those commands in the terminal as the order below using MacOs, and pl
 | Initialization      | Requirement Analysis         | 1 Week        | Team |
 | Development         | Backend Implementation(User Registration, Authentication and Status) | 2 weeks | Zhaoyu (Selena) Yan|
 | Development         | Backend Implementation(Chat room creation and joining、Real-time messaging)| 3 Weeks       | Yiran (Sheila) Chen |
-| Frontend Development| UI Design and Integration    | 3 Weeks       | Yixu (Henry) Ye     |
+| Frontend Development| Frontend Implementation(UI Design)<br>Integration    | 2 Weeks<br>1 Week       | Yixu (Henry) Ye     |
 
 
 ## Lessons Learned
