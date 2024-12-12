@@ -57,6 +57,11 @@ The application includes an intuitive and responsive user interface designed wit
 ## User’s Guide
 This User's Guide provides detailed instructions on how users can navigate and utilize the chat application’s features, such as signing up, logging in, joining chat rooms, sending messages, and more.
 
+#### 1. Main Page
+Once `trunk serve --open` is executed on the client side, the main page will be displayed.
+<img width="1470" alt="截屏2024-12-12 下午5 38 27" src="https://github.com/user-attachments/assets/ac40791f-86ed-40b3-918f-f2b8add20cbb" />
+
+
 ## Reproducibility Guide
 
 Please run those commands in the terminal as the order below using MacOs, and please make sure you have installed all the dependencies before running the commands. Meanwhile, the port 5050, 8080, and 5000 should be available for the application to run.
