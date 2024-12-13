@@ -6,49 +6,6 @@
 | Yiran (Sheila) Chen | 1004392739 | sheila.chen@mail.utoronto.ca|
 | Yixu (Henry) Ye     | 1010506579 | yixu.ye@mail.utoronto.ca    |
 
-## Reproducibility Guide
-
-Please run those commands in the terminal as the order below using MacOs, and please make sure you have installed all the dependencies before running the commands. Meanwhile, the port 5050, 8080, and 5000 should be available for the application to run.
-
----
-
-### Backend
-
-#### Before running the backend
-
-- install before running the database
-`brew install surrealdb/tap/surreal`
-- install before running the backend
-`cargo install cargo-watch`
-
-#### Run the database in the terminal
-
-1. `cd server`
-2. `surreal start --log info --user root --pass root --bind 127.0.0.1:5050 file://mydatabase.db`
-
-#### Run the backend in the terminal
-
-1. `cd server`
-2. `cargo watch -x run` or `cargo run`
-
----
-
-### Frontend
-
-#### Before running the frontend
-
-- install before running the frontend
-  
-1. `rustup target add wasm32-unknown-unknown`
-2. `cargo install --locked trunk`
-
-#### Run the frontend
-
-1. `cd client`
-2. `trunk serve --open`
-
----
-
 ## Motivation
 
 Real-time communication is central to our digital lives, shaping everything from work meetings to casual catch-ups with friends. While many established chat applications exist, they often face performance and scalability challenges under high user loads. Several of these platforms may struggle to provide low-latency communication and a robust infrastructure for thousands of concurrent users.
@@ -307,6 +264,49 @@ Parameters:
 - Response:
   - 200 OK: Returns the room details.
   - 404 Not Found: If the room does not exist.
+
+## Reproducibility Guide
+
+Please run those commands in the terminal as the order below using MacOs, and please make sure you have installed all the dependencies before running the commands. Meanwhile, the port 5050, 8080, and 5000 should be available for the application to run.
+
+---
+
+### Backend
+
+#### Before running the backend
+
+- install before running the database
+`brew install surrealdb/tap/surreal`
+- install before running the backend
+`cargo install cargo-watch`
+
+#### Run the database in the terminal
+
+1. `cd server`
+2. `surreal start --log info --user root --pass root --bind 127.0.0.1:5050 file://mydatabase.db`
+
+#### Run the backend in the terminal
+
+1. `cd server`
+2. `cargo watch -x run` or `cargo run`
+
+---
+
+### Frontend
+
+#### Before running the frontend
+
+- install before running the frontend
+  
+1. `rustup target add wasm32-unknown-unknown`
+2. `cargo install --locked trunk`
+
+#### Run the frontend
+
+1. `cd client`
+2. `trunk serve --open`
+
+---
 
 ## Contributions
 <table class="tg">
