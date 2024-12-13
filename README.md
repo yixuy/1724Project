@@ -130,7 +130,9 @@ This Developer's Guide provides detailed backend API instructions on how develop
 - Method: GET
 - Description: Retrieves user details based on the token.
 - Parameters: token (Path): User’s authentication token.
-- Example in Postman: `http://127.0.0.1:5000//user/{token}`
+- Example in Postman:
+  assume: `token = "12345678"`
+  run: `http://127.0.0.1:5000//user/12345678`
 - Response:
   - 200 OK: Returns the user details.
   - 401 Unauthorized: If the token is invalid.
@@ -151,10 +153,12 @@ This Developer's Guide provides detailed backend API instructions on how develop
 
 - Method: POST
 - Description: Creates a new user with the specified username and password.
-- Example in Postman: `http://127.0.0.1:5000/new_user`
+- Example in Postman: 
+  assume: `username =  "harry" password = "12345678"`
+  run : `http://127.0.0.1:5000/new_user`
 - Request Body:
-  `{"username": "string",
-    "password": "string"}`
+  `{"username": "harry",
+    "password": "12345678"}`
 - Response:
   - 201 Created: Returns the created user details.
   - 400 Bad Request: If validation fails.
@@ -165,7 +169,9 @@ This Developer's Guide provides detailed backend API instructions on how develop
 
 - Method: POST
 - Description: Updates a user based on their unique identifier.
-- Example in Postman: `http://127.0.0.1:5000/update_user/{uuid}`
+- Example in Postman:
+  assume: `uuid = "12345678"`
+  run : `http://127.0.0.1:5000/update_user/12345678`
 - Parameters: uuid (Path): Unique identifier of the user.
 - Response:
   - 200 OK: Returns the updated user details.
@@ -181,10 +187,12 @@ This Developer's Guide provides detailed backend API instructions on how develop
 
 - Method: POST
 - Description: Logs in a user and generates a token.
-- Example in Postman: `http://127.0.0.1:5000/login`
+- Example in Postman:
+  assume: `username =  "harry" password = "12345678"`
+  run : `http://127.0.0.1:5000/login`
 - Request Body:
-  `{"username": "string",
-    "password": "string"}`
+  `{"username": "harry",
+    "password": "12345678"}`
 - Response:
   - 200 OK: Returns a JWT token.
   - 401 Unauthorized: If credentials are invalid.
@@ -195,7 +203,9 @@ This Developer's Guide provides detailed backend API instructions on how develop
 
 - Method: POST
 - Description: Logs out the user and sets their status to offline.
-- Example in Postman: `http://127.0.0.1:5000/logout/{username}`
+- Example in Postman:
+  assume: `username =  "harry"`
+  run : `http://127.0.0.1:5000/logout/harry`
 - Parameters: username (Path): The username of the user.
 - Response:
   - 200 OK: Returns a confirmation message.
@@ -207,7 +217,9 @@ This Developer's Guide provides detailed backend API instructions on how develop
 
 - Method: GET
 - Description: retrieves the online/offline status of a user.
-- Example in Postman: `http://127.0.0.1:5000/get_status/{username}`
+- Example in Postman: 
+  assume: `username =  "harry"`
+  run : `http://127.0.0.1:5000/get_status/harry`
 - Parameters: username (Path): The username of the user.
 - Response:
   - 200 OK: Returns the user’s status.
@@ -223,9 +235,11 @@ This Developer's Guide provides detailed backend API instructions on how develop
 
 - Method: POST
 - Description: Creates a new chat room.
-- Example in Postman: `http://127.0.0.1:5000/create_room`
-- Request Body:  
-  `{"room_id": "string"}`
+- Example in Postman:
+  assume: `room_id =  "1"`
+  run : `http://127.0.0.1:5000/create_room`
+- Request Body:
+  `{"room_id": "1"}`
 - Response:
   - 201 Created: Returns the created room details.
   - 400 Bad Request: If room creation fails.
@@ -248,7 +262,9 @@ This Developer's Guide provides detailed backend API instructions on how develop
 - Method: GET
 - Description: Retrieves details of a specific room by its ID.
 Parameters:
-- Example in Postman: `http://127.0.0.1:5000/room/{room_id}`
+- Example in Postman:
+  assume: `room_id =  "1"`
+  run : `http://127.0.0.1:5000/room/"1"`
 - Response:
   - 200 OK: Returns the room details.
   - 404 Not Found: If the room does not exist.
