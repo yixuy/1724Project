@@ -117,14 +117,22 @@ Once logged in, users can log out by clicking the red **Sign Out** button on the
 ![](images/after-sign-out.png)
 
 ### Chat Room Creation
-After logging into the system, you will be redirected to the homepage, where you can create a new chat room by entering a room number.
+After logging into the system, you will be redirected to the homepage, where you can create a new chat room by entering a room number and clicking the "Create the room" button.
 - If a room number already exists, you can choose to directly join the existing room.
 - The default value in the room number input field is set to 0, and the default message displayed is: _"Room 0 not found. Are you sure you want to create one?"_
 - Note: Since 0 is the default value, there may be cases where Room 0 already exists, but the system initially shows that Room 0 does not exist upon entering the homepage. In such situations, if you want to create Room 0 or confirm whether Room 0 already exists, please clear the input field and re-enter the room number to proceed.
 
 ![](images/create-room.png)
 
+### Chat Room Joining
+If the room number you enter already exists, you will have the option to join the existing room directly without creating a new one. Simply click the "Join the room" button to proceed.
 
+![](images/join-room.png)
+
+### Chat Room Page
+After clicking the "Create the room" or "Join the room" button, you will be redirected to the "Chat Room" page. For example, if you create and enter Room 1, you will see "User xxx (your name) in Room 1" displayed at the top of the chat box on the page.
+
+![](images/enter-chat-room.png)
 
 
 
