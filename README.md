@@ -26,7 +26,7 @@ The backend will use Actix Web, a powerful and scalable framework for high-perfo
 
 Ultimately, the project aims to create a fully functional chat application written entirely in Rust, showcasing the language's potential for building more than just system-level software. By connecting a high-performance backend with a responsive, user-friendly frontend, this project explores how Rust can be used to create innovative web applications and contribute to its growing adoption in the industry.
 
-## Key Features
+## Features
 
 Our real-time chat application incorporates several essential features designed to ensure a seamless and engaging user experience. Each feature supports the objective of building a scalable and efficient communication platform. Below are the main features:
 
@@ -39,10 +39,10 @@ Users can log in with their registered credentials. If the username is unregiste
 #### 3. User Session Management
 Logged-in users can log out at any time, which invalidates their session. They cannot access chat rooms or send messages without re-logging in. This mechanism ensures that only authenticated users can interact with the system, enhancing security and scalability.
 
-#### 4. Chat room creation and joining
+#### 4. Chat Room Creation and Joining
 Users can create new chat rooms with unique room numbers, allowing others to join and engage in conversations. Each chat room operates independently, ensuring that messages sent within a specific room are visible only to its participants. This isolation enhances privacy and minimizes distractions, enabling users to focus on their discussions. By providing dedicated spaces for communication, this feature empowers users to engage in their favorite topics with ease and efficiency.
 
-#### 5. Real-time messaging using WebSockets
+#### 5. Real-time Messaging using WebSockets
 The application utilizes WebSocket technology, a protocol designed to establish a persistent, full-duplex connection between clients and the server. Unlike traditional HTTP, WebSocket supports continuous, two-way communication without the overhead of repeatedly opening and closing connections. This enables the application to transmit messages instantly, ensuring a smooth and interactive user experience. By facilitating immediate message delivery, the system offers a dynamic and responsive platform for efficient and real-time communication.
 
 #### 6. Chat Room Leaving
@@ -51,7 +51,7 @@ Users can choose to leave the current chat room if they no longer wish to contin
 #### 7. User Status Detection
 The application tracks user presence in real-time, displaying statuses such as online, offline, and leave to other participants in a chat room. Logged-in users are marked as online, while logged-out users are marked as offline. When a user leaves a chat room, their status is updated to leave, allowing others to see that the user has exited the room. This feature enhances the interactive experience by fostering awareness of user activity within chat rooms.
 
-#### 8. Message persistence and history retrieval
+#### 8. Message Persistence and History Retrieval
 To ensure a reliable communication experience, all chat room messages are stored in a database, enabling both persistence and easy access to message history. This feature prevents message loss caused by unexpected disconnections or browser refreshes. Upon re-entering a chat room, users can retrieve previously exchanged messages, seamlessly resuming their conversations without missing any context. With the help of SurrealDB, the message retrieval process is fast and reliable, enhancing the user experience by providing consistent and efficient access to message history.
 
 #### 9. User-Friendly Frontend Interface
@@ -155,6 +155,7 @@ If you want to leave the current chat room, simply click the "Leave Room" button
 - From there, you can choose to create a new room or join another room.
 - If you no longer wish to chat, just click the "Sign Out" button to exit the chat app.
 
+![](images/leave-room-click.png)
 ![](images/leave-room.png)
 
 ### User Status
@@ -162,6 +163,10 @@ When a user leaves the current room, their status will update to "Leave", allowi
 
 ![](images/user-status.png)
 
+### Message History
+As shown in the image, when users enter an already created room, they will be able to view the previous messages exchanged in the chat, allowing them to catch up on the conversation.
+
+![](message-history.png)
 
 ## Developer's Guide
 This Developer's Guide provides detailed backend API instructions on how developers can set up the chat application. For each API endpoint, this guide provides the following information:
