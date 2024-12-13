@@ -62,6 +62,8 @@ Once `trunk serve --open` is executed on the client side, the main page will be 
 <img src="https://github.com/yixuy/1724Project/blob/Final-Report/images/1.png" alt="main_page" width="800">
 
 #### 2. Sign Up
+If you are new to the chat app or wish to use a different account, simply click the "Sign Up" button in the top-right corner to complete the registration process.
+
 
 #### 3. Sign In
 As indicated on the main page with the message "Please sign up with a username before you can join the room", you can click the "Sign In" button in the top-right corner. This will redirect you to the sign-in page.
