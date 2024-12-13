@@ -10,6 +10,8 @@
 
 Please run those commands in the terminal as the order below using MacOs, and please make sure you have installed all the dependencies before running the commands. Meanwhile, the port 5050, 8080, and 5000 should be available for the application to run.
 
+---
+
 ### Backend
 
 #### Before running the backend
@@ -29,6 +31,8 @@ Please run those commands in the terminal as the order below using MacOs, and pl
 1. `cd server`
 2. `cargo watch -x run`
 
+---
+
 ### Frontend
 
 #### Before running the frontend
@@ -43,6 +47,7 @@ Please run those commands in the terminal as the order below using MacOs, and pl
 1. `cd client`
 2. `trunk serve --open`
 
+---
 
 ## Motivation
 
