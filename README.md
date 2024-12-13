@@ -101,23 +101,7 @@ The application includes an intuitive and responsive user interface designed wit
 
 This User's Guide provides detailed instructions on how users can navigate and utilize the chat application’s features, such as signing up, logging in, joining chat rooms, sending messages, and more.
 
-#### 1. Main Page
 
-Once `trunk serve --open` is executed on the client side, the main page will be displayed.
-<img src="https://github.com/yixuy/1724Project/blob/Final-Report/images/1.png" alt="main_page" width="800">
-
-#### 2. Sign Up
-
-If you are new to the chat app or wish to use a different account, simply click the "Sign Up" button in the top-right corner to complete the registration process.
-
-
-#### 3. Sign In
-
-As indicated on the main page with the message "Please sign up with a username before you can join the room", you can click the "Sign In" button in the top-right corner. This will redirect you to the sign-in page.
-<img src="https://github.com/yixuy/1724Project/blob/Final-Report/images/3-1.png" alt="sign_in_1" width="800">
-
-`Sign In` Page<br>
-<img src="https://github.com/yixuy/1724Project/blob/Final-Report/images/3-2.png" alt="sign_in_2" width="800">
 
 
 ## Developer's Guide
