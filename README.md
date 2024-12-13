@@ -166,7 +166,7 @@ When a user leaves the current room, their status will update to "Leave", allowi
 ### Message History
 As shown in the image, when users enter an already created room, they will be able to view the previous messages exchanged in the chat, allowing them to catch up on the conversation.
 
-![](message-history.png)
+![](images/message-history.png)
 
 ## Developer's Guide
 This Developer's Guide provides detailed backend API instructions on how developers can set up the chat application. For each API endpoint, this guide provides the following information:
