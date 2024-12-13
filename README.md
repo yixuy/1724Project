@@ -29,7 +29,7 @@ Please run those commands in the terminal as the order below using MacOs, and pl
 #### Run the backend in the terminal
 
 1. `cd server`
-2. `cargo watch -x run`
+2. `cargo watch -x run` or `cargo run`
 
 ---
 
