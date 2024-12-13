@@ -101,8 +101,63 @@ The application includes an intuitive and responsive user interface designed wit
 
 This User's Guide provides detailed instructions on how users can navigate and utilize the chat application’s features, such as signing up, logging in, joining chat rooms, sending messages, and more.
 
+### Public homepage
+Once the frontend is running, the app's public homepage will be displayed in your browser.
 
+- At the top of the page, you'll see a welcome message: _"Welcome to the Rust Chat App!"_
+- In the center of the page, a message reads: _"Please Sign up the username before you can join the room."_
+- In the top-right corner, you will find the **Sign In** and **Sign Up** buttons.
 
+![](images/app.png)
+
+### Sign-Up
+Click on the **Sign Up** button to navigate to the sign-up page.
+- On this page, you can enter a username and password.
+- After entering your credentials, click the **Sign Up** button below the input fields.
+
+![](images/sign-up.png)
+
+- The username must be at least 3 characters long and the password must be at least 5 characters long.
+- If the username or password is too short, an error message will appear: _"Username or password too short."_
+
+![](images/invalid-input.png)
+
+- If the username is already taken, the system will notify you with: _"Username already exists."_  
+- In both cases, you can adjust your input and try again.
+
+![](images/user-exists.png)
+
+Upon successful registration, a message will be displayed: _"Sign-up successful!"_  
+Click the **Go to Sign-In** button to proceed to the sign-in page.
+
+![](images/sign-up-success.png)
+
+### Sign-In
+Registered users can log in using their credentials.
+- On the **Sign-In** page, enter your username and password and click the **Sign In** button.
+
+![](images/sign-in.png)
+
+- If the username entered is not registered, the system will display: _"User does not exist."_  
+- A **Go to Sign-Up** button will appear, allowing you to navigate to the sign-up page.
+
+![](images/user-not-exist.png)
+
+- If the password is incorrect, the error message will read: _"Invalid password."_  
+- You can re-enter your credentials and try again.
+
+![](images/invalid-password.png)
+
+Upon successful login, you will be redirected to the homepage.
+
+![](images/homepage.png)
+
+### Sign-Out
+Once logged in, users can log out by clicking the red **Sign Out** button on the homepage.
+- After logging out, you will be redirected to the sign-in page.
+- Access to chat rooms and other features will be restricted until you log in again.
+
+![](images/after-sign-out.png)
 
 ## Developer's Guide
 This Developer's Guide provides detailed backend API instructions on how developers can set up the chat application. For each API endpoint, this guide provides the following information:
