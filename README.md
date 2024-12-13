@@ -140,11 +140,11 @@ After clicking the "Create the room" or "Join the room" button, you will be redi
 You can now start sending messages and chatting with others in the same room! To send a message, simply type it in the message box and click the "Send" button.
 - For each message, you will see the username of the sender, their status, and the time the message was sent.
   
-![](images/send-message.png)
+![](images/sending-message.png)
 
 - If another user enters the same room and sends a message, you will see his/her message in real-time, as shown in the image.
 
-![](images/another-user-send-message.png)
+![](images/real-time-message.png)
 
 
 
