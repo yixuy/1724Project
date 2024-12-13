@@ -45,13 +45,16 @@ Users can create new chat rooms with unique room numbers, allowing others to joi
 #### 5. Real-time messaging using WebSockets
 The application utilizes WebSocket technology, a protocol designed to establish a persistent, full-duplex connection between clients and the server. Unlike traditional HTTP, WebSocket supports continuous, two-way communication without the overhead of repeatedly opening and closing connections. This enables the application to transmit messages instantly, ensuring a smooth and interactive user experience. By facilitating immediate message delivery, the system offers a dynamic and responsive platform for efficient and real-time communication.
 
-#### 6. User Status Detection
+#### 6. Chat Room Leaving
+Users can choose to leave the current chat room if they no longer wish to continue the ongoing conversation or if they want to join another chat room. This feature provides users with flexibility, allowing them to easily switch between rooms or exit when needed.
+
+#### 7. User Status Detection
 The application tracks user presence in real-time, displaying statuses such as online, offline, and leave to other participants in a chat room. Logged-in users are marked as online, while logged-out users are marked as offline. When a user leaves a chat room, their status is updated to leave, allowing others to see that the user has exited the room. This feature enhances the interactive experience by fostering awareness of user activity within chat rooms.
 
-#### 7. Message persistence and history retrieval
+#### 8. Message persistence and history retrieval
 To ensure a reliable communication experience, all chat room messages are stored in a database, enabling both persistence and easy access to message history. This feature prevents message loss caused by unexpected disconnections or browser refreshes. Upon re-entering a chat room, users can retrieve previously exchanged messages, seamlessly resuming their conversations without missing any context. With the help of SurrealDB, the message retrieval process is fast and reliable, enhancing the user experience by providing consistent and efficient access to message history.
 
-#### 8. User-Friendly Frontend Interface
+#### 9. User-Friendly Frontend Interface
 The application includes an intuitive and responsive user interface designed with a simple and minimal aesthetic. It features clear and obvious buttons, easy navigation, and clear instructions, ensuring a seamless experience for all users, regardless of technical expertise. The interface allows users to effortlessly register, log in, create or join chat rooms, and exchange messages. Within chat rooms, real-time user status updates are prominently displayed, making interactions more engaging and transparent.
 
 ## User’s Guide
@@ -118,7 +121,7 @@ Once logged in, users can log out by clicking the red **Sign Out** button on the
 
 ---
 
-### Chat Room Creation
+### Create Chat Room
 After logging into the system, you will be redirected to the homepage, where you can create a new chat room by entering a room number (e.g., 9) and clicking the "Create the room" button.
 - If a room number already exists, you can choose to directly join the existing room.
 - The default value in the room number input field is set to 0, and the default message displayed is: _"Room 0 not found. Are you sure you want to create one?"_
@@ -126,7 +129,7 @@ After logging into the system, you will be redirected to the homepage, where you
 
 ![](images/create-room.png)
 
-### Chat Room Joining
+### Join Chat Room
 If the room number you enter already exists, you will have the option to join the existing room directly without creating a new one. Simply click the "Join the room" button to proceed.
 
 ![](images/join-room.png)
@@ -139,14 +142,25 @@ After clicking the "Create the room" or "Join the room" button, you will be redi
 ### Messaging and Real-Time Interaction
 You can now start sending messages and chatting with others in the same room! To send a message, simply type it in the message box and click the "Send" button.
 - For each message, you will see the username of the sender, their status, and the time the message was sent.
-  
+
+![](images/type-message.png)
 ![](images/sending-message.png)
 
 - If another user enters the same room and sends a message, you will see his/her message in real-time, as shown in the image.
 
 ![](images/real-time-message.png)
 
+### Leave Chat Room
+If you want to leave the current chat room, simply click the "Leave Room" button in the top-right corner of the chat box (outside the chat box), and you will be redirected back to the homepage.
+- From there, you can choose to create a new room or join another room.
+- If you no longer wish to chat, just click the "Sign Out" button to exit the chat app.
 
+![](images/leave-room.png)
+
+### User Status
+When a user leaves the current room, their status will update to "Leave", allowing other users in the room to see that they have exited.
+
+![](images/user-status.png)
 
 
 ## Developer's Guide
