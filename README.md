@@ -116,6 +116,8 @@ Once logged in, users can log out by clicking the red **Sign Out** button on the
 
 ![](images/after-sign-out.png)
 
+---
+
 ### Chat Room Creation
 After logging into the system, you will be redirected to the homepage, where you can create a new chat room by entering a room number and clicking the "Create the room" button.
 - If a room number already exists, you can choose to directly join the existing room.
