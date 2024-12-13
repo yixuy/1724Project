@@ -5,8 +5,6 @@ use surrealdb::{Error, Surreal};
 #[derive(Debug, Clone)]
 pub struct Database {
     pub client: Surreal<Client>,
-    pub name_space: String,
-    pub db_name: String,
 }
 
 // Database for the chat app
@@ -22,10 +20,6 @@ impl Database {
             .await?;
         client.use_ns("surreal").use_db("chat").await?;
 
-        Ok(Database {
-            client,
-            name_space: "surreal".to_string(),
-            db_name: "chat".to_string(),
-        })
+        Ok(Database { client })
     }
 }

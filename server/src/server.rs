@@ -52,7 +52,7 @@ impl Actor for ChatServer {
     type Context = Context<Self>;
 
     fn started(&mut self, _: &mut Self::Context) {
-        println!("ChatServer started");
+        // println!("ChatServer started");
     }
 }
 
@@ -88,7 +88,7 @@ impl Handler<Join> for ChatServer {
                 let history_json = serde_json::to_string(&room_msg).unwrap();
                 user.do_send(ClientMessage(history_json));
             }
-            println!("User '{}' joined room '{}'", username, room_id);
+            // println!("User '{}' joined room '{}'", username, room_id);
         };
         Box::pin(fut.into_actor(self).map(|_, _, _| ()))
     }
@@ -113,7 +113,7 @@ impl Handler<Leave> for ChatServer {
                 }
             });
 
-            println!("User '{}' left room '{}'", msg.username, msg.room_id);
+            // println!("User '{}' left room '{}'", msg.username, msg.room_id);
         }
     }
 }
@@ -155,7 +155,7 @@ impl Handler<MessageToRoom> for ChatServer {
                         user.do_send(ClientMessage(history_json));
                     }
                 }
-                println!("Send message to room '{}'", room_id);
+                // println!("Send message to room '{}'", room_id);
             };
 
             Box::pin(fut.into_actor(self).map(|_, _, _| ()))
@@ -214,10 +214,11 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WebSocketSession 
                     if let Some(action) = parsed.get("action").and_then(|v| v.as_str()) {
                         if action == "leave" {
                             // Trigger leave message to ChatServer
-                            self.server_addr.do_send(Leave {
-                                username: self.username.clone(),
-                                room_id: self.room_id.clone(),
-                            });
+                            // Just send the leave message to the server once
+                            // self.server_addr.do_send(Leave {
+                            //     username: self.username.clone(),
+                            //     room_id: self.room_id.clone(),
+                            // });
                             ctx.stop(); // Optionally stop the context
                         }
                     } else {

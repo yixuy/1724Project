@@ -1,4 +1,4 @@
-use crate::models::user::UserStatus;
+// use crate::models::user::UserStatus;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 #[derive(Validate, Debug, Serialize, Deserialize, Clone)]
