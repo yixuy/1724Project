@@ -170,6 +170,8 @@ This Developer's Guide provides detailed backend API instructions on how develop
 
 ### User Authentication
 
+---
+
 `/login`
 
 - Method: POST
@@ -206,7 +208,11 @@ This Developer's Guide provides detailed backend API instructions on how develop
   - 200 OK: Returns the user’s status.
   - 404 Not Found: If the user does not exist.
 
+---
+
 ### Chat Room Management
+
+---
 
 `/create_room`
 
