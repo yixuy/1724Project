@@ -30,8 +30,6 @@ Ultimately, the project aims to create a fully functional chat application writt
 
 Our real-time chat application incorporates several essential features designed to ensure a seamless and engaging user experience. Each feature supports the objective of building a scalable and efficient communication platform. Below are the main features:
 
----
-
 #### 1. User Registration
 Users can register by providing a username and password. To ensure security, the username must be at least three characters long, and the password at least five characters. The system validates the input and provides feedback if the criteria are not met (e.g., "username or password too short"). The username must also be unique, verified against existing records in the database. If the username already exists, the user is prompted to choose another one. Successful registration securely stores the username and a hashed password in the database to protect against unauthorized access.
 
@@ -59,8 +57,6 @@ The application includes an intuitive and responsive user interface designed wit
 ## User’s Guide
 
 This User's Guide provides detailed instructions on how users can navigate and utilize the chat application’s features, such as signing up, logging in, joining chat rooms, sending messages, and more.
-
----
 
 ### Public homepage
 Once the frontend is running, the app's public homepage will be displayed in your browser.
