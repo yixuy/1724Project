@@ -409,5 +409,11 @@ Please run those commands in the terminal as the order below using MacOs, and pl
 
 ## Lessons Learned
 
+In this project, we integrated three pivotal technologies—`Yew, SurrealDB, and Actix Web`—to construct a comprehensive application entirely in Rust. This endeavor not only reinforced our classroom learning but also provided hands-on experience in leveraging Rust’s robust features to develop a well-structured, real-world project.
+
+Despite Rust’s relative novelty in frontend development compared to languages like JavaScript and TypeScript, we successfully implemented a real-time chat application using the Yew framework. Yew’s functional programming paradigm mirrors that of React, facilitating a smoother transition for developers familiar with React’s architecture. To handle asynchronous operations in the frontend, we utilized `wasm_bindgen_futures::spawn_local`. This function schedules a Rust Future to execute on the current thread without necessitating the Send trait, which is particularly advantageous in WebAssembly (Wasm) contexts. It enables the sending of asynchronous requests using `async` and `await` syntax in the frontend. For state management, we employed `RefCell` in conjunction with the use_state hook to achieve shared, mutable state across various components of the application. This approach allows for multiple ownership and interior mutability of data, aligning with React-like state management patterns in Rust. On the backend, we integrated SurrealDB as our database solution and `Actix Web` as the web framework. We defined data models using Rust’s `enum` and `struct` constructs, ensuring consistency and type safety across both the backend and the database. Error handling was meticulously managed using Rust’s `Result` and `Option` types, enabling us to address recoverable errors in a manner that is both safe and expressive. Additionally, we implemented rigorous `validation` for user inputs to safeguard against SQL injection and other security vulnerabilities.
+
+In conclusion, this project exemplifies the effective utilization of Rust’s features in building a full-stack application, highlighting the language’s versatility and capability in modern software development.
+
 ## Video Demo
 
