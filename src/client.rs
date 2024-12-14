@@ -4,7 +4,7 @@ use futures_util::{StreamExt, SinkExt};
 
 #[tokio::main]
 async fn main() {
-    // 连接 WebSocket 服务器
+    
     let (ws_stream, _) = connect_async("ws://127.0.0.1:8080/ws/")
         .await
         .expect("Failed to connect");
@@ -26,7 +26,7 @@ async fn main() {
     // update''
     //let mut current_room: Option<String> = None;  // Track the current room
 
-    // Step 2: Ask for action (create/join)
+    // Step 2: Ask for create or join
     let room_action = loop {
         println!("Do you want to create a new chat room or join an existing one?");
         println!("Type 'create' to create a new room or 'join' to join an existing room:");
@@ -40,7 +40,7 @@ async fn main() {
         }
     };
 
-    // Step 3: Ask for the room name
+    // Step 3: Ask for room number
     let room_name = match room_action.to_lowercase().as_str() {
         "create" => {
             println!("Enter the new room name:");
@@ -68,7 +68,7 @@ async fn main() {
         }
     };
 
-    // Step 4: Send command to server
+    // Step 4: Send corresponding command to the server
     let command = format!("/{action} {room}", action = room_action, room = room_name);
     write.send(Message::Text(command)).await.unwrap();
 
@@ -101,7 +101,6 @@ async fn main() {
             return;
         }
     } else if server_response.contains("created successfully") {
-        // 房间创建成功, 更新房间状态并且将用户加入对应的房间
         println!("{}", server_response);
         write
             .send(Message::Text(format!("/join {}", room_name)))
@@ -125,7 +124,6 @@ async fn main() {
     while let Ok(Some(line)) = lines.next_line().await {
         let message = format!("{}: {}", name, line);
 
-        // 在发送消息之前检查是否已加入房间
         write.send(Message::Text(message)).await.unwrap();
     }
     */
