@@ -45,18 +45,6 @@ pub struct User {
     pub password: String,
     pub status: UserStatus,
 }
-// }
-// #[derive(Validate, Debug, Serialize, Deserialize, Clone)]
-// pub struct UserMessage {
-//     pub username: String,
-//     pub status: UserStatus,
-// }
-
-// impl UserMessage {
-//     pub fn new(username: String, status: UserStatus) -> UserMessage {
-//         UserMessage { username, status }
-//     }
-// }
 
 impl User {
     pub fn new(uuid: String, username: String, password: String, status: UserStatus) -> User {

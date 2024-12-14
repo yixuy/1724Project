@@ -6,13 +6,12 @@ use actix_web::web::Data;
 use async_trait::async_trait;
 use surrealdb::Error;
 
-// Implement the UserTrait(function) for the Database struct
+
 #[async_trait]
 pub trait UserTrait {
     async fn get_all_users(db: &Data<Database>) -> Option<Vec<User>>;
     async fn get_user(db: &Data<Database>, user: &str) -> Result<User, UserError>;
     async fn add_user(db: &Data<Database>, new_user: User) -> Result<User, UserError>;
-    // async fn get_user_status(db: &Data<Database>, username: &str) -> Result<UserStatus, UserError>;
     async fn set_offline(db: &Data<Database>, username: &str) -> Result<User, UserError>;
 
     async fn update_user(db: &Data<Database>, uuid: &str) -> Option<User>;

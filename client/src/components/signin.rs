@@ -60,18 +60,6 @@ pub fn sign_in() -> Html {
     )
     .unwrap();
 
-    // let go_home_button = {
-    //     let navigator = navigator.clone();
-    //     let onclick = Callback::from(move |_| navigator.push(&Route::Home));
-
-    //     html! {
-    //         <div >
-    //         <h1 >{ "Sign In Page" }</h1>
-    //         <button {onclick}>{"click to go home"}</button>
-    //     </div>
-    //     }
-    // };
-
     let username = use_state(|| "".to_string());
     let password = use_state(|| "".to_string());
     let message = use_state(|| "".to_string());

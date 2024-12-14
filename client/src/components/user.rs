@@ -12,13 +12,10 @@ use yew_router::prelude::*;
 
 #[derive(Properties, PartialEq, Clone, Debug, Serialize, Deserialize)]
 pub struct UserAttribute {
-    // #[validate(regex(path = "NUMERIC_REGEX", message = "Room number must be numeric"))]
     pub username: String,
 }
 #[function_component(UserComponent)]
 pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
-    // let user_json = serde_json::from_str::<User>(&*user_string).unwrap();
-
     let css = style!(
         r#"
         .container {
@@ -60,7 +57,6 @@ pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
     .unwrap();
 
     let navigator = use_navigator().unwrap();
-    // let username = get_current_user().unwrap_or_else(|| "".to_string());
     let user = User::new(username.clone(), "".to_string());
     let fetched = use_state(|| false);
     let user_string = use_state(|| "".to_string());
@@ -125,7 +121,6 @@ pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
                         username: username.clone(),
                         room: room.room_id,
                     });
-                    // is_room_created.set(true);
                 }
             });
         })
@@ -140,7 +135,7 @@ pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
             e.prevent_default();
             let data = Room::new(room_number.to_string());
             let navigator = navigator.clone();
-            // fetch_base_url(data, navigator);
+
             let username = username.clone();
             wasm_bindgen_futures::spawn_local(async move {
                 match reqwest::Client::new()
@@ -155,9 +150,7 @@ pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
                             room: data.room_id,
                         });
                     }
-                    _ => {
-                        // message.set("Sign-in failed!".to_string());
-                    }
+                    _ => {}
                 }
             });
         })
@@ -171,7 +164,6 @@ pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
             e.prevent_default();
 
             let navigator = navigator.clone();
-            // fetch_base_url(data, navigator);
             let username = username.clone();
             wasm_bindgen_futures::spawn_local(async move {
                 match reqwest::Client::new()
@@ -190,9 +182,7 @@ pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
 
                         navigator.push(&Route::SignIn);
                     }
-                    _ => {
-                        // message.set("Sign-in failed!".to_string());
-                    }
+                    _ => {}
                 }
             });
         })

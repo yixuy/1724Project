@@ -8,8 +8,6 @@ use yew::prelude::*;
 use yew_router::prelude::*;
 #[function_component(Home)]
 pub fn home() -> Html {
-    // let user_json = serde_json::from_str::<User>(&*user_string).unwrap();
-
     let css = style!(
         r#"
         .container {

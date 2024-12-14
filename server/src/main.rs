@@ -5,7 +5,6 @@ mod db;
 mod models;
 use actix::Actor;
 use db::Database;
-mod auth;
 mod endpoints;
 mod error;
 mod server;

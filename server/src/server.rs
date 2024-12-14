@@ -51,9 +51,7 @@ impl ChatServer {
 impl Actor for ChatServer {
     type Context = Context<Self>;
 
-    fn started(&mut self, _: &mut Self::Context) {
-        // println!("ChatServer started");
-    }
+    fn started(&mut self, _: &mut Self::Context) {}
 }
 
 // Handle Join

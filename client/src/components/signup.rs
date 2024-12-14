@@ -55,18 +55,6 @@ pub fn sign_up() -> Html {
     )
     .unwrap();
 
-    // let go_home_button = {
-    //     let navigator = navigator.clone();
-    //     let onclick = Callback::from(move |_| navigator.push(&Route::Home));
-
-    //     html! {
-    //         <div >
-    //         <h1 >{ "Sign Up Page" }</h1>
-    //         <button {onclick}>{"click to go home"}</button>
-    //     </div>
-    //     }
-    // };
-
     let username = use_state(|| "".to_string());
     let password = use_state(|| "".to_string());
     let message = use_state(|| "".to_string());
@@ -83,8 +71,7 @@ pub fn sign_up() -> Html {
             let data = User::new((*username).clone(), (*password).clone());
             let message = message.clone();
             let success = success.clone();
-            // let navigator = navigator.clone();
-            // fetch_base_url(data, navigator);
+        
             wasm_bindgen_futures::spawn_local(async move {
                 match reqwest::Client::new()
                     .post("http://127.0.0.1:5000/new_user")

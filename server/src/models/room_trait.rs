@@ -18,12 +18,6 @@ pub trait RoomTrait {
         room_id: String,
         message: ChatMessage,
     ) -> Option<Room>;
-    // async fn update_room_message(
-    //     db: &Data<Database>,
-    //     room_id: &str,
-    //     message: Message,
-    // ) -> Result<Vec<Room>, Error>;
-    // async fn update_user_status(db: &Data<Database>, uuid: &str) -> Option<User>;
 }
 
 // #[derive(Validate, Debug, Serialize, Deserialize)]
