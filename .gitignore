@@ -1,7 +1,7 @@
-/client/target/
 /client/dist/
-/server/target/
 /server/mydatabase.db
+/client/target/
 /mydatabase.db
 /user/target/
-/images
+/server/target/
+/images/
