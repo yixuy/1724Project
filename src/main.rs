@@ -14,7 +14,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(server.clone()))
             .route("/ws/", web::get().to(server::ws_index))
     })
-    .bind("127.0.0.1:8080")? // 启动 WebSocket 8080
+    .bind("127.0.0.1:8080")? // launch 8080
     .run()
     .await
 }
