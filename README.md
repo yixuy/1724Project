@@ -117,8 +117,6 @@ Once logged in, users can log out by clicking the red **Sign Out** button on the
 - After logging out, you will be redirected to the sign-in page.
 - Access to chat rooms and other features will be restricted until you log in again.
 
-![](images/after-sign-out.png)
-
 ---
 
 ### Create Chat Room
