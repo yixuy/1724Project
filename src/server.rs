@@ -3,12 +3,12 @@ use actix_web::{web, Error, HttpRequest, HttpResponse};
 use actix_web_actors::ws;
 use std::collections::{HashMap, HashSet};
 
-// 1. 定义消息类型
+// 1. Define
 #[derive(Message)]
 #[rtype(result = "()")]
 pub struct TextMessage(pub String);
 
-// Chat Server 是 WebSocket Server
+// Chat Server
 pub struct ChatServer {
     sessions: HashMap<usize, Recipient<TextMessage>>,
     rooms: HashMap<String, HashSet<usize>>, //room -> client_id
@@ -138,9 +138,9 @@ impl Handler<LeaveRoom> for ChatServer {
 
 // 4. WebSocket Session
 pub struct ChatSession {
-    id: usize, // 客户端唯一ID
-    room: Option<String>, // 当前所在聊天室
-    addr: Addr<ChatServer>, // 服务器的地址
+    id: usize, //Client ID
+    room: Option<String>, 
+    addr: Addr<ChatServer>, 
 }
 
 impl ChatSession {
@@ -156,7 +156,6 @@ impl ChatSession {
 impl Actor for ChatSession {
     type Context = ws::WebsocketContext<Self>;
 
-    //客户端连接时触发，将客户端注册到服务器
     fn started(&mut self, ctx: &mut Self::Context) {
         let addr = ctx.address();
         self.addr
@@ -166,7 +165,6 @@ impl Actor for ChatSession {
             });
     }
 
-    //客户端断开时触发，将其从聊天室移除
     fn stopped(&mut self, _: &mut Self::Context) {
         if let Some(room) = &self.room {
             self.addr.do_send(LeaveRoom {
@@ -263,21 +261,19 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for ChatSession {
                 );
 
             } else if let Some(room) = &self.room {
-                // 如果用户已加入房间，则广播消息
+                
                 self.addr.do_send(BroadcastMessage {
                     room_name: room.clone(),
                     message: trimmed_text.to_owned(),
                 });
             } else {
-                // 用户未加入房间，提示加入房间
+                
                 ctx.text("You must join a room first. Use '/join <room_name>' to join an existing room.");
             }
 
-        } else if let Ok(ws::Message::Close(_)) = msg {
-            // 处理连接关闭
+        } else if let Ok(ws::Message::Close(_)) = msg {           
             ctx.stop();
         } else if let Ok(ws::Message::Ping(msg)) = msg {
-            // 处理 Ping 消息
             ctx.pong(&msg);
         }
     }
@@ -324,13 +320,13 @@ impl Handler<GenerateId> for ChatServer {
 }
 
 
-// WebSocket 路由
+// WebSocket Router
 pub async fn ws_index(
     req: HttpRequest,
     stream: web::Payload,
     srv: web::Data<Addr<ChatServer>>,
 ) -> Result<HttpResponse, Error> {
-    // 通过发送消息生成一个唯一的 ID
+    // Generate a Unique ID
     let id = srv.send(GenerateId).await.unwrap_or(0);
 
     let session = ChatSession::new(id, srv.get_ref().clone());
