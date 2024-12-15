@@ -87,7 +87,7 @@ If you don't have rust installed, please install rust by following the instructi
 #### Run the backend in the terminal
 
 1. `cd server`
-2. `cargo watch -x run` or `cargo run`
+2. `cargo watch -x run`(or `cargo run`)
 
 ---
 
