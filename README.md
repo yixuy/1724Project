@@ -64,7 +64,9 @@ https://drive.google.com/drive/folders/1TOLfA3iASq7DLsU7M1bk-Su9eWnsa6cv?usp=sha
 
 ## Reproducibility Guide
 
-Please run those commands in the terminal as the order below using MacOs, and please make sure you have installed all the dependencies before running the commands. Meanwhile, the port 5050, 8080, and 5000 should be available for the application to run.
+Please run those commands in the terminal as the order below using MacOs, and please make sure you have installed rust and all the dependencies before running the commands. Meanwhile, the port 5050, 8080, and 5000 should be available for the application to run.
+
+If you don't have rust installed, please install rust by following the instructions in the official rust website: https://www.rust-lang.org/tools/install
 
 ---
 
