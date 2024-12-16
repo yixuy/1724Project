@@ -174,6 +174,7 @@ After logging into the system, you will be redirected to the homepage, where you
 - If a room number already exists, you can choose to directly join the existing room.
 - The default value in the room number input field is set to 0, and the default message displayed is: _"Please enter a nonzero room number"_
 
+![](images/create-room-0.png)
 ![](images/create-room.png)
 
 ### Join Chat Room
