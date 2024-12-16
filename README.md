@@ -207,17 +207,18 @@ If you want to leave the current chat room, simply click the "Leave Room" button
 ![](images/leave-room-update.png)
 
 ### User Status
-When a user leaves the current room, their status will update to "Leave", allowing other users in the room to see that they have exited.
+User status will vary depending on the situation:
+- When a user leaves the current room, their status will update to "Leave", allowing other users in the room to see that they have exited.
 
 ![](images/user-status-update.png)
 
-When a user signs out, their status will change to "Offline."
+- When a user signs out, their status will change to "Offline."
 ![](images/user-status-update-1.png)
 
 ### Message History
 As shown in the image, when users enter an already created room, they will be able to view the previous messages exchanged in the chat, allowing them to catch up on the conversation.
 
-![](images/message-history.png)
+![](images/message-history-update.png)
 
 ## Developer's Guide
 This Developer's Guide provides detailed backend API instructions on how developers can set up the chat application. For each API endpoint, this guide provides the following information:
