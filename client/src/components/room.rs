@@ -26,11 +26,8 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
     let room_id_clone = room_id.clone();
     let room_id = room_id.clone();
     let has_run = use_state(|| false);
-    let join_msg = use_state(|| String::new());
-    let join_msg_clone = join_msg.clone();
 
     use_effect(move || {
-        let join_msg = join_msg_clone.clone();
         let messages_for_effect = messages_for_receive;
         let username = username_clone.clone();
         let room_id = room_id.clone();
@@ -46,8 +43,12 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
             spawn_local(async move {
                 let messages_for_effect = messages_for_effect.clone();
                 while let Some(Ok(WsMessage::Text(text))) = r.next().await {
-                    if text.contains("joined") {
-                        join_msg.set(text.clone());
+                    if text == "leave" {
+                        if let Some(window) = web_sys::window() {
+                            window.location().reload().unwrap_or_else(|err| {
+                                gloo_console::log!("Failed to reload page:", &format!("{:?}", err));
+                            });
+                        }
                     } else {
                         let raw_messages: Vec<ChatMessage> = match serde_json::from_str(&text) {
                             Ok(messages) => messages,

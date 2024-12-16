@@ -100,13 +100,19 @@ impl Handler<Leave> for ChatServer {
         let db_clone = self.db.clone();
         let username = msg.username.clone();
 
-        if let Some(users) = self.rooms.get_mut(&msg.room_id) {
+        if let Some(users) = self.rooms.get(&msg.room_id) {
+            let mut users_clone = users.clone();
             // Remove disconnected users
-            users.retain(|addr| addr.connected());
+            users_clone.retain(|addr| addr.connected());
 
             actix::spawn(async move {
                 match update_user_status_with_retry(&db_clone, &username, UserStatus::Leave).await {
-                    Ok(_) => println!("Successfully updated status for user '{}'", username),
+                    Ok(_) => {
+                        for user in users_clone {
+                            let history_json = "leave".to_string();
+                            user.do_send(ClientMessage(history_json));
+                        }
+                    }
                     Err(e) => println!("Failed to update status for user '{}': {}", username, e),
                 }
             });
