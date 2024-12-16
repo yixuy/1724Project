@@ -8,6 +8,7 @@
 
 ## Table of Contents
   - [Motivation](#motivation)
+  - [Features](#features)
   - [Objectives](#objectives)
   - [Video Demo](#video-demo)
   - [Reproducibility Guide](#reproducibility-guide)
