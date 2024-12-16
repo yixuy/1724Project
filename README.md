@@ -6,6 +6,15 @@
 | Yiran (Sheila) Chen | 1004392739 | sheila.chen@mail.utoronto.ca  |
 | Yixu (Henry) Ye     | 1010506579 | yixu.ye@mail.utoronto.ca      |
 
+## Table of Contents
+  - [Motivation](#motivation)
+  - [Objectives](#objectives)
+  - [Video Demo](#video-demo)
+  - [Reproducibility Guide](#reproducibility-guide)
+  - [User's Guide](#users-guide)
+  - [Developer's Guide](#developers-guide)
+  - [Contributions](#contributions)
+  - [Lessons Learned](#lessons-learned)
 
 ## Motivation
 
