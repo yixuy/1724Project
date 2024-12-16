@@ -192,24 +192,27 @@ You can now start sending messages and chatting with others in the same room! To
 - For each message, you will see the username of the sender, their status, and the time the message was sent.
 
 ![](images/type-message.png)
-![](images/sending-message.png)
+![](images/sending-message-update.png)
 
 - If another user enters the same room and sends a message, you will see his/her message in real-time, as shown in the image.
 
-![](images/real-time-message.png)
+![](images/real-time-message-update.png)
 
 ### Leave Chat Room
 If you want to leave the current chat room, simply click the "Leave Room" button in the top-right corner of the chat box (outside the chat box), and you will be redirected back to the homepage.
 - From there, you can choose to create a new room or join another room.
 - If you no longer wish to chat, just click the "Sign Out" button to exit the chat app.
 
-![](images/leave-room-click.png)
-![](images/leave-room.png)
+![](images/leave-room-click-update.png)
+![](images/leave-room-update.png)
 
 ### User Status
 When a user leaves the current room, their status will update to "Leave", allowing other users in the room to see that they have exited.
 
-![](images/user-status.png)
+![](images/user-status-update.png)
+
+When a user signs out, their status will change to "Offline."
+![](images/user-status-update-1.png)
 
 ### Message History
 As shown in the image, when users enter an already created room, they will be able to view the previous messages exchanged in the chat, allowing them to catch up on the conversation.
