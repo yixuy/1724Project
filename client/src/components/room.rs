@@ -186,23 +186,24 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
         }
 
         .messages {
-            flex-grow: 0;
-            overflow-y: auto;
+            flex: 1; /* Allows the box to expand and take available space */
+            overflow-y: auto; /* Scroll when content exceeds the container */
             margin: 10px;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             background-color: lightblue;
-            height: 50vh;
+            min-height: 50vh; /* Minimum height for better visibility */
         }
 
         .message {
-            border: 2px solid white; /* White border */
-            border-radius: 5px; /* Optional: adds rounded corners */
-            padding: 10px; /* Adds some space inside the border */
-            margin: 5px; /* Adds space between messages */
-            background-color: #f0f8ff; /* Optional: subtle background color for contrast */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: adds a shadow for better visibility */
+            border: 2px solid white;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px;
+            background-color: #f0f8ff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            word-break: break-word; /* Ensure long words wrap correctly */
         }
 
         .title {
