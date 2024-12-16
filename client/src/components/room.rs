@@ -274,10 +274,22 @@ pub fn room(RoomAttribute { username, room_id }: &RoomAttribute) -> Html {
                 <div class="messages">
                     { for messages.iter().zip(status_clone.iter()).map(|(message, status)| html! {
                         <div class="message">
-                            <span>{ format!("Username: {} ----- Status: [{}] ----- {}", &message.username, status,  message.timestamp ) }</span>
-                            <br/>
-
-                            <strong>{ &message.content }</strong>
+                            <span>
+                                { format!("Username: {} ----- Status: [", &message.username) }
+                                    <span
+                                        style={if status == "Online" {
+                                            "color: green; font-weight: bold;"
+                                        } else if status == "Offline" {
+                                            "color: red;"
+                                        } else {
+                                            "color: gray;"
+                                        }}
+                                    >
+                                        { status }
+                                    </span>
+                                    { format!("] ----- {}", message.timestamp) }
+                            </span>
+                            <p>{ &message.content }</p>
                         </div>
                     })}
                 </div>
