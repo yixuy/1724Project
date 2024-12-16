@@ -215,6 +215,7 @@ User status will vary depending on the situation.
 ![](images/user-status-update.png)
 
 - When a user signs out, their status will change to "Offline."
+
 ![](images/user-status-update-1.png)
 
 ### Message History
