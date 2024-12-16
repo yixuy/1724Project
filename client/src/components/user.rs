@@ -202,12 +202,15 @@ pub fn user(UserAttribute { username }: &UserAttribute) -> Html {
                 <h2>{ format!("What is the room number you want to join?")}</h2>
                 <input value={room_number.to_string()} {oninput} />
                 <br />
+                if room_number.to_string() != "0" {
                 if *is_room_created {
                     <p>{ format!("Room {} found, Are you sure join now? ", room_number.to_string()) }</p>
                     <button {onclick}>{"Join the room"}</button>
                 }else{
                     <p>{ format!("Room {} not found, Are you sure creating one ", room_number.to_string()) }</p>
                     <button onclick={create_on_click}>{"Create the room"}</button>
+                }}else{
+                    <p>{"Please enter a nonzero room number"}</p>
                 }
             </div>
             </div>

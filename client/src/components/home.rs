@@ -100,12 +100,16 @@ pub fn home() -> Html {
                 <h2>{ format!("What is the room number you want to join?")}</h2>
                 <input value={room_number.to_string()} {oninput} />
                 <br />
-                if *is_room_created {
-                    <p>{ format!("Chat Room {} found", room_number.to_string()) }</p>
-                    // <button {onclick}>{"Join the room"}</button>
-                }else{
-                    <p>{ format!("Chat Room {} not found", room_number.to_string()) }</p>
+                if room_number.to_string() != "0" {
+                    if *is_room_created {
+                        <p>{ format!("Chat Room {} found", room_number.to_string()) }</p>
+                        // <button {onclick}>{"Join the room"}</button>
+                    }else{
+                        <p>{ format!("Chat Room {} not found", room_number.to_string()) }</p>
 
+                    }
+                }else{
+                    <p>{"Please enter a nonzero room number"}</p>
                 }
             </div>
             </div>
